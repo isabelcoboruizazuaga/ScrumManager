@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@id/inicio">
+    <fragment
+        android:id="@+id/inicio"
+        android:name="com.example.scrummanager.Vistas.Inicio"
+        android:label="fragment_inicio"
+        tools:layout="@layout/fragment_inicio" />
+    <fragment
+        android:id="@+id/clientes"
+        android:name="com.example.scrummanager.Vistas.Clientes"
+        android:label="fragment_clientes"
+        tools:layout="@layout/fragment_clientes" />
+    <fragment
+        android:id="@+id/departamentos"
+        android:name="com.example.scrummanager.Vistas.Departamentos"
+        android:label="fragment_departamentos"
+        tools:layout="@layout/fragment_departamentos" />
+    <fragment
+        android:id="@+id/empleados"
+        android:name="com.example.scrummanager.Vistas.Empleados"
+        android:label="fragment_empleados"
+        tools:layout="@layout/fragment_empleados" />
+    <fragment
+        android:id="@+id/equipos"
+        android:name="com.example.scrummanager.Vistas.Equipos"
+        android:label="fragment_equipos"
+        tools:layout="@layout/fragment_equipos" />
+    <fragment
+        android:id="@+id/proyectos"
+        android:name="com.example.scrummanager.Vistas.Proyectos"
+        android:label="fragment_proyectos"
+        tools:layout="@layout/fragment_proyectos" />
+</navigation>

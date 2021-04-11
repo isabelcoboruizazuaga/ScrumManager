@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/inicio"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="@string/menu_home" />
+        <item
+            android:id="@+id/equipos"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="@string/menu_departamentos" />
+        <item
+            android:id="@+id/empleados"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="@string/menu_equipos" />
+        <item
+            android:id="@+id/clientes"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="@string/menu_proyectos" />
+        <item
+            android:id="@+id/departamentos"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="@string/menu_clientes" />
+        <item
+            android:id="@+id/proyectos"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="@string/menu_empleados" />
+        <item
+            android:id="@+id/nav_sdads"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="@string/menu_departamentos" />
+    </group>
+</menu>
