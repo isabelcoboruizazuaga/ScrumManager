@@ -32,12 +32,12 @@ public class AdaptadorEmpleados extends RecyclerView.Adapter<RecyclerView.ViewHo
         View v;
         if (viewType == MOSTRAR_MENU) {
             //Se infla la View
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_departamento_item, parent, false);
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_item_empleado, parent, false);
             //Se crea el ViewHolder
             return new AdaptadorEmpleados.MenuViewHolder(v);
         } else {
             //Se infla la View
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.empleado_item, parent, false);
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_empleado, parent, false);
             //Se crea el ViewHolder
             return new AdaptadorEmpleados.AdaptadorEmpleadosViewHolder(v);
         }
@@ -67,29 +67,26 @@ public class AdaptadorEmpleados extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
         //Si se está mostrando el menú
         if (holder instanceof MenuViewHolder) {
-            //Se incluye el nombre del departamento en el layout
-            ((MenuViewHolder) holder).tv_nombreDepartamento.setText(nombreEmpleado.toString());
-
             //Se asignan onClickListeners para las opciones del menú
-            ((MenuViewHolder) holder).btn_atrasDepartamento.setOnClickListener(new View.OnClickListener() {
+            ((MenuViewHolder) holder).btn_atrasEmpleado.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     cerrarMenu();
                 }
             });
-            ((MenuViewHolder) holder).btn_verDepartamento.setOnClickListener(new View.OnClickListener() {
+            ((MenuViewHolder) holder).btn_verEmpleado.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     verDepartamento();
                 }
             });
-            ((MenuViewHolder) holder).btn_editarDepartamento.setOnClickListener(new View.OnClickListener() {
+            ((MenuViewHolder) holder).btn_editarEmpleado.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     editarDepartamento();
                 }
             });
-            ((MenuViewHolder) holder).btn_borrarDepartamento.setOnClickListener(new View.OnClickListener() {
+            ((MenuViewHolder) holder).btn_borrarEmpleado.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     borrarDepartamento();
@@ -140,8 +137,7 @@ public class AdaptadorEmpleados extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public class MenuViewHolder extends RecyclerView.ViewHolder {
         //items del layout
-        private ImageButton btn_verDepartamento, btn_editarDepartamento, btn_atrasDepartamento, btn_borrarDepartamento;
-        private TextView tv_nombreDepartamento;
+        private ImageButton btn_verEmpleado, btn_atrasEmpleado, btn_borrarEmpleado, btn_editarEmpleado;
 
         public MenuViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -150,11 +146,10 @@ public class AdaptadorEmpleados extends RecyclerView.Adapter<RecyclerView.ViewHo
             contexto = itemView.getContext();
 
             //inicializacón de los elementos del layout
-            btn_verDepartamento = itemView.findViewById(R.id.btn_verDepartamento);
-            btn_editarDepartamento = itemView.findViewById(R.id.btn_editarDepartamento);
-            btn_atrasDepartamento = itemView.findViewById(R.id.btn_atrasDepartamento);
-            btn_borrarDepartamento = itemView.findViewById(R.id.btn_borrarDepartamento);
-            tv_nombreDepartamento = itemView.findViewById(R.id.tv_nombreDepartamento);
+            btn_verEmpleado = itemView.findViewById(R.id.btn_verEmpleado);
+            btn_atrasEmpleado = itemView.findViewById(R.id.btn_atrasEmpleado);
+            btn_borrarEmpleado = itemView.findViewById(R.id.btn_borrarEmpleado);
+            btn_editarEmpleado = itemView.findViewById(R.id.btn_editarEmpleado);
         }
     }
 

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,12 +33,12 @@ public class AdaptadorDepartamentos extends RecyclerView.Adapter<RecyclerView.Vi
         View v;
         if(viewType==MOSTRAR_MENU ){
             //Se infla la View
-            v= LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_departamento_item , parent, false);
+            v= LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_item_departamento, parent, false);
             //Se crea el ViewHolder
             return new MenuViewHolder(v);
         }else{
             //Se infla la View
-            v= LayoutInflater.from(parent.getContext()).inflate(R.layout.departamento_item, parent, false);
+            v= LayoutInflater.from(parent.getContext()).inflate(R.layout.item_departamento, parent, false);
             //Se crea el ViewHolder
             return new AdaptadorDepartamentosViewHolder(v);
         }
