@@ -11,6 +11,7 @@ public class Empleado implements Serializable {
     private Direccion direccionEmpleado;
     private String especialidadEmpleado;
     private String idDepartamento;
+    private boolean showMenu=false;
 
     public Empleado() {
     }
@@ -19,6 +20,14 @@ public class Empleado implements Serializable {
         this.nifEmpleado = nifEmpleado;
         this.nombreEmpleado = nombreEmpleado;
         this.apellidoEmpleado = apellidoEmpleado;
+    }
+
+    public boolean isShowMenu() {
+        return showMenu;
+    }
+
+    public void setShowMenu(boolean showMenu) {
+        this.showMenu = showMenu;
     }
 
     public String getNifEmpleado() {
