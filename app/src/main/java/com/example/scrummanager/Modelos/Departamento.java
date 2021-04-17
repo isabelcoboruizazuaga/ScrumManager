@@ -10,6 +10,7 @@ public class Departamento implements Serializable {
     private String urlFotoDepartamento;
     private ArrayList<Empleado> miembrosDepartamento;
     private ArrayList<Proyecto> ListaProyectosDepartamento;
+    private boolean showMenu=false;
 
     public Departamento() {
     }
@@ -17,6 +18,14 @@ public class Departamento implements Serializable {
     public Departamento(String idDepartamento, String nombreDepartamento) {
         this.idDepartamento = idDepartamento;
         this.nombreDepartamento = nombreDepartamento;
+    }
+
+    public boolean isShowMenu() {
+        return showMenu;
+    }
+
+    public void setShowMenu(boolean showMenu) {
+        this.showMenu = showMenu;
     }
 
     public void setIdDepartamento(String idDepartamento) {
