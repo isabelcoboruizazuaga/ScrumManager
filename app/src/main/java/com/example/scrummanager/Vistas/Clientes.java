@@ -2,59 +2,56 @@ package com.example.scrummanager.Vistas;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.scrummanager.Controladores.AdaptadorClientes;
+import com.example.scrummanager.Modelos.Cliente;
 import com.example.scrummanager.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link Clientes#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.example.scrummanager.Controladores.AdaptadorClientes;
+import com.example.scrummanager.Modelos.Cliente;
+import com.example.scrummanager.R;
+
+import java.util.ArrayList;
+
 public class Clientes extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+     private RecyclerView recView;
+     private ArrayList<Cliente> clientes;
+     private Cliente cliente;
 
     public Clientes() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Clientes.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static Clientes newInstance(String param1, String param2) {
+    public static Clientes newInstance() {
         Clientes fragment = new Clientes();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -62,5 +59,36 @@ public class Clientes extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_clientes, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        super.onViewCreated(view, savedInstanceState);
+        //Inicialización del recycler view
+        recView= view.findViewById(R.id.rv_clientes);
+        //Creación del layout y asignación al recycler
+        LinearLayoutManager layoutManager= new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
+        recView.setLayoutManager(layoutManager);
+
+        clientes =new ArrayList<Cliente>();
+        cliente = new Cliente("1","Cliente1", "Apellido", "cli@email");
+        clientes.add(cliente);
+        cliente = new Cliente("1","Cliente2", "Apellido", "cli@email");
+        clientes.add(cliente);
+        cliente = new Cliente("1","Cliente3", "Apellido", "cli@email");
+        clientes.add(cliente);
+        cliente = new Cliente("1","Cliente4", "Apellido", "cli@email");
+        clientes.add(cliente);
+        cliente = new Cliente("1","Cliente5", "Apellido", "cli@email");
+        clientes.add(cliente);
+        cliente = new Cliente("1","Cliente6", "Apellido", "cli@email");
+        clientes.add(cliente);
+        cliente = new Cliente("1","Cliente7", "Apellido", "cli@email");
+        clientes.add(cliente);
+
+        AdaptadorClientes adaptadorClientes= new AdaptadorClientes(clientes,getContext());
+        recView.setAdapter(adaptadorClientes);
     }
 }

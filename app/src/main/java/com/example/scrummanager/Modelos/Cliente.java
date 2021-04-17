@@ -10,6 +10,7 @@ public class Cliente implements Serializable {
     private String telefonoCliente;
     private Direccion direccionCliente;
     private String tipoCliente; //Company or individual
+    private boolean showMenu= false;
 
     public Cliente() {
     }
@@ -19,6 +20,14 @@ public class Cliente implements Serializable {
         this.nombreCliente = nombreCliente;
         this.apellidoCliente = apellidoCliente;
         this.emailCliente = emailCliente;
+    }
+
+    public boolean isShowMenu() {
+        return showMenu;
+    }
+
+    public void setShowMenu(boolean showMenu) {
+        this.showMenu = showMenu;
     }
 
     public String getNifCliente() {
