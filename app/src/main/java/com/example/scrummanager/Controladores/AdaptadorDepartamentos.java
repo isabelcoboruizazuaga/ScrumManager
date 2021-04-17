@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -31,7 +32,7 @@ public class AdaptadorDepartamentos extends RecyclerView.Adapter<RecyclerView.Vi
         View v;
         if(viewType==MOSTRAR_MENU ){
             //Se infla la View
-            v= LayoutInflater.from(parent.getContext()).inflate(R.layout.departamento_item, parent, false);
+            v= LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_departamento_item , parent, false);
             //Se crea el ViewHolder
             return new MenuViewHolder(v);
         }else{
@@ -52,6 +53,7 @@ public class AdaptadorDepartamentos extends RecyclerView.Adapter<RecyclerView.Vi
             //Se incluye el departamento en el layout
             ((AdaptadorDepartamentosViewHolder) holder).tv_nombreDepartamento.setText(nombreDepartamento.toString());
 
+            //Si se mantiene pulsado se abre el menú de opciones
             ((AdaptadorDepartamentosViewHolder)holder).itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
@@ -62,11 +64,14 @@ public class AdaptadorDepartamentos extends RecyclerView.Adapter<RecyclerView.Vi
 
         }
         if(holder instanceof MenuViewHolder){
-            String nombreDepartamento= departamento.getNombreDepartamento();
-
-            //Se incluye el departamento en el layout
-            ((MenuViewHolder) holder).tv_nombreDepartamento.setText("AAAAAAAAA");
-
+            //Si se mantiene pulsado se cierra el menú de opciones
+            ((MenuViewHolder)holder).itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    cerrarMenu();
+                    return true;
+                }
+            });
         }
     }
 
@@ -101,7 +106,7 @@ public class AdaptadorDepartamentos extends RecyclerView.Adapter<RecyclerView.Vi
     }
     public class MenuViewHolder extends RecyclerView.ViewHolder{
         //items del layout
-        private TextView tv_nombreDepartamento, iv_fotoDepartamento;
+        private Button tv_nombreEmpleado, iv_fotoDepartamento;
         public MenuViewHolder(@NonNull View itemView){
             super(itemView);
 
@@ -109,8 +114,7 @@ public class AdaptadorDepartamentos extends RecyclerView.Adapter<RecyclerView.Vi
             contexto= itemView.getContext();
 
             //inicializacón de los elementos del layout
-            tv_nombreDepartamento= itemView.findViewById(R.id.tv_nombreDepartamento);
-            //iv_fotoDepartamento= itemView.findViewById(R.id.iv_fotoDepartamento);
+            //tv_nombreEmpleado= itemView.findViewById(R.id.tv_nombreEmpleado);
 
         }
     }
