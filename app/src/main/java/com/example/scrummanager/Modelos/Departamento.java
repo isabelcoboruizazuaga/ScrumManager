@@ -7,6 +7,7 @@ public class Departamento implements Serializable {
     private String idDepartamento;
     private String nombreDepartamento;
     private String nifJefeDepartamento;
+    private String urlFotoDepartamento;
     private ArrayList<Empleado> miembrosDepartamento;
     private ArrayList<Proyecto> ListaProyectosDepartamento;
 
@@ -16,6 +17,18 @@ public class Departamento implements Serializable {
     public Departamento(String idDepartamento, String nombreDepartamento) {
         this.idDepartamento = idDepartamento;
         this.nombreDepartamento = nombreDepartamento;
+    }
+
+    public void setIdDepartamento(String idDepartamento) {
+        this.idDepartamento = idDepartamento;
+    }
+
+    public String getUrlFotoDepartamento() {
+        return urlFotoDepartamento;
+    }
+
+    public void setUrlFotoDepartamento(String urlFotoDepartamento) {
+        this.urlFotoDepartamento = urlFotoDepartamento;
     }
 
     public String getIdDepartamento() {
