@@ -30,7 +30,7 @@
                     android:orientation="vertical">
 
                     <com.example.scrummanager.Controladores.ProporcionalImageButton
-                        android:id="@+id/imageView23"
+                        android:id="@+id/btn_verDepartamento"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:adjustViewBounds="true"
@@ -38,7 +38,7 @@
                         app:srcCompat="@drawable/profile_pic" />
 
                     <com.example.scrummanager.Controladores.ProporcionalImageButton
-                        android:id="@+id/imageVie22w3"
+                        android:id="@+id/btn_atrasDepartamento"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:adjustViewBounds="true"
@@ -54,7 +54,7 @@
                     android:orientation="vertical">
 
                     <com.example.scrummanager.Controladores.ProporcionalImageButton
-                        android:id="@+id/imageView3"
+                        android:id="@+id/btn_editarDepartamento"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:adjustViewBounds="true"
@@ -62,7 +62,7 @@
                         app:srcCompat="@drawable/profile_pic" />
 
                     <com.example.scrummanager.Controladores.ProporcionalImageButton
-                        android:id="@+id/imageVie2w3"
+                        android:id="@+id/btn_borrarDepartamento"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:adjustViewBounds="true"
@@ -80,35 +80,5 @@
                 android:textStyle="bold"
                 android:text="Nombre Departamento" />
         </LinearLayout>
-
-
-        <!--
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:layout_margin="5dp"
-                    android:orientation="vertical">
-
-                    <Button
-                        android:id="@+id/button2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Button" />
-
-                    <Button
-                        android:id="@+id/button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Button" />
-
-                    <Button
-                        android:id="@+id/button3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Button" />
-
-                </LinearLayout>
-        -->
     </androidx.cardview.widget.CardView>
 </RelativeLayout>
