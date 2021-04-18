@@ -53,7 +53,7 @@ public class Departamentos extends Fragment {
 
         recView= view.findViewById(R.id.rv_departamentos);
         GridLayoutManager gridlayoutManager= new GridLayoutManager(getContext(),2);
-        LinearLayoutManager layoutManager= new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
+        LinearLayoutManager layoutManager= new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
         recView.setLayoutManager(gridlayoutManager);
 
         departamentos=new ArrayList<Departamento>();

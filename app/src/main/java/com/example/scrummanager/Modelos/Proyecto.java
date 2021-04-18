@@ -14,6 +14,7 @@ public class Proyecto implements Serializable {
     private ArrayList<Sprint> listaSprints;
     private ArrayList<Date> fechasProyecto;
     private long presupuesto;
+    private boolean showMenu= false;
     //TODO SLA implementation
 
 
@@ -29,6 +30,22 @@ public class Proyecto implements Serializable {
 
     public String getIdProyecto() {
         return idProyecto;
+    }
+
+    public boolean isShowMenu() {
+        return showMenu;
+    }
+
+    public void setShowMenu(boolean showMenu) {
+        this.showMenu = showMenu;
+    }
+
+    public String getNombreProyecto() {
+        return nombreProyecto;
+    }
+
+    public void setNombreProyecto(String nombreProyecto) {
+        this.nombreProyecto = nombreProyecto;
     }
 
     public Dictionary<Empleado, String> getEquipoProyecto() {
