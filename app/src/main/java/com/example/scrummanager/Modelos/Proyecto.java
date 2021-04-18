@@ -6,74 +6,76 @@ import java.util.Date;
 import java.util.Dictionary;
 
 public class Proyecto implements Serializable {
-    private String projectId;
-    private Dictionary<Empleado, String> projectTeam;
-    private Cliente projectCliente;
-    private String projectSpecifications; //TODO maybe make it a class
-    private ArrayList<Sprint> projectSprintList;
-    private ArrayList<Date> projectDates;
-    private long projectBudget;
+    private String idProyecto;
+    private String nombreProyecto;
+    private Dictionary<Empleado, String> equipoProyecto;
+    private Cliente cliente;
+    private String especificacionesProyecto; //TODO maybe make it a class
+    private ArrayList<Sprint> listaSprints;
+    private ArrayList<Date> fechasProyecto;
+    private long presupuesto;
     //TODO SLA implementation
 
 
     public Proyecto() {
     }
 
-    public Proyecto(String projectId, Dictionary<Empleado, String> projectTeam, String projectSpecifications) {
-        this.projectId = projectId;
-        this.projectTeam = projectTeam;
-        this.projectSpecifications = projectSpecifications;
+    public Proyecto(String idProyecto, String nombreProyecto, String especificacionesProyecto, Cliente cliente) {
+        this.nombreProyecto =nombreProyecto; 
+        this.idProyecto = idProyecto;
+        this.cliente = cliente;
+        this.especificacionesProyecto = especificacionesProyecto;
     }
 
-    public String getProjectId() {
-        return projectId;
+    public String getIdProyecto() {
+        return idProyecto;
     }
 
-    public Dictionary<Empleado, String> getProjectTeam() {
-        return projectTeam;
+    public Dictionary<Empleado, String> getEquipoProyecto() {
+        return equipoProyecto;
     }
 
-    public void setProjectTeam(Dictionary<Empleado, String> projectTeam) {
-        this.projectTeam = projectTeam;
+    public void setEquipoProyecto(Dictionary<Empleado, String> equipoProyecto) {
+        this.equipoProyecto = equipoProyecto;
     }
 
-    public Cliente getProjectCliente() {
-        return projectCliente;
+    public Cliente getCliente() {
+        return cliente;
     }
 
-    public void setProjectCliente(Cliente projectCliente) {
-        this.projectCliente = projectCliente;
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
 
-    public String getProjectSpecifications() {
-        return projectSpecifications;
+    public String getEspecificacionesProyecto() {
+        return especificacionesProyecto;
     }
 
-    public void setProjectSpecifications(String projectSpecifications) {
-        this.projectSpecifications = projectSpecifications;
+    public void setEspecificacionesProyecto(String especificacionesProyecto) {
+        this.especificacionesProyecto = especificacionesProyecto;
     }
 
-    public ArrayList<Sprint> getProjectSprintList() {
-        return projectSprintList;
+    public ArrayList<Sprint> getListaSprints() {
+        return listaSprints;
     }
 
-    public void setProjectSprintList(ArrayList<Sprint> projectSprintList) {
-        this.projectSprintList = projectSprintList;
+    public void setListaSprints(ArrayList<Sprint> listaSprints) {
+        this.listaSprints = listaSprints;
     }
 
-    public ArrayList<Date> getProjectDates() {
-        return projectDates;
+    public ArrayList<Date> getFechasProyecto() {
+        return fechasProyecto;
     }
 
-    public void setProjectDates(ArrayList<Date> projectDates) {
-        this.projectDates = projectDates;
+    public void setFechasProyecto(ArrayList<Date> fechasProyecto) {
+        this.fechasProyecto = fechasProyecto;
     }
 
-    public long getProjectBudget() {
-        return projectBudget;
+    public long getPresupuesto() {
+        return presupuesto;
     }
 
-    public void setProjectBudget(long projectBudget) {
-        this.projectBudget = projectBudget;
+    public void setPresupuesto(long presupuesto) {
+        this.presupuesto = presupuesto;
     }
 }
