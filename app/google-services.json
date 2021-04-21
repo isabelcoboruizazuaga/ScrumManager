@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "76234650894",
+    "project_id": "scrummanager-edb30",
+    "storage_bucket": "scrummanager-edb30.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:76234650894:android:641860eb1ffbad8ae3d35f",
+        "android_client_info": {
+          "package_name": "com.example.scrummanager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "76234650894-hbcsr8bms7tmqt8djp85j7pcbho0higf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.scrummanager",
+            "certificate_hash": "c06362b4a3c5f8a81e7bb75442a96c153e634483"
+          }
+        },
+        {
+          "client_id": "76234650894-m5tc7jggg1spc2qgi6utbemak73k98dv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjlWFQsYGJFIlbVmSdu6-gNMu65Pu0YF8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "76234650894-m5tc7jggg1spc2qgi6utbemak73k98dv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
