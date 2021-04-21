@@ -28,6 +28,8 @@ public class Proyecto implements Serializable {
         this.especificacionesProyecto = especificacionesProyecto;
     }
 
+
+
     public String getIdProyecto() {
         return idProyecto;
     }

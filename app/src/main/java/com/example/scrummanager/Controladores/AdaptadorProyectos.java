@@ -9,6 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.scrummanager.Modelos.Cliente;
@@ -23,10 +24,12 @@ public class AdaptadorProyectos extends RecyclerView.Adapter<RecyclerView.ViewHo
     private Context contexto;
     private Proyecto proyecto;
     private final int MOSTRAR_MENU = 1, OCULTAR_MENU = 2;
+    private Fragment fragment;
 
-    public AdaptadorProyectos(ArrayList<Proyecto> proyectos, Context contexto) {
+    public AdaptadorProyectos(ArrayList<Proyecto> proyectos, Context contexto, Fragment fragment) {
         this.proyectos = proyectos;
         this.contexto = contexto;
+        this.fragment= fragment;
     }
 
     @NonNull
@@ -65,6 +68,8 @@ public class AdaptadorProyectos extends RecyclerView.Adapter<RecyclerView.ViewHo
             ((AdaptadorProyectosViewHolder) holder).itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
+                    TextView tv= fragment.getView().findViewById(R.id.textView2);
+                    tv.setText("a");
                     mostrarMenu(position);
                     return true;
                 }

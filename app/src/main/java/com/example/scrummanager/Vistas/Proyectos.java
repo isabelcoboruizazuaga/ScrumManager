@@ -79,7 +79,7 @@ public class Proyectos extends Fragment {
 
         proyectos.add(proyecto);
 
-        AdaptadorProyectos adaptadorProyectos= new AdaptadorProyectos(proyectos,getContext());
+        AdaptadorProyectos adaptadorProyectos= new AdaptadorProyectos(proyectos,getContext(), this);
         recView.setAdapter(adaptadorProyectos);
     }
 }
