@@ -7,18 +7,18 @@
 
     <fragment
         android:id="@+id/FirstFragment"
-        android:name="com.example.scrummanager.Vistas.FirstFragment"
+        android:name="com.example.scrummanager.Vistas.InicioSesionFragment"
         android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first">
+        tools:layout="@layout/fragment_inicio_sesion">
         <action
             android:id="@+id/action_FirstFragment_to_SecondFragment"
             app:destination="@id/SecondFragment" />
     </fragment>
     <fragment
         android:id="@+id/SecondFragment"
-        android:name="com.example.scrummanager.Vistas.SecondFragment"
+        android:name="com.example.scrummanager.Vistas.RegistrarseFragment"
         android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
+        tools:layout="@layout/fragment_registrarse">
         <action
             android:id="@+id/action_SecondFragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />
