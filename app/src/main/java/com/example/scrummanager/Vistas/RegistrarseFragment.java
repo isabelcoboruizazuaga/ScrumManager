@@ -31,7 +31,7 @@ public class RegistrarseFragment extends Fragment {
     private FirebaseDatabase database;
 
     Button bt_register;
-    private EditText et_username;
+    private EditText et_nombreEmpresa;
     private EditText et_email;
     private EditText et_password;
     @Override
@@ -46,13 +46,13 @@ public class RegistrarseFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        //Layout variables initialization
-        et_username= (EditText)getView().findViewById(R.id.et_username);
+        //Inicialización variables del menú
+        et_nombreEmpresa= (EditText)getView().findViewById(R.id.et_nombreEmpresa);
         et_email = (EditText)getView().findViewById(R.id.et_email);
         et_password = (EditText)getView().findViewById(R.id.et_password);
         bt_register= getView().findViewById(R.id.bt_register);
 
-        //Initialization of Firebase Authentication
+        //Initialización de Firebase Authentication
         mAuth = FirebaseAuth.getInstance();
         //Firebase database initialization
         database= FirebaseDatabase.getInstance();
@@ -73,32 +73,33 @@ public class RegistrarseFragment extends Fragment {
             }
         });
     }
-    //This method will be launched when the user press the Register button
+
+    //Método ejecutado cuando el usuario pulse el botón de registrar
     private void createNewAccount(){
-        String name = et_username.getText().toString();
+        String name = et_nombreEmpresa.getText().toString();
         String email = et_email.getText().toString();
         String password = et_password.getText().toString();
 
-        //If all the text fields are complete the user is register
+        //El usuario se registra sólo si ha rellenado los tres campos
         if(!TextUtils.isEmpty(name)&& !TextUtils.isEmpty(email)&& !TextUtils.isEmpty(password)){
             mAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            //if the account is created correctly the user is redirected to the main activity
+                            //si no hay error al crear la cuenta se redirige a la actividad principal
                             if (task.isSuccessful()) {
-                                //The user is sent a verification Email
+                                //Se le envía un correo de verificación
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 verifyEmail(user);
 
-                                //The user is created and added to the database
+                                //Se crea el perfil de usuario y se envía a la base de datos
                                 String uid = user.getUid();
-                                Empleado userObject= new Empleado(uid,name,email);
-                                dbReference.child("User").child(uid).setValue(userObject);
+                                Empleado userObject= new Empleado(uid,email.substring(0,email .indexOf("@")),"",name);
+                                dbReference.child(name).child("Empleados").child(uid).setValue(userObject);
 
                                 updateUI(user);
                             } else {
-                                //if it fails the user is informed
+                                //Si falla el usuario es informado
                                 updateUI(null);
                             }
                         }
@@ -107,7 +108,7 @@ public class RegistrarseFragment extends Fragment {
 
     }
 
-    //Method to redirect the user to the main activity. If the register failed it won't redirect the user
+    //Redirige al usuario o muestra un error
     private void updateUI(FirebaseUser account){
         if(account != null){
             Toast.makeText(getContext(),"succes",Toast.LENGTH_LONG).show();
@@ -117,7 +118,7 @@ public class RegistrarseFragment extends Fragment {
         }
 
     }
-    //Method for the verification of the user email
+    //Método que envía el email de verificación
     private void verifyEmail(FirebaseUser user){
         user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

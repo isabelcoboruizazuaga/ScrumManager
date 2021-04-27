@@ -39,8 +39,6 @@ public class InicioSesionFragment extends Fragment {
     private static final int RC_GOOGLE_API = 1;
     private DatabaseReference dbReference;
     private FirebaseDatabase database;
-
-    //variables
     Button bt_login, bt_registrar;
     SignInButton bt_googleSingIn;
     EditText et_correo, et_contrasena;
@@ -59,12 +57,13 @@ public class InicioSesionFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        //Inicialización items del layout
         bt_login = getView().findViewById(R.id.bt_iniciarSesion);
         bt_googleSingIn = getView().findViewById(R.id.botonGoogle);
-
         et_correo = getView().findViewById(R.id.et_email);
         et_contrasena = getView().findViewById(R.id.et_password);
 
+        //Inicialización firebase
         database= FirebaseDatabase.getInstance();
         dbReference=database.getReference();
 
@@ -73,6 +72,7 @@ public class InicioSesionFragment extends Fragment {
             public void onClick(View view) {
                 String correo = et_correo.getText().toString();
                 String contrasena = et_contrasena.getText().toString();
+                //Si es correcto pasa a la actividad principal
                 if(iniciaSesion(correo,contrasena)){
                     Toast.makeText(getContext(),"ok", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(getContext(), NavigationDrawerActivity.class));
@@ -81,6 +81,7 @@ public class InicioSesionFragment extends Fragment {
             }
         });
 
+        //Al pulsar el texto de registro pasa a ese fragment
         view.findViewById(R.id.tv_registrarse).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -89,6 +90,7 @@ public class InicioSesionFragment extends Fragment {
             }
         });
 
+        //Ajustes del botón google
         GoogleSignInOptions gso = new GoogleSignInOptions
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -99,6 +101,7 @@ public class InicioSesionFragment extends Fragment {
 
         mAuth = FirebaseAuth.getInstance();
 
+        //Al pulsar el botón pasa al método de actividad
         bt_googleSingIn.setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -110,6 +113,7 @@ public class InicioSesionFragment extends Fragment {
     }
 
     Boolean exito = false;
+    //Si el inicio de sesión es correcto devuelve true
     public boolean iniciaSesion(String correo, String contrasena){
         FirebaseAuth.getInstance().signInWithEmailAndPassword(correo,contrasena).addOnCompleteListener(
                 new OnCompleteListener<AuthResult>() {
@@ -122,21 +126,22 @@ public class InicioSesionFragment extends Fragment {
         return exito;
     }
 
+    //Método que se activa tras pulsar el botón de google
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        //Comprueba que haya sido activado por el botón
         if(requestCode == RC_GOOGLE_API){
             Task<GoogleSignInAccount> gTask = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 GoogleSignInAccount account = gTask.getResult(ApiException.class);
                 if(account != null){
                     mAuth.signInWithCredential(GoogleAuthProvider.getCredential(account.getIdToken(), null));
-
                     if(mAuth.getCurrentUser() != null){
                         FirebaseUser user = mAuth.getCurrentUser();
-
                         String uid = user.getUid();
 
+                        //Si el usuario existe no lo modifica, si no existe añade los datos nuevos
                         dbReference.child("User").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -144,7 +149,7 @@ public class InicioSesionFragment extends Fragment {
                                     startActivity(new Intent(getContext(),NavigationDrawerActivity.class));
                                     Toast.makeText(getContext(),"ok", Toast.LENGTH_LONG).show();
                                 } else {
-                                    Empleado userObject= new Empleado(user.getEmail(),user.getDisplayName(),uid);
+                                    Empleado userObject= new Empleado(user.getEmail(),user.getDisplayName(),uid,"");
                                     dbReference.child("User").child(uid).setValue(userObject);
                                     startActivity(new Intent(getContext(),NavigationDrawerActivity.class));
                                 }

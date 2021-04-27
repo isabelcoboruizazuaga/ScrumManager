@@ -57,7 +57,7 @@ public class Empleados extends Fragment {
         LinearLayoutManager layoutManager= new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
         recView.setLayoutManager(layoutManager);
 
-        empleados =new ArrayList<Empleado>();
+       /* empleados =new ArrayList<Empleado>();
         empleado = new Empleado("1","Empleado1", "Apellido");
         empleados.add(empleado);
         empleado = new Empleado("1","Empleado2", "Apellido");
@@ -71,7 +71,7 @@ public class Empleados extends Fragment {
         empleado = new Empleado("1","Empleado6", "Apellido");
         empleados.add(empleado);
         empleado = new Empleado("1","Empleado7", "Apellido");
-        empleados.add(empleado);
+        empleados.add(empleado);*/
 
         AdaptadorEmpleados adaptadorEmpleados= new AdaptadorEmpleados(empleados,getContext());
         recView.setAdapter(adaptadorEmpleados);

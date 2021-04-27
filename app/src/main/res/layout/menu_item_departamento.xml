@@ -31,19 +31,21 @@
 
                     <com.example.scrummanager.Controladores.ProporcionalImageButton
                         android:id="@+id/btn_verDepartamento"
+                        android:backgroundTint="@color/white"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:adjustViewBounds="true"
                         android:scaleType="centerCrop"
-                        app:srcCompat="@drawable/profile_pic" />
+                        app:srcCompat="@drawable/view_icon" />
 
                     <com.example.scrummanager.Controladores.ProporcionalImageButton
                         android:id="@+id/btn_atrasDepartamento"
+                        android:backgroundTint="@color/white"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:adjustViewBounds="true"
                         android:scaleType="centerCrop"
-                        app:srcCompat="@drawable/profile_pic" />
+                        app:srcCompat="@drawable/back_icon" />
 
                 </LinearLayout>
 
@@ -55,19 +57,21 @@
 
                     <com.example.scrummanager.Controladores.ProporcionalImageButton
                         android:id="@+id/btn_editarDepartamento"
+                        android:backgroundTint="@color/white"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:adjustViewBounds="true"
                         android:scaleType="centerCrop"
-                        app:srcCompat="@drawable/profile_pic" />
+                        app:srcCompat="@drawable/edit_icon" />
 
                     <com.example.scrummanager.Controladores.ProporcionalImageButton
                         android:id="@+id/btn_borrarDepartamento"
+                        android:backgroundTint="@color/white"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:adjustViewBounds="true"
                         android:scaleType="centerCrop"
-                        app:srcCompat="@drawable/profile_pic" />
+                        app:srcCompat="@drawable/bin_icon" />
 
                 </LinearLayout>
             </LinearLayout>

@@ -3,6 +3,7 @@ package com.example.scrummanager.Modelos;
 import java.io.Serializable;
 
 public class Empleado implements Serializable {
+    private String uid;
     private String nifEmpleado;
     private String nombreEmpleado;
     private String apellidoEmpleado;
@@ -11,15 +12,43 @@ public class Empleado implements Serializable {
     private Direccion direccionEmpleado;
     private String especialidadEmpleado;
     private String idDepartamento;
+    private int nivelJerarquia; //1 -> Jefe, 2 -> Jefe departamento,  3 -> Project Manager, 4-> Empleado base
+    private String empresa;
     private boolean showMenu=false;
 
     public Empleado() {
     }
 
-    public Empleado(String nifEmpleado, String nombreEmpleado, String apellidoEmpleado) {
-        this.nifEmpleado = nifEmpleado;
+    public Empleado(String uid, String nombreEmpleado, String apellidoEmpleado, String empresa) {
+        this.uid = uid;
         this.nombreEmpleado = nombreEmpleado;
         this.apellidoEmpleado = apellidoEmpleado;
+        this.nivelJerarquia=4;
+        this.empresa= empresa;
+    }
+
+    public String getEmpresa() {
+        return empresa;
+    }
+
+    public void setEmpresa(String empresa) {
+        this.empresa = empresa;
+    }
+
+    public int getNivelJerarquia() {
+        return nivelJerarquia;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setNifEmpleado(String nifEmpleado) {
+        this.nifEmpleado = nifEmpleado;
+    }
+
+    public void setNivelJerarquia(int nivelJerarquia) {
+        this.nivelJerarquia = nivelJerarquia;
     }
 
     public boolean isShowMenu() {
