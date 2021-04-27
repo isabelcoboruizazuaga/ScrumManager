@@ -107,7 +107,12 @@ public class AdaptadorClientes extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemCount() {
-        return clientes.size();
+
+        try{
+            return clientes.size();
+        }catch (NullPointerException e){
+            return 0;
+        }
     }
 
     @Override

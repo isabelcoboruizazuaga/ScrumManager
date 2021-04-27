@@ -110,7 +110,11 @@ public class AdaptadorDepartamentos extends RecyclerView.Adapter<RecyclerView.Vi
 
     @Override
     public int getItemCount() {
-        return departamentos.size();
+        try{
+            return departamentos.size();
+        }catch (NullPointerException e){
+            return 0;
+        }
     }
 
     @Override

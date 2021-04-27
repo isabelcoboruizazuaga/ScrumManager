@@ -2,6 +2,7 @@ package com.example.scrummanager.Vistas;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,10 +73,12 @@ public class InicioSesionFragment extends Fragment {
             public void onClick(View view) {
                 String correo = et_correo.getText().toString();
                 String contrasena = et_contrasena.getText().toString();
-                //Si es correcto pasa a la actividad principal
-                if(iniciaSesion(correo,contrasena)){
-                    Toast.makeText(getContext(),"ok", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(getContext(), NavigationDrawerActivity.class));
+                if(!TextUtils.isEmpty(correo)&& !TextUtils.isEmpty(contrasena)) {
+                    //Si es correcto pasa a la actividad principal
+                    if (iniciaSesion(correo, contrasena)) {
+                        Toast.makeText(getContext(), "ok", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getContext(), NavigationDrawerActivity.class));
+                    }
                 }
 
             }

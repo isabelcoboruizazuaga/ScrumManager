@@ -106,7 +106,11 @@ public class AdaptadorEmpleados extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemCount() {
-        return empleados.size();
+        try {
+            return empleados.size();
+        }catch (NullPointerException e){
+            return 0;
+        }
     }
 
     @Override

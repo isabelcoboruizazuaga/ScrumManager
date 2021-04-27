@@ -117,7 +117,11 @@ public class AdaptadorProyectos extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemCount() {
-        return proyectos.size();
+        try{
+            return proyectos.size();
+        }catch (NullPointerException e){
+            return 0;
+        }
     }
 
     @Override

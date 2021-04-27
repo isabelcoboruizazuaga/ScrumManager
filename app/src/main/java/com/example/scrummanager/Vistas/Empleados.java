@@ -57,21 +57,21 @@ public class Empleados extends Fragment {
         LinearLayoutManager layoutManager= new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
         recView.setLayoutManager(layoutManager);
 
-       /* empleados =new ArrayList<Empleado>();
-        empleado = new Empleado("1","Empleado1", "Apellido");
+        empleados =new ArrayList<Empleado>();
+        empleado = new Empleado("1","Empleado1", "Apellido","");
         empleados.add(empleado);
-        empleado = new Empleado("1","Empleado2", "Apellido");
+        empleado = new Empleado("1","Empleado2", "Apellido","");
         empleados.add(empleado);
-        empleado = new Empleado("1","Empleado3", "Apellido");
+        empleado = new Empleado("1","Empleado3", "Apellido","");
         empleados.add(empleado);
-        empleado = new Empleado("1","Empleado4", "Apellido");
+        empleado = new Empleado("1","Empleado4", "Apellido","");
         empleados.add(empleado);
-        empleado = new Empleado("1","Empleado5", "Apellido");
+        empleado = new Empleado("1","Empleado5", "Apellido","");
         empleados.add(empleado);
-        empleado = new Empleado("1","Empleado6", "Apellido");
+        empleado = new Empleado("1","Empleado6", "Apellido","");
         empleados.add(empleado);
-        empleado = new Empleado("1","Empleado7", "Apellido");
-        empleados.add(empleado);*/
+        empleado = new Empleado("1","Empleado7", "Apellido","");
+        empleados.add(empleado);
 
         AdaptadorEmpleados adaptadorEmpleados= new AdaptadorEmpleados(empleados,getContext());
         recView.setAdapter(adaptadorEmpleados);
