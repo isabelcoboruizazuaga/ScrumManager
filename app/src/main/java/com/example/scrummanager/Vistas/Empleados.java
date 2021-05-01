@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -39,6 +41,7 @@ public class Empleados extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -49,8 +52,17 @@ public class Empleados extends Fragment {
     }
 
     @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        //Se ocultan las opciones del menú que no pertenecen a este fragment
+        MenuItem item=menu.findItem(R.id.menuCosaInutil);
+        if(item!=null)
+            item.setVisible(false);
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         //Inicialización del recycler view
         recView= view.findViewById(R.id.rv_empleados);
         //Creación del layout y asignación al recycler
@@ -58,19 +70,19 @@ public class Empleados extends Fragment {
         recView.setLayoutManager(layoutManager);
 
         empleados =new ArrayList<Empleado>();
-        empleado = new Empleado("1","Empleado1", "Apellido","");
+        empleado = new Empleado("1","Empleado1", "Apellido");
         empleados.add(empleado);
-        empleado = new Empleado("1","Empleado2", "Apellido","");
+        empleado = new Empleado("1","Empleado2", "Apellido");
         empleados.add(empleado);
-        empleado = new Empleado("1","Empleado3", "Apellido","");
+        empleado = new Empleado("1","Empleado3", "Apellido");
         empleados.add(empleado);
-        empleado = new Empleado("1","Empleado4", "Apellido","");
+        empleado = new Empleado("1","Empleado4", "Apellido");
         empleados.add(empleado);
-        empleado = new Empleado("1","Empleado5", "Apellido","");
+        empleado = new Empleado("1","Empleado5", "Apellido");
         empleados.add(empleado);
-        empleado = new Empleado("1","Empleado6", "Apellido","");
+        empleado = new Empleado("1","Empleado6", "Apellido");
         empleados.add(empleado);
-        empleado = new Empleado("1","Empleado7", "Apellido","");
+        empleado = new Empleado("1","Empleado7", "Apellido");
         empleados.add(empleado);
 
         AdaptadorEmpleados adaptadorEmpleados= new AdaptadorEmpleados(empleados,getContext());

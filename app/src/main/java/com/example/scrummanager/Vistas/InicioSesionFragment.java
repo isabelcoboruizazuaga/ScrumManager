@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.scrummanager.Modelos.Empleado;
+import com.example.scrummanager.Modelos.Empresa;
 import com.example.scrummanager.NavigationDrawerActivity;
 import com.example.scrummanager.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -35,6 +36,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.UUID;
 
 public class InicioSesionFragment extends Fragment {
     private static final int RC_GOOGLE_API = 1;
@@ -152,8 +155,14 @@ public class InicioSesionFragment extends Fragment {
                                     startActivity(new Intent(getContext(),NavigationDrawerActivity.class));
                                     Toast.makeText(getContext(),"ok", Toast.LENGTH_LONG).show();
                                 } else {
-                                    Empleado userObject= new Empleado(user.getEmail(),user.getDisplayName(),uid,"");
-                                    dbReference.child("User").child(uid).setValue(userObject);
+                                    //Se crea la empresa
+                                    String eid=UUID.randomUUID().toString();
+                                    Empresa empresa= new Empresa(eid, "Empresisa");
+                                    dbReference.child(eid).child("NombreEmpresa").setValue("Empresisa");
+
+                                    dbReference.child(eid).child("NombreEmpresa").setValue("Empresisa");
+                                    Empleado userObject= new Empleado(user.getEmail(),user.getDisplayName(),uid);
+                                    dbReference.child(eid).child("Empleados").child(uid).setValue(userObject);
                                     startActivity(new Intent(getContext(),NavigationDrawerActivity.class));
                                 }
                             }

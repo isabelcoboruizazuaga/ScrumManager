@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.scrummanager.Modelos.Empleado;
+import com.example.scrummanager.Modelos.Empresa;
 import com.example.scrummanager.NavigationDrawerActivity;
 import com.example.scrummanager.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -24,6 +25,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.UUID;
 
 public class RegistrarseFragment extends Fragment {
     private FirebaseAuth mAuth;
@@ -76,12 +79,12 @@ public class RegistrarseFragment extends Fragment {
 
     //Método ejecutado cuando el usuario pulse el botón de registrar
     private void createNewAccount(){
-        String name = et_nombreEmpresa.getText().toString();
+        String nombreEmpresa = et_nombreEmpresa.getText().toString();
         String email = et_email.getText().toString();
         String password = et_password.getText().toString();
 
         //El usuario se registra sólo si ha rellenado los tres campos
-        if(!TextUtils.isEmpty(name)&& !TextUtils.isEmpty(email)&& !TextUtils.isEmpty(password)){
+        if(!TextUtils.isEmpty(nombreEmpresa)&& !TextUtils.isEmpty(email)&& !TextUtils.isEmpty(password)){
             mAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
@@ -92,10 +95,15 @@ public class RegistrarseFragment extends Fragment {
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 verifyEmail(user);
 
+                                //Se crea la empresa
+                                String eid=UUID.randomUUID().toString();
+                                Empresa empresa= new Empresa(eid, nombreEmpresa);
+                                dbReference.child(eid).child("NombreEmpresa").setValue(nombreEmpresa);
+
                                 //Se crea el perfil de usuario y se envía a la base de datos
                                 String uid = user.getUid();
-                                Empleado userObject= new Empleado(uid,email.substring(0,email .indexOf("@")),"",name);
-                                dbReference.child(name).child("Empleados").child(uid).setValue(userObject);
+                                Empleado userObject= new Empleado(uid,email.substring(0,email .indexOf("@")),"");
+                                dbReference.child(eid).child("Empleados").child(uid).setValue(userObject);
 
                                 updateUI(user);
                             } else {
