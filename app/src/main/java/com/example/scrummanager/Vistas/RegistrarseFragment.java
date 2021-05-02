@@ -1,7 +1,9 @@
 package com.example.scrummanager.Vistas;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,7 +52,7 @@ public class RegistrarseFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         //Inicialización variables del menú
-        et_nombreEmpresa= (EditText)getView().findViewById(R.id.et_nombreEmpresa);
+        et_nombreEmpresa= (EditText)getView().findViewById(R.id.et_nombreEmpleado);
         et_email = (EditText)getView().findViewById(R.id.et_email);
         et_password = (EditText)getView().findViewById(R.id.et_password);
         bt_register= getView().findViewById(R.id.bt_register);
@@ -64,7 +66,7 @@ public class RegistrarseFragment extends Fragment {
         bt_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createNewAccount();
+                crearCuenta();
             }
         });
 
@@ -78,7 +80,7 @@ public class RegistrarseFragment extends Fragment {
     }
 
     //Método ejecutado cuando el usuario pulse el botón de registrar
-    private void createNewAccount(){
+    private void crearCuenta(){
         String nombreEmpresa = et_nombreEmpresa.getText().toString();
         String email = et_email.getText().toString();
         String password = et_password.getText().toString();
@@ -99,10 +101,15 @@ public class RegistrarseFragment extends Fragment {
                                 String eid=UUID.randomUUID().toString();
                                 Empresa empresa= new Empresa(eid, nombreEmpresa);
                                 dbReference.child(eid).child("NombreEmpresa").setValue(nombreEmpresa);
+                                //Se añade a las preferencias para no tener que recuperarlo más
+                                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+                                SharedPreferences.Editor edit_pref = prefs.edit();
+                                edit_pref.putString("eid", eid);
+                                edit_pref.commit();
 
                                 //Se crea el perfil de usuario y se envía a la base de datos
                                 String uid = user.getUid();
-                                Empleado userObject= new Empleado(uid,email.substring(0,email .indexOf("@")),"");
+                                Empleado userObject= new Empleado(uid,email.substring(0,email .indexOf("@")),"",eid);
                                 dbReference.child(eid).child("Empleados").child(uid).setValue(userObject);
 
                                 updateUI(user);

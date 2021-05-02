@@ -7,6 +7,8 @@ import java.util.Dictionary;
 
 public class Proyecto implements Serializable {
     private String idProyecto;
+    private String idEmpresa;
+    
     private String nombreProyecto;
     private Dictionary<Empleado, String> equipoProyecto;
     private Cliente cliente;

@@ -4,25 +4,37 @@ import java.io.Serializable;
 
 public class Empleado implements Serializable {
     private String uid;
+    private String idEmpresa;
+    private String idDepartamento;
+
     private String nifEmpleado;
     private String nombreEmpleado;
     private String apellidoEmpleado;
     private String emailEmpleado;
     private String telefonoEmpleado;
+
     private Direccion direccionEmpleado;
     private String especialidadEmpleado;
-    private String idDepartamento;
     private int nivelJerarquia; //1 -> Jefe, 2 -> Jefe departamento,  3 -> Project Manager, 4-> Empleado base
     private boolean showMenu=false;
 
     public Empleado() {
     }
 
-    public Empleado(String uid, String nombreEmpleado, String apellidoEmpleado) {
+    public Empleado(String uid, String nombreEmpleado, String apellidoEmpleado, String idEmpresa) {
         this.uid = uid;
         this.nombreEmpleado = nombreEmpleado;
         this.apellidoEmpleado = apellidoEmpleado;
         this.nivelJerarquia=4;
+        this.idEmpresa=idEmpresa;
+    }
+
+    public String getIdEmpresa() {
+        return idEmpresa;
+    }
+
+    public void setIdEmpresa(String idEmpresa) {
+        this.idEmpresa = idEmpresa;
     }
 
     public int getNivelJerarquia() {

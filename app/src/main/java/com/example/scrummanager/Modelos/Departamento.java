@@ -5,19 +5,23 @@ import java.util.ArrayList;
 
 public class Departamento implements Serializable {
     private String idDepartamento;
+    private String idEmpresa;
+
     private String nombreDepartamento;
-    private String nifJefeDepartamento;
+    private String uidJefeDepartamento;
     private String urlFotoDepartamento;
-    private ArrayList<Empleado> miembrosDepartamento;
+
+    private ArrayList<String> miembrosDepartamento; //guarda la uid de cada miembro
     private ArrayList<Proyecto> ListaProyectosDepartamento;
     private boolean showMenu=false;
 
     public Departamento() {
     }
 
-    public Departamento(String idDepartamento, String nombreDepartamento) {
+    public Departamento(String idDepartamento, String nombreDepartamento, String idEmpresa) {
         this.idDepartamento = idDepartamento;
         this.nombreDepartamento = nombreDepartamento;
+        this.idEmpresa= idEmpresa;
     }
 
     public boolean isShowMenu() {
@@ -52,19 +56,19 @@ public class Departamento implements Serializable {
         this.nombreDepartamento = nombreDepartamento;
     }
 
-    public String getNifJefeDepartamento() {
-        return nifJefeDepartamento;
+    public String getUidJefeDepartamento() {
+        return uidJefeDepartamento;
     }
 
-    public void setNifJefeDepartamento(String nifJefeDepartamento) {
-        this.nifJefeDepartamento = nifJefeDepartamento;
+    public void setUidJefeDepartamento(String uidJefeDepartamento) {
+        this.uidJefeDepartamento = uidJefeDepartamento;
     }
 
-    public ArrayList<Empleado> getMiembrosDepartamento() {
+    public ArrayList<String> getMiembrosDepartamento() {
         return miembrosDepartamento;
     }
 
-    public void setMiembrosDepartamento(ArrayList<Empleado> miembrosDepartamento) {
+    public void setMiembrosDepartamento(ArrayList<String> miembrosDepartamento) {
         this.miembrosDepartamento = miembrosDepartamento;
     }
 

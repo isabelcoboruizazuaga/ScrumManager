@@ -3,7 +3,9 @@ package com.example.scrummanager.Modelos;
 import java.io.Serializable;
 
 public class Cliente implements Serializable {
+    private String idEmpresa;
     private String nifCliente;
+
     private String nombreCliente;
     private String apellidoCliente;
     private String emailCliente;

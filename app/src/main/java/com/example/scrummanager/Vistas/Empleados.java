@@ -1,5 +1,6 @@
 package com.example.scrummanager.Vistas;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.scrummanager.Controladores.AdaptadorDepartamentos;
 import com.example.scrummanager.Controladores.AdaptadorEmpleados;
@@ -50,15 +52,6 @@ public class Empleados extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_empleados, container, false);
     }
-
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        //Se ocultan las opciones del menú que no pertenecen a este fragment
-        MenuItem item=menu.findItem(R.id.menuCosaInutil);
-        if(item!=null)
-            item.setVisible(false);
-    }
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -70,22 +63,43 @@ public class Empleados extends Fragment {
         recView.setLayoutManager(layoutManager);
 
         empleados =new ArrayList<Empleado>();
-        empleado = new Empleado("1","Empleado1", "Apellido");
+        empleado = new Empleado("1","Empleado1", "Apellido","1");
         empleados.add(empleado);
-        empleado = new Empleado("1","Empleado2", "Apellido");
+        empleado = new Empleado("1","Empleado2", "Apellido","1");
         empleados.add(empleado);
-        empleado = new Empleado("1","Empleado3", "Apellido");
+        empleado = new Empleado("1","Empleado3", "Apellido","1");
         empleados.add(empleado);
-        empleado = new Empleado("1","Empleado4", "Apellido");
+        empleado = new Empleado("1","Empleado4", "Apellido","1");
         empleados.add(empleado);
-        empleado = new Empleado("1","Empleado5", "Apellido");
+        empleado = new Empleado("1","Empleado5", "Apellido","1");
         empleados.add(empleado);
-        empleado = new Empleado("1","Empleado6", "Apellido");
+        empleado = new Empleado("1","Empleado6", "Apellido","1");
         empleados.add(empleado);
-        empleado = new Empleado("1","Empleado7", "Apellido");
+        empleado = new Empleado("1","Empleado7", "Apellido","1");
         empleados.add(empleado);
 
         AdaptadorEmpleados adaptadorEmpleados= new AdaptadorEmpleados(empleados,getContext());
         recView.setAdapter(adaptadorEmpleados);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        //Se ocultan las opciones del menú que no pertenecen a este fragment
+        MenuItem item=menu.findItem(R.id.menuCosaInutil);
+        if(item!=null)
+            item.setVisible(false);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menuAnEmp:
+                Toast.makeText(getContext(), "Añadir", Toast.LENGTH_LONG).show();
+                startActivity(new Intent(getContext(), NuevoEmpleadoActivity.class));
+                break;
+
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
