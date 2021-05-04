@@ -9,6 +9,7 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -42,6 +43,7 @@ public class NuevoEmpleadoActivity extends AppCompatActivity {
     private ArrayList<Departamento> departamentos;
     private ArrayList<String> departamentosNombres;
     private Empleado empleadoManager;
+    private String idDepartamento;
 
 
     private Spinner spinnerDepartamento;
@@ -101,6 +103,20 @@ public class NuevoEmpleadoActivity extends AppCompatActivity {
 
         rellenarSpinnerDepartamento();
 
+
+        spinnerDepartamento.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parentView,View selectedItemView, int position, long id) {
+                //La posición del nombre de departamento equivale a la de la lista de objetos departamento
+                int posNombre =  spinnerDepartamento.getSelectedItemPosition();
+                //Se asigna la id del departamento de esa posición para poder introducirlo en el nuevo empleado
+                idDepartamento= departamentos.get(posNombre).getIdDepartamento();
+            }
+
+            public void onNothingSelected(AdapterView<?> arg0) {// do nothing
+            }
+
+        });
+
         btn_registrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,6 +130,8 @@ public class NuevoEmpleadoActivity extends AppCompatActivity {
         ArrayAdapter<String> departamentoAdapter= new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, departamentosNombres);
         departamentoAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerDepartamento.setAdapter(departamentoAdapter);
+
+
     }
 
     //Método ejecutado cuando el usuario pulse el botón de registrar
@@ -144,7 +162,7 @@ public class NuevoEmpleadoActivity extends AppCompatActivity {
                                 String uid = user.getUid();
                                 Empleado empleadoObjeto= new Empleado(uid,nombre,apellido,eid);
                                 empleadoObjeto.setEmailEmpleado(email);
-                                empleadoObjeto.setIdDepartamento("1");
+                                empleadoObjeto.setIdDepartamento(idDepartamento);
                                 dbReference.child(eid).child("Empleados").child(uid).setValue(empleadoObjeto);
 
                                 updateUI(user);

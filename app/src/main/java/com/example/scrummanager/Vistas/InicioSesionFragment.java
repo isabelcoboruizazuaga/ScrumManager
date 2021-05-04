@@ -76,7 +76,6 @@ public class InicioSesionFragment extends Fragment {
         et_correo = getView().findViewById(R.id.et_email);
         et_contrasena = getView().findViewById(R.id.et_password);
         et_idEmpresa= getView().findViewById(R.id.et_idEmpresa);
-
         //Inicialización firebase
         database= FirebaseDatabase.getInstance();
         dbReference=database.getReference();
@@ -177,8 +176,9 @@ public class InicioSesionFragment extends Fragment {
                                 edit_pref.putString("eid", idEmpresa);
                                 edit_pref.commit();
 
-                                Toast.makeText(getContext(), idEmpresa, Toast.LENGTH_LONG).show();
                                 startActivity(new Intent(getContext(), NavigationDrawerActivity.class));
+                            }else {
+                                Toast.makeText(getContext(),"El id de empresa no es correcto",Toast.LENGTH_SHORT).show();
                             }
                         }
                         @Override
@@ -188,8 +188,7 @@ public class InicioSesionFragment extends Fragment {
                     });
                 }
             }else{
-                System.out.println("TERRIBLE ERROR");
-                Toast.makeText(getContext(),"TERRIBLE ERROR",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),"Error al iniciar sesión",Toast.LENGTH_SHORT).show();
             }
         }
     }
