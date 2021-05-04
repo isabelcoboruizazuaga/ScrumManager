@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,15 +43,19 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.UUID;
 
 public class InicioSesionFragment extends Fragment {
-    private static final int RC_GOOGLE_API = 1;
+    Button bt_login;
+    EditText et_correo, et_contrasena,et_idEmpresa;
+
     private DatabaseReference dbReference;
     private FirebaseDatabase database;
-    private boolean primeraVez;
-    Button bt_login;
-    SignInButton bt_googleSingIn;
-    EditText et_correo, et_contrasena,et_idEmpresa;
     FirebaseAuth mAuth;
+
+    private boolean primeraVez, eidCorrecto, exito= false;
+
+    //TODO BORRAR ESTO
+    SignInButton bt_googleSingIn;
     GoogleSignInClient client_google;
+    private static final int RC_GOOGLE_API = 1;
 
 
     @Override
@@ -84,7 +89,7 @@ public class InicioSesionFragment extends Fragment {
             et_idEmpresa.setVisibility(View.VISIBLE);
         }else{
             primeraVez=false;
-            et_idEmpresa.setVisibility(View.INVISIBLE);
+            et_idEmpresa.setText(eid);
         }
 
         bt_login.setOnClickListener(new View.OnClickListener() {
@@ -94,24 +99,16 @@ public class InicioSesionFragment extends Fragment {
                 String contrasena = et_contrasena.getText().toString();
                 String idEmpresa= et_idEmpresa.getText().toString();
 
-                if(!TextUtils.isEmpty(correo)&& !TextUtils.isEmpty(contrasena)) {
-                    //Si es la primera vez que se inicia sesión se necesitará el id de empresa, si no no es necesario
-                    if(!TextUtils.isEmpty(idEmpresa) && primeraVez){
-                        //Se añade el id de empresa a las preferencias para no tener que recuperarlo más
-                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-                        SharedPreferences.Editor edit_pref = prefs.edit();
-                        edit_pref.putString("eid", idEmpresa);
-                        edit_pref.commit();
-
-                        //Si es correcto pasa a la actividad principal
+                //Si es la primera vez que se inicia sesión se necesitará el id de empresa, si no no es necesario
+                if(primeraVez){
+                    Toast.makeText(getContext(),"aaaaaaa",Toast.LENGTH_SHORT).show();
+                    inicioPrimeraVez(correo,contrasena,idEmpresa);
+                } else{
+                    //La contraseña y correo no deben estar vacíos
+                    if(!TextUtils.isEmpty(correo)&& !TextUtils.isEmpty(contrasena)) {
+                        //Si el inicio de sesión es correcto pasa a la actividad principal
                         if (iniciaSesion(correo, contrasena)) {
                             Toast.makeText(getContext(), idEmpresa, Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getContext(), NavigationDrawerActivity.class));
-                        }
-                    }else {
-                        //Si es correcto pasa a la actividad principal
-                        if (iniciaSesion(correo, contrasena)) {
-                            Toast.makeText(getContext(), eid +"aaaaa", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(getContext(), NavigationDrawerActivity.class));
                         }
                     }
@@ -149,11 +146,8 @@ public class InicioSesionFragment extends Fragment {
             }
         });
     }
-
-    Boolean exito = false;
     //Si el inicio de sesión es correcto devuelve true
     public boolean iniciaSesion(String correo, String contrasena){
-        //TODO CARGAR EMPRESAID
         FirebaseAuth.getInstance().signInWithEmailAndPassword(correo,contrasena).addOnCompleteListener(
                 new OnCompleteListener<AuthResult>() {
                     @Override
@@ -164,6 +158,47 @@ public class InicioSesionFragment extends Fragment {
         );
         return exito;
     }
+
+    private void inicioPrimeraVez(String correo, String contrasena, String idEmpresa){
+        //La contraseña y correo no deben estar vacíos
+        if(!TextUtils.isEmpty(correo)&& !TextUtils.isEmpty(contrasena)) {
+            //Si el inicio de sesión es correcto comprueba que la empresa también lo sea
+            if (iniciaSesion(correo, contrasena)) {
+                if(!TextUtils.isEmpty(idEmpresa)){
+                   String uid =FirebaseAuth.getInstance().getUid();
+                    //Se comprueba que el id de empresa sea correcto y el usuario esté dentro
+                    dbReference.child(idEmpresa).child("Empleados").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if(dataSnapshot.exists()) {
+                                //Se añade el id de empresa a las preferencias para no tener que recuperarlo más
+                                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+                                SharedPreferences.Editor edit_pref = prefs.edit();
+                                edit_pref.putString("eid", idEmpresa);
+                                edit_pref.commit();
+
+                                Toast.makeText(getContext(), idEmpresa, Toast.LENGTH_LONG).show();
+                                startActivity(new Intent(getContext(), NavigationDrawerActivity.class));
+                            }
+                        }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.e("onDataChange", "Error!", databaseError.toException());
+                        }
+                    });
+                }
+            }else{
+                System.out.println("TERRIBLE ERROR");
+                Toast.makeText(getContext(),"TERRIBLE ERROR",Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+
+
+
+
+
 
     //Método que se activa tras pulsar el botón de google
     @Override
@@ -185,6 +220,13 @@ public class InicioSesionFragment extends Fragment {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 if(snapshot.exists()){
+                                    String eid="ad96328d-ce92-4da7-88cf-b7ff81d0e6d3";
+                                    //Se añade a las preferencias para no tener que recuperarlo más
+                                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+                                    SharedPreferences.Editor edit_pref = prefs.edit();
+                                    edit_pref.putString("eid", eid);
+                                    edit_pref.commit();
+
                                     startActivity(new Intent(getContext(),NavigationDrawerActivity.class));
                                     Toast.makeText(getContext(),"ok", Toast.LENGTH_LONG).show();
                                 } else {
