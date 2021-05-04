@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,12 +49,18 @@ public class AdaptadorEmpleados extends RecyclerView.Adapter<RecyclerView.ViewHo
         empleado = empleados.get(position);
 
         String nombreEmpleado = empleado.getNombreEmpleado();
+        String apellidoEmpleado = empleado.getApellidoEmpleado();
+        String emailEmpleado = empleado.getEmailEmpleado();
+        String departamentoEmpleado = empleado.getIdDepartamento();
 
         //Si se está mostrando el Empleado
         if (holder instanceof AdaptadorEmpleadosViewHolder) {
 
             //Se incluye el empleado en el layout
-            ((AdaptadorEmpleadosViewHolder) holder).tv_nombreEmpleado.setText(nombreEmpleado.toString());
+            ((AdaptadorEmpleadosViewHolder) holder).tv_nombreEmpleado.setText(nombreEmpleado);
+            ((AdaptadorEmpleadosViewHolder) holder).tv_apellidoEmpleado.setText(apellidoEmpleado);
+            ((AdaptadorEmpleadosViewHolder) holder).tv_departamentoEmpleado.setText(departamentoEmpleado);
+            ((AdaptadorEmpleadosViewHolder) holder).tv_emailEmpleado.setText(emailEmpleado);
 
             //Si se mantiene pulsado se abre el menú de opciones
             ((AdaptadorEmpleadosViewHolder) holder).itemView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -124,7 +131,8 @@ public class AdaptadorEmpleados extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public class AdaptadorEmpleadosViewHolder extends RecyclerView.ViewHolder {
         //items del layout
-        private TextView tv_nombreEmpleado, iv_fotoEmpleado;
+        private TextView tv_nombreEmpleado,tv_apellidoEmpleado,tv_emailEmpleado,tv_departamentoEmpleado;
+        private ImageView iv_fotoEmpleado;
 
         public AdaptadorEmpleadosViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -134,7 +142,10 @@ public class AdaptadorEmpleados extends RecyclerView.Adapter<RecyclerView.ViewHo
 
             //inicializacón de los elementos del layout
             tv_nombreEmpleado = itemView.findViewById(R.id.tv_nombreEmpleado);
-            //iv_fotoDepartamento= itemView.findViewById(R.id.iv_fotoDepartamento);
+            tv_apellidoEmpleado = itemView.findViewById(R.id.tv_apellidoEmpleado);
+            tv_emailEmpleado = itemView.findViewById(R.id.tv_emailEmpleado);
+            tv_departamentoEmpleado = itemView.findViewById(R.id.tv_departamentoEmpleado);
+            iv_fotoEmpleado= itemView.findViewById(R.id.iv_fotoEmpleado);
 
         }
     }
