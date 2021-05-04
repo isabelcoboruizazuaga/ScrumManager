@@ -100,9 +100,7 @@ public class NuevoEmpleadoActivity extends AppCompatActivity {
         departamentosNombres.add(dpt.getNombreDepartamento());
         departamentos.add(dpt);
 
-
         rellenarSpinnerDepartamento();
-
 
         spinnerDepartamento.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parentView,View selectedItemView, int position, long id) {
@@ -111,27 +109,22 @@ public class NuevoEmpleadoActivity extends AppCompatActivity {
                 //Se asigna la id del departamento de esa posición para poder introducirlo en el nuevo empleado
                 idDepartamento= departamentos.get(posNombre).getIdDepartamento();
             }
-
             public void onNothingSelected(AdapterView<?> arg0) {// do nothing
             }
 
         });
-
         btn_registrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 crearCuenta();
             }
         });
-
     }
 
     private void rellenarSpinnerDepartamento(){
         ArrayAdapter<String> departamentoAdapter= new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, departamentosNombres);
         departamentoAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerDepartamento.setAdapter(departamentoAdapter);
-
-
     }
 
     //Método ejecutado cuando el usuario pulse el botón de registrar
@@ -143,35 +136,41 @@ public class NuevoEmpleadoActivity extends AppCompatActivity {
         String apellido = et_apellidos.getText().toString();
 
         //El usuario se registra sólo si ha rellenado los tres campos
-        if(!TextUtils.isEmpty(email)&& !TextUtils.isEmpty(email)&& !TextUtils.isEmpty(contrasenia)){
-            mAuthWorker.createUserWithEmailAndPassword(email, contrasenia)
-                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            //si no hay error al crear la cuenta se redirige a la actividad principal
-                            if (task.isSuccessful()) {
-                                //Se le envía un correo de verificación
-                                FirebaseUser user = mAuthWorker.getCurrentUser();
-                                verificarEmail(user);
+        if(!TextUtils.isEmpty(nombre)&& !TextUtils.isEmpty(apellido)&& !TextUtils.isEmpty(email)&& !TextUtils.isEmpty(contrasenia)){
+            if(contrasenia.length()>=6){
+                mAuthWorker.createUserWithEmailAndPassword(email, contrasenia)
+                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                //si no hay error al crear la cuenta se redirige a la actividad principal
+                                if (task.isSuccessful()) {
+                                    //Se le envía un correo de verificación
+                                    FirebaseUser user = mAuthWorker.getCurrentUser();
+                                    verificarEmail(user);
 
-                                //Se añade a la empresa
-                                SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-                                String eid= sp.getString("eid","-1");
+                                    //Se añade a la empresa
+                                    SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+                                    String eid= sp.getString("eid","-1");
 
-                                //Se crea el perfil de usuario y se envía a la base de datos
-                                String uid = user.getUid();
-                                Empleado empleadoObjeto= new Empleado(uid,nombre,apellido,eid);
-                                empleadoObjeto.setEmailEmpleado(email);
-                                empleadoObjeto.setIdDepartamento(idDepartamento);
-                                dbReference.child(eid).child("Empleados").child(uid).setValue(empleadoObjeto);
+                                    //Se crea el perfil de usuario y se envía a la base de datos
+                                    String uid = user.getUid();
+                                    Empleado empleadoObjeto= new Empleado(uid,nombre,apellido,eid);
+                                    empleadoObjeto.setEmailEmpleado(email);
+                                    empleadoObjeto.setIdDepartamento(idDepartamento);
+                                    dbReference.child(eid).child("Empleados").child(uid).setValue(empleadoObjeto);
 
-                                updateUI(user);
-                            } else {
-                                //Si falla el usuario es informado
-                                updateUI(null);
+                                    updateUI(user);
+                                } else {
+                                    //Si falla el usuario es informado
+                                    updateUI(null);
+                                }
                             }
-                        }
-                    });
+                        });
+            }else{
+                Toast.makeText(this,"La contraseña debe tener al menos 6 caracteres",Toast.LENGTH_SHORT).show();
+            }
+        }else{
+            Toast.makeText(this,"Debe rellenar todos los campos",Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -181,9 +180,10 @@ public class NuevoEmpleadoActivity extends AppCompatActivity {
         if(account != null){
             //Si es correcto sale de la cuenta creada para seguir en la cuenta de administrador
             mAuthWorker.signOut();
+            this.finish();
             Toast.makeText(this,"Cuenta creada".toString(),Toast.LENGTH_SHORT).show();
         }else{
-            Toast. makeText(this,"error",Toast. LENGTH_SHORT).show();
+            Toast. makeText(this,"Error, es posible que el correo ya esté en uso",Toast. LENGTH_SHORT).show();
         }
 
     }
