@@ -1,6 +1,7 @@
 package com.example.scrummanager.Controladores;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.scrummanager.Modelos.Empleado;
 import com.example.scrummanager.R;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -21,6 +26,7 @@ public class AdaptadorEmpleados extends RecyclerView.Adapter<RecyclerView.ViewHo
     private Context contexto;
     private Empleado empleado;
     private final int MOSTRAR_MENU = 1, OCULTAR_MENU = 2;
+    StorageReference storageReference;
 
     public AdaptadorEmpleados(ArrayList<Empleado> empleados, Context contexto) {
         this.empleados = empleados;
@@ -61,6 +67,16 @@ public class AdaptadorEmpleados extends RecyclerView.Adapter<RecyclerView.ViewHo
             ((AdaptadorEmpleadosViewHolder) holder).tv_apellidoEmpleado.setText(apellidoEmpleado);
             ((AdaptadorEmpleadosViewHolder) holder).tv_departamentoEmpleado.setText(departamentoEmpleado);
             ((AdaptadorEmpleadosViewHolder) holder).tv_emailEmpleado.setText(emailEmpleado);
+
+            //Imagen de perfil
+            storageReference= FirebaseStorage.getInstance().getReference();
+            StorageReference perfilRef= storageReference.child("users/"+empleado.getUid()+"/profile.jpg");
+            perfilRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Picasso.get().load(uri).into(((AdaptadorEmpleadosViewHolder) holder).iv_fotoEmpleado);
+                }
+            });
 
             //Si se mantiene pulsado se abre el menú de opciones
             ((AdaptadorEmpleadosViewHolder) holder).itemView.setOnLongClickListener(new View.OnLongClickListener() {

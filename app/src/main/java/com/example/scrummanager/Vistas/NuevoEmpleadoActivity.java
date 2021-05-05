@@ -1,11 +1,16 @@
 package com.example.scrummanager.Vistas;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -13,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -20,6 +26,8 @@ import com.example.scrummanager.Modelos.Departamento;
 import com.example.scrummanager.Modelos.Empleado;
 import com.example.scrummanager.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
@@ -31,6 +39,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -39,6 +51,7 @@ public class NuevoEmpleadoActivity extends AppCompatActivity {
     private DatabaseReference dbReference;
     private FirebaseDatabase database;
     private ValueEventListener eventListener;
+    StorageReference storageReference;
 
     private ArrayList<Departamento> departamentos;
     private ArrayList<String> departamentosNombres;
@@ -49,6 +62,7 @@ public class NuevoEmpleadoActivity extends AppCompatActivity {
     private Spinner spinnerDepartamento;
     private Button btn_registrar;
     private EditText et_nombre, et_apellidos, et_dni, et_email, et_contrasenia;
+    private ImageView iv_imagenEmpleado;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,9 +76,13 @@ public class NuevoEmpleadoActivity extends AppCompatActivity {
         et_dni=findViewById(R.id.et_dniEmpleado);
         et_email=findViewById(R.id.et_emailEmpleado);
         et_contrasenia=findViewById(R.id.et_contraseniaEmpleado);
+        iv_imagenEmpleado=findViewById(R.id.iv_imagenEmpleado);
 
-        //Initialización de Firebase Authentication
+        //Initialización de Firebase
         mAuthAdmin = FirebaseAuth.getInstance();
+
+        /*storageReference= FirebaseStorage.getInstance().getReference();*/
+
         //Configuración de la autenticación
         FirebaseOptions firebaseOptions = new FirebaseOptions.Builder()
                 .setDatabaseUrl("[https://scrummanager-edb30-default-rtdb.firebaseio.com/]")
@@ -119,8 +137,62 @@ public class NuevoEmpleadoActivity extends AppCompatActivity {
                 crearCuenta();
             }
         });
+
+        /*iv_imagenEmpleado.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent abrirGaleriaIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(abrirGaleriaIntent,1000);
+            }
+        });*/
+
+        /*CARGAR IMAGEN PERFIL
+        StorageReference storageReference;
+        StorageReference perfilRef= storageReference.child("users/"+mAuthAdmin.getCurrentUser().getUid()+"profile.jpg");
+        perfilRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Picasso.get().load(uri).into(iv_imagenEmpleado);
+            }
+        });*/
     }
 
+    /*//Método que se activará cuando la imagen de pérfil se pulse y se abra la galería
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==1000){
+            if(resultCode== Activity.RESULT_OK){
+                Uri imagenUri= data.getData();
+                subirImagenFirebase(imagenUri);
+            }
+        }
+    }
+
+    //Método para subir la imagen a la database y cargarla en el layout
+    private void subirImagenFirebase(Uri imagenUri){
+        StorageReference archivoRef= storageReference.child("users/"+mAuthAdmin.getCurrentUser().getUid()+"/profile.jpg");
+        archivoRef.putFile(imagenUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                archivoRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        //Si se sube correctamente se accede a la base de datos y la carga en el layout
+                        Picasso.get().load(uri).into(iv_imagenEmpleado);
+                    }
+                });
+                Toast.makeText(getBaseContext(),"ok",Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getBaseContext(),"errooor",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }*/
+
+    //Método para rellenar las opciones de departamento
     private void rellenarSpinnerDepartamento(){
         ArrayAdapter<String> departamentoAdapter= new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, departamentosNombres);
         departamentoAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
