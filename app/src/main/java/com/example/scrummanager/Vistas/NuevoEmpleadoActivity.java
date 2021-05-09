@@ -206,6 +206,7 @@ public class NuevoEmpleadoActivity extends AppCompatActivity {
         String contrasenia = et_contrasenia.getText().toString();
         String nombre = et_nombre.getText().toString();
         String apellido = et_apellidos.getText().toString();
+        String dni= et_dni.getText().toString();
 
         //El usuario se registra sólo si ha rellenado los tres campos
         if(!TextUtils.isEmpty(nombre)&& !TextUtils.isEmpty(apellido)&& !TextUtils.isEmpty(email)&& !TextUtils.isEmpty(contrasenia)){
@@ -228,6 +229,7 @@ public class NuevoEmpleadoActivity extends AppCompatActivity {
                                     String uid = user.getUid();
                                     Empleado empleadoObjeto= new Empleado(uid,nombre,apellido,eid);
                                     empleadoObjeto.setEmailEmpleado(email);
+                                    empleadoObjeto.setNifEmpleado(dni);
                                     empleadoObjeto.setIdDepartamento(idDepartamento);
                                     dbReference.child(eid).child("Empleados").child(uid).setValue(empleadoObjeto);
 

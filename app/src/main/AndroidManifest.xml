@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ScrumManager">
-        <activity android:name=".Vistas.NuevoEmpleadoActivity"></activity>
+        <activity android:name=".Vistas.EditarEmpleadoActivity"></activity>
+        <activity android:name=".Vistas.NuevoEmpleadoActivity" />
         <activity
             android:name=".Vistas.LoginActivity"
             android:label="@string/title_activity_login"
@@ -23,7 +24,7 @@
         <activity
             android:name=".NavigationDrawerActivity"
             android:label="@string/app_name"
-            android:theme="@style/Theme.ScrumManager.NoActionBar"></activity>
+            android:theme="@style/Theme.ScrumManager.NoActionBar" />
     </application>
 
 </manifest>

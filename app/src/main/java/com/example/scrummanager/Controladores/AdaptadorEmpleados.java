@@ -1,6 +1,10 @@
 package com.example.scrummanager.Controladores;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +18,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.scrummanager.Modelos.Empleado;
 import com.example.scrummanager.R;
+import com.example.scrummanager.Vistas.EditarEmpleadoActivity;
+import com.example.scrummanager.Vistas.NuevoEmpleadoActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
@@ -24,7 +32,7 @@ import java.util.ArrayList;
 public class AdaptadorEmpleados extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<Empleado> empleados;
     private Context contexto;
-    private Empleado empleado;
+    //private Empleado empleado;
     private final int MOSTRAR_MENU = 1, OCULTAR_MENU = 2;
     StorageReference storageReference;
 
@@ -52,7 +60,7 @@ public class AdaptadorEmpleados extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        empleado = empleados.get(position);
+        Empleado empleado = empleados.get(position);
 
         String nombreEmpleado = empleado.getNombreEmpleado();
         String apellidoEmpleado = empleado.getApellidoEmpleado();
@@ -100,19 +108,19 @@ public class AdaptadorEmpleados extends RecyclerView.Adapter<RecyclerView.ViewHo
             ((MenuViewHolder) holder).btn_verEmpleado.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    verDepartamento();
+                    verEmpleado();
                 }
             });
             ((MenuViewHolder) holder).btn_editarEmpleado.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    editarDepartamento();
+                    editarEmpleado(empleado);
                 }
             });
             ((MenuViewHolder) holder).btn_borrarEmpleado.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    borrarDepartamento();
+                    borrarEmpleado(v, empleado);
                 }
             });
 
@@ -209,18 +217,47 @@ public class AdaptadorEmpleados extends RecyclerView.Adapter<RecyclerView.ViewHo
         notifyDataSetChanged();
     }
 
-    public void editarDepartamento() {
-        System.out.println("Editandooooo");
-        Toast.makeText(contexto, "EDITANDO SEÑORES", Toast.LENGTH_LONG);
+    public void editarEmpleado(Empleado empleado) {
+        Intent intent= new Intent(contexto, EditarEmpleadoActivity.class);
+        intent.putExtra("empleado",empleado);
+        contexto.startActivity(intent);
     }
 
-    public void verDepartamento() {
+    public void verEmpleado() {
         System.out.println("VIENDOOOOOOO");
         Toast.makeText(contexto, "VIENDO SEÑORES", Toast.LENGTH_LONG);
     }
 
-    public void borrarDepartamento() {
-        System.out.println("BORRANDOOOOOOO");
-        Toast.makeText(contexto, "BORRANDO SEÑORES", Toast.LENGTH_LONG);
+    public void borrarEmpleado(View view, Empleado empleado) {
+        borrarConfirmacion(view, empleado.getUid(), empleado.getNombreEmpleado()+" "+empleado.getApellidoEmpleado(),empleado.getIdEmpresa());
+    }
+
+    private void borrarConfirmacion(View view, String uidEmpleado, String nombreEmpleado, String eid) {
+        //Inicialización de la base de datos
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference dbReference = database.getReference();
+
+        //Inicialización
+        AlertDialog.Builder alertDialogBu = new AlertDialog.Builder(contexto);
+        alertDialogBu.setTitle("Borrar");
+        alertDialogBu.setMessage("¿Seguro que quiere eliminar a " + nombreEmpleado +"? Esta acción no se puede deshacer");
+
+        //Opción positiva
+        alertDialogBu.setPositiveButton("Borrar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dbReference.child(eid).child("Empleados").child(uidEmpleado).removeValue();
+
+                Toast.makeText(contexto, nombreEmpleado + " borrado", Toast.LENGTH_SHORT).show();
+            }
+        });
+        //Opción negativa
+        alertDialogBu.setNegativeButton("Cancelar·", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(contexto, "Cancelado", Toast.LENGTH_SHORT).show();
+            }
+        });
+        //Creación del dialog
+        AlertDialog alertDialog = alertDialogBu.create();
+        alertDialog.show();
     }
 }

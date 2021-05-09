@@ -84,25 +84,6 @@ public class Empleados extends Fragment {private FirebaseAuth mAuthAdmin, mAuthW
         recView.setLayoutManager(layoutManager);
 
         rellenarRecyclerView();
-
-        /*empleados =new ArrayList<Empleado>();
-        empleado = new Empleado("1","Empleado1", "Apellido","1");
-        empleados.add(empleado);
-        empleado = new Empleado("1","Empleado2", "Apellido","1");
-        empleados.add(empleado);
-        empleado = new Empleado("1","Empleado3", "Apellido","1");
-        empleados.add(empleado);
-        empleado = new Empleado("1","Empleado4", "Apellido","1");
-        empleados.add(empleado);
-        empleado = new Empleado("1","Empleado5", "Apellido","1");
-        empleados.add(empleado);
-        empleado = new Empleado("1","Empleado6", "Apellido","1");
-        empleados.add(empleado);
-        empleado = new Empleado("1","Empleado7", "Apellido","1");
-        empleados.add(empleado);
-
-        AdaptadorEmpleados adaptadorEmpleados= new AdaptadorEmpleados(empleados,getContext());
-        recView.setAdapter(adaptadorEmpleados);*/
     }
 
     @Override
