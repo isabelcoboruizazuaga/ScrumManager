@@ -68,7 +68,7 @@ public class EditarEmpleadoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_nuevo_empleado);
+        setContentView(R.layout.activity_editar_empleado);
 
         //Se recogen los datos del empleado a editar
         Intent intent = getIntent();
@@ -207,6 +207,8 @@ public class EditarEmpleadoActivity extends AppCompatActivity {
 
         //Se actualiza la imagen
         subirImagenFirebase(imagenUri);
+
+        finish();
     }
 
 

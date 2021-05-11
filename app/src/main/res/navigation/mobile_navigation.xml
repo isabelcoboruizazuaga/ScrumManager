@@ -23,7 +23,11 @@
         android:id="@+id/empleados"
         android:name="com.example.scrummanager.Vistas.Empleados"
         android:label="fragment_empleados"
-        tools:layout="@layout/fragment_empleados" />
+        tools:layout="@layout/fragment_empleados" >
+        <action
+            android:id="@+id/action_empleados_to_verEmpleado"
+            app:destination="@id/verEmpleado" />
+    </fragment>
     <fragment
         android:id="@+id/equipos"
         android:name="com.example.scrummanager.Vistas.Equipos"
@@ -34,4 +38,9 @@
         android:name="com.example.scrummanager.Vistas.Proyectos"
         android:label="fragment_proyectos"
         tools:layout="@layout/fragment_proyectos" />
+    <fragment
+        android:id="@+id/verEmpleado"
+        android:name="com.example.scrummanager.VerEmpleado"
+        android:label="fragment_ver_empleado"
+        tools:layout="@layout/fragment_ver_empleado" />
 </navigation>

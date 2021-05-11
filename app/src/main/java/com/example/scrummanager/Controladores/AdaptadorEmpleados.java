@@ -1,6 +1,5 @@
 package com.example.scrummanager.Controladores;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,11 +14,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.scrummanager.Modelos.Empleado;
 import com.example.scrummanager.R;
 import com.example.scrummanager.Vistas.EditarEmpleadoActivity;
-import com.example.scrummanager.Vistas.NuevoEmpleadoActivity;
+import com.example.scrummanager.Vistas.VerEmpleadoActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -32,13 +33,14 @@ import java.util.ArrayList;
 public class AdaptadorEmpleados extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<Empleado> empleados;
     private Context contexto;
-    //private Empleado empleado;
     private final int MOSTRAR_MENU = 1, OCULTAR_MENU = 2;
     StorageReference storageReference;
+    Fragment fragment;
 
-    public AdaptadorEmpleados(ArrayList<Empleado> empleados, Context contexto) {
+    public AdaptadorEmpleados(ArrayList<Empleado> empleados, Context contexto, Fragment fragment) {
         this.empleados = empleados;
         this.contexto = contexto;
+        this.fragment=fragment;
     }
 
     @NonNull
@@ -94,6 +96,16 @@ public class AdaptadorEmpleados extends RecyclerView.Adapter<RecyclerView.ViewHo
                     return true;
                 }
             });
+            //Si se hace un click simple se muestra el contenido
+            ((AdaptadorEmpleadosViewHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent= new Intent(contexto, VerEmpleadoActivity.class);
+                    intent.putExtra("empleado",empleado);
+                    contexto.startActivity(intent);
+                }
+            });
+
 
         }
         //Si se está mostrando el menú
@@ -108,7 +120,7 @@ public class AdaptadorEmpleados extends RecyclerView.Adapter<RecyclerView.ViewHo
             ((MenuViewHolder) holder).btn_verEmpleado.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    verEmpleado();
+                    verEmpleado(empleado);
                 }
             });
             ((MenuViewHolder) holder).btn_editarEmpleado.setOnClickListener(new View.OnClickListener() {
@@ -223,9 +235,10 @@ public class AdaptadorEmpleados extends RecyclerView.Adapter<RecyclerView.ViewHo
         contexto.startActivity(intent);
     }
 
-    public void verEmpleado() {
-        System.out.println("VIENDOOOOOOO");
-        Toast.makeText(contexto, "VIENDO SEÑORES", Toast.LENGTH_LONG);
+    public void verEmpleado(Empleado empleado) {
+        Intent intent= new Intent(contexto, VerEmpleadoActivity.class);
+        intent.putExtra("empleado",empleado);
+        contexto.startActivity(intent);
     }
 
     public void borrarEmpleado(View view, Empleado empleado) {

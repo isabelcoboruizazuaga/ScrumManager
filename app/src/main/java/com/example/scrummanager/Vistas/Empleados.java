@@ -104,7 +104,7 @@ public class Empleados extends Fragment {private FirebaseAuth mAuthAdmin, mAuthW
                     for(DataSnapshot snap: datos){
                         empleados.add(snap.getValue(Empleado.class));
                     }
-                    AdaptadorEmpleados adaptadorEmpleados= new AdaptadorEmpleados(empleados,getContext());
+                    AdaptadorEmpleados adaptadorEmpleados= new AdaptadorEmpleados(empleados,getContext(),getParentFragment());
                     recView.setAdapter(adaptadorEmpleados);
                 }
             }
