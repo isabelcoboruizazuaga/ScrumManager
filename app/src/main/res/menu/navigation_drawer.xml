@@ -5,7 +5,8 @@
         android:id="@+id/menuAnEmp"/>
     <item android:title="CosaInutil"
         android:id="@+id/menuCosaInutil"/>
-    <item android:title="Item" />
+    <item android:title="AñadirDepartamento"
+        android:id="@+id/menuAnDept"/>
     <item android:title="Item" />
     <item android:id="@+id/action_settings"
         android:title="@string/action_settings"

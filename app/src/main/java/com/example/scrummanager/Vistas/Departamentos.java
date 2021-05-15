@@ -1,5 +1,6 @@
 package com.example.scrummanager.Vistas;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,6 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -38,6 +41,7 @@ public class Departamentos extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -74,5 +78,28 @@ public class Departamentos extends Fragment {
 
         AdaptadorDepartamentos adaptadorDepartamentos= new AdaptadorDepartamentos(departamentos,getContext());
         recView.setAdapter(adaptadorDepartamentos);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        //Se ocultan las opciones del menú que no pertenecen a este fragment
+        MenuItem item=menu.findItem(R.id.menuCosaInutil);
+        if(item!=null)
+            item.setVisible(false);
+        item=menu.findItem(R.id.menuAnEmp);
+        if(item!=null)
+            item.setVisible(false);
+
+    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menuAnDept:
+                startActivity(new Intent(getContext(), NuevoDepartamentoActivity.class));
+                break;
+
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

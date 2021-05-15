@@ -92,6 +92,9 @@ public class Empleados extends Fragment {private FirebaseAuth mAuthAdmin, mAuthW
         MenuItem item=menu.findItem(R.id.menuCosaInutil);
         if(item!=null)
             item.setVisible(false);
+        item=menu.findItem(R.id.menuAnDept);
+        if(item!=null)
+            item.setVisible(false);
     }
     //Database listener
     public void rellenarRecyclerView (){

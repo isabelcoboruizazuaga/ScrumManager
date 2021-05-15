@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ScrumManager">
-        <activity android:name=".Vistas.VerEmpleadoActivity"></activity>
+        <activity android:name=".Vistas.NuevoDepartamentoActivity"></activity>
+        <activity android:name=".Vistas.VerEmpleadoActivity" />
         <activity android:name=".Vistas.EditarEmpleadoActivity" />
         <activity android:name=".Vistas.NuevoEmpleadoActivity" />
         <activity
