@@ -1,6 +1,7 @@
 package com.example.scrummanager.Vistas;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,6 +11,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,15 +21,28 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.example.scrummanager.Controladores.AdaptadorDepartamentos;
+import com.example.scrummanager.Controladores.AdaptadorEmpleados;
 import com.example.scrummanager.Modelos.Departamento;
+import com.example.scrummanager.Modelos.Empleado;
 import com.example.scrummanager.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 public class Departamentos extends Fragment {
    private RecyclerView recView;
-   private ArrayList<Departamento> departamentos;
-   private Departamento departamento;
+   private DatabaseReference dbReference;
+    private FirebaseDatabase database;
+    private ValueEventListener eventListener;
+
+
+    private ArrayList<Departamento> departamentos=new ArrayList<>();
+    private Departamento departamento;
+    private String eid;
 
     public Departamentos() {
         // Required empty public constructor
@@ -54,13 +70,24 @@ public class Departamentos extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        //Inicialización database
+        database= FirebaseDatabase.getInstance();
+        dbReference=database.getReference();
 
+        //Obtención del id de empresa
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getContext());
+        eid= sp.getString("eid","-1");
+
+        //Inicialización del recycler view
         recView= view.findViewById(R.id.rv_departamentos);
+
+        //Creación del layout y asignación al recycler
         GridLayoutManager gridlayoutManager= new GridLayoutManager(getContext(),2);
         LinearLayoutManager layoutManager= new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
         recView.setLayoutManager(gridlayoutManager);
 
-        departamentos=new ArrayList<Departamento>();
+        rellenarRecyclerView();
+       /* departamentos=new ArrayList<Departamento>();
         departamento= new Departamento("id01","dep1","eid");
         departamentos.add(departamento);
         departamento= new Departamento("id02","dep2","eid");
@@ -74,10 +101,7 @@ public class Departamentos extends Fragment {
         departamento= new Departamento("sad","dep5","eid");
         departamentos.add(departamento);
         departamento= new Departamento("ad","dep6","eid");
-        departamentos.add(departamento);
-
-        AdaptadorDepartamentos adaptadorDepartamentos= new AdaptadorDepartamentos(departamentos,getContext());
-        recView.setAdapter(adaptadorDepartamentos);
+        departamentos.add(departamento);*/
     }
 
     @Override
@@ -89,17 +113,38 @@ public class Departamentos extends Fragment {
         item=menu.findItem(R.id.menuAnEmp);
         if(item!=null)
             item.setVisible(false);
-
     }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.menuAnDept:
                 startActivity(new Intent(getContext(), NuevoDepartamentoActivity.class));
                 break;
-
-
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    //Database listener
+    public void rellenarRecyclerView (){
+        dbReference.child(eid).child("Departamentos").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    departamentos.clear();
+                    Iterable<DataSnapshot> datos = dataSnapshot.getChildren();
+                    for(DataSnapshot snap: datos){
+                        departamentos.add(snap.getValue(Departamento.class));
+                    }
+                    AdaptadorDepartamentos adaptadorDepartamentos= new AdaptadorDepartamentos(departamentos,getContext());
+                    recView.setAdapter(adaptadorDepartamentos);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("onDataChange", "Error!", databaseError.toException());
+            }
+        });
     }
 }

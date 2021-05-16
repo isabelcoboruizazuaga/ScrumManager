@@ -36,10 +36,9 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.EventListener;
 import java.util.UUID;
 
-public class NuevoDepartamentoActivity extends AppCompatActivity {
+public class EditarDepartamentoActivity extends AppCompatActivity {
     private DatabaseReference dbReference;
     private FirebaseDatabase database;
     private ValueEventListener eventListener;
@@ -49,8 +48,9 @@ public class NuevoDepartamentoActivity extends AppCompatActivity {
     private ArrayList<String> empleadosNombres;
     private String uidJefeDpt;
     private String eid;
+    private String did;
+    private Departamento departamento;
     private Uri imagenUri;
-    String did= UUID.randomUUID().toString();
 
     private Spinner spinnerEmpleado;
     private Button btn_crear;
@@ -62,11 +62,19 @@ public class NuevoDepartamentoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nuevo_departamento);
 
+        //Se recogen los datos del departamento a editar
+        Intent intent = getIntent();
+        departamento = (Departamento) intent.getSerializableExtra("departamento");
+        did= departamento.getIdDepartamento();
+
         //Inicialización variables del layout
         spinnerEmpleado= findViewById(R.id.spinner_empleados);
         btn_crear= findViewById(R.id.btn_addDepartamento);
         et_nombre=findViewById(R.id.et_nombreDepartamento);
         iv_imagenDepartamento=findViewById(R.id.iv_imagenDepartamento);
+
+        btn_crear.setText("Editar");
+        et_nombre.setText(departamento.getNombreDepartamento());
 
         //Obtención del id de empresa
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
@@ -83,9 +91,9 @@ public class NuevoDepartamentoActivity extends AppCompatActivity {
         setEventListener();
         dbReference.child("Empleados").addValueEventListener(eventListener);
 
-       Empleado empleado= new Empleado("-1","Sin","Jefe",eid);
-       empleados.add(empleado);
-       empleadosNombres.add(empleado.getNombreEmpleado() + empleado.getApellidoEmpleado());
+        Empleado empleado= new Empleado("-1","Sin","Jefe",eid);
+        empleados.add(empleado);
+        empleadosNombres.add(empleado.getNombreEmpleado() + empleado.getApellidoEmpleado());
 
         //Control del spinner de selección de jefe de departamento
         rellenarSpinnerEmpleados(empleado);
@@ -146,6 +154,7 @@ public class NuevoDepartamentoActivity extends AppCompatActivity {
                         Picasso.get().load(uri).into(iv_imagenDepartamento);
                     }
                 });
+                Toast.makeText(getBaseContext(),"ok",Toast.LENGTH_SHORT).show();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -159,13 +168,10 @@ public class NuevoDepartamentoActivity extends AppCompatActivity {
         String nombre= et_nombre.getText().toString();
         Departamento departamento= new Departamento(did,nombre,eid);
 
-        //Si el departamento se edita sin jefe se añade sin más a la base de datos
+        //Si el departamento se crea sin jefe se añade sin más a la base de datos
         if(uidJefeDpt.equals("-1")){
             dbReference.child("Departamentos").child(did).setValue(departamento);
-            //Se sube la imagen a la base de datos
-            subirImagenFirebase(imagenUri);
             Toast.makeText(getApplicationContext(), "Departamento creado", Toast.LENGTH_SHORT).show();
-
             finish();
         }else {
             //Se obtiene el empleado a añadir
@@ -186,7 +192,7 @@ public class NuevoDepartamentoActivity extends AppCompatActivity {
                             dbReference.child("Departamentos").child(did).setValue(departamento);
                             Toast.makeText(getApplicationContext(), "Departamento creado", Toast.LENGTH_SHORT).show();
 
-                            //Se sube la imagen a la base de datos
+                            //Se actualiza la imagen
                             subirImagenFirebase(imagenUri);
 
                             finish();
@@ -211,7 +217,7 @@ public class NuevoDepartamentoActivity extends AppCompatActivity {
         empleadoAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerEmpleado.setAdapter(empleadoAdapter);
     }
- private Empleado empleado;
+    private Empleado empleado;
     private void setEventListener(){
         eventListener= new ValueEventListener() {
             @Override
@@ -230,5 +236,4 @@ public class NuevoDepartamentoActivity extends AppCompatActivity {
             }
         };
     }
-
 }

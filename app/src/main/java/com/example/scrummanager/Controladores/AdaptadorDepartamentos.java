@@ -1,10 +1,13 @@
 package com.example.scrummanager.Controladores;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -13,14 +16,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.scrummanager.Modelos.Departamento;
 import com.example.scrummanager.R;
+import com.example.scrummanager.Vistas.EditarDepartamentoActivity;
+import com.example.scrummanager.Vistas.EditarEmpleadoActivity;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 public class AdaptadorDepartamentos extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<Departamento> departamentos;
     private Context contexto;
-    private Departamento departamento;
     private final int MOSTRAR_MENU=1, OCULTAR_MENU=2;
+    StorageReference storageReference;
 
     public AdaptadorDepartamentos(ArrayList<Departamento> departamentos, Context contexto) {
         this.departamentos = departamentos;
@@ -46,7 +55,7 @@ public class AdaptadorDepartamentos extends RecyclerView.Adapter<RecyclerView.Vi
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        departamento= departamentos.get(position);
+        Departamento departamento= departamentos.get(position);
 
         String nombreDepartamento= departamento.getNombreDepartamento();
 
@@ -55,6 +64,16 @@ public class AdaptadorDepartamentos extends RecyclerView.Adapter<RecyclerView.Vi
 
             //Se incluye el departamento en el layout
             ((AdaptadorDepartamentosViewHolder) holder).tv_nombreDepartamento.setText(nombreDepartamento.toString());
+
+            //Imagen de departamento
+            storageReference= FirebaseStorage.getInstance().getReference();
+            StorageReference perfilRef= storageReference.child("departments/"+departamento.getIdDepartamento()+"/cover.jpg");
+            perfilRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Picasso.get().load(uri).into(((AdaptadorDepartamentos.AdaptadorDepartamentosViewHolder) holder).iv_fotoDepartamento);
+                }
+            });
 
             //Si se mantiene pulsado se abre el menú de opciones
             ((AdaptadorDepartamentosViewHolder)holder).itemView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -87,7 +106,7 @@ public class AdaptadorDepartamentos extends RecyclerView.Adapter<RecyclerView.Vi
             ((MenuViewHolder) holder).btn_editarDepartamento.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    editarDepartamento();
+                    editarDepartamento(departamento);
                 }
             });
             ((MenuViewHolder) holder).btn_borrarDepartamento.setOnClickListener(new View.OnClickListener() {
@@ -128,7 +147,8 @@ public class AdaptadorDepartamentos extends RecyclerView.Adapter<RecyclerView.Vi
 
     public class AdaptadorDepartamentosViewHolder extends RecyclerView.ViewHolder{
         //items del layout
-        private TextView tv_nombreDepartamento, iv_fotoDepartamento;
+        private TextView tv_nombreDepartamento;
+        private ImageView iv_fotoDepartamento;
         public AdaptadorDepartamentosViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -137,7 +157,7 @@ public class AdaptadorDepartamentos extends RecyclerView.Adapter<RecyclerView.Vi
 
             //inicializacón de los elementos del layout
             tv_nombreDepartamento= itemView.findViewById(R.id.tv_nombreDepartamento);
-            //iv_fotoDepartamento= itemView.findViewById(R.id.iv_fotoDepartamento);
+            iv_fotoDepartamento= itemView.findViewById(R.id.iv_fotoDepartamento);
 
         }
     }
@@ -186,9 +206,10 @@ public class AdaptadorDepartamentos extends RecyclerView.Adapter<RecyclerView.Vi
         notifyDataSetChanged();
     }
 
-    public void editarDepartamento(){
-        System.out.println("Editandooooo");
-        Toast.makeText(contexto,"EDITANDO SEÑORES", Toast.LENGTH_LONG);
+    public void editarDepartamento(Departamento departamento){
+        Intent intent= new Intent(contexto, EditarDepartamentoActivity.class);
+        intent.putExtra("departamento",departamento);
+        contexto.startActivity(intent);
     }
 
     public void verDepartamento(){
