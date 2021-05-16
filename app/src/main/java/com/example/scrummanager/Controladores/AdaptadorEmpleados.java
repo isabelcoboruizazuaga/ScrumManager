@@ -37,6 +37,7 @@ public class AdaptadorEmpleados extends RecyclerView.Adapter<RecyclerView.ViewHo
     StorageReference storageReference;
     Fragment fragment;
 
+
     public AdaptadorEmpleados(ArrayList<Empleado> empleados, Context contexto, Fragment fragment) {
         this.empleados = empleados;
         this.contexto = contexto;
