@@ -91,12 +91,37 @@ public class EditarDepartamentoActivity extends AppCompatActivity {
         setEventListener();
         dbReference.child("Empleados").addValueEventListener(eventListener);
 
-        Empleado empleado= new Empleado("-1","Sin","Jefe",eid);
-        empleados.add(empleado);
-        empleadosNombres.add(empleado.getNombreEmpleado() + empleado.getApellidoEmpleado());
+        //Se coloca el empleado actual el primero
+        if(departamento.getUidJefeDepartamento()!=null) {
+            dbReference.child("Empleados").child(departamento.getUidJefeDepartamento()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Empleado empleado1 = snapshot.getValue(Empleado.class);
+                    empleados.add(0, empleado1);
+                    empleadosNombres.add(0, empleado1.getNombreEmpleado() + " " + empleado1.getApellidoEmpleado());
+
+                    //Se añade la opción de dejar sin jefe
+                    Empleado empleado = new Empleado("-1", "Sin", "Jefe", eid);
+                    empleados.add(empleado);
+                    empleadosNombres.add(empleado.getNombreEmpleado() + empleado.getApellidoEmpleado());
+
+                    rellenarSpinnerEmpleados(empleado);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
+            });
+        }else{
+            //Se añade la opción de dejar sin jefe
+            Empleado empleado = new Empleado("-1", "Sin", "Jefe", eid);
+            empleados.add(empleado);
+            empleadosNombres.add(empleado.getNombreEmpleado() + empleado.getApellidoEmpleado());
+
+            rellenarSpinnerEmpleados(empleado);
+        }
 
         //Control del spinner de selección de jefe de departamento
-        rellenarSpinnerEmpleados(empleado);
         spinnerEmpleado.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 //La posición del nombre de empleado equivale a la de la lista de objetos empleado
@@ -211,7 +236,7 @@ public class EditarDepartamentoActivity extends AppCompatActivity {
         }
     }
 
-    //Método para rellenar las opciones de departamento
+    //Método para rellenar las opciones de empleados
     private void rellenarSpinnerEmpleados(Empleado empleado){
         ArrayAdapter<String> empleadoAdapter= new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, empleadosNombres);
         empleadoAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

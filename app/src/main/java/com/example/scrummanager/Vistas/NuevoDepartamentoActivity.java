@@ -3,6 +3,8 @@ package com.example.scrummanager.Vistas;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -20,6 +22,8 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.scrummanager.Controladores.AdaptadorEmpleados;
+import com.example.scrummanager.Controladores.AdaptadorEmpleadosDpt;
 import com.example.scrummanager.Modelos.Departamento;
 import com.example.scrummanager.Modelos.Empleado;
 import com.example.scrummanager.R;
@@ -56,6 +60,8 @@ public class NuevoDepartamentoActivity extends AppCompatActivity {
     private Button btn_crear;
     private EditText et_nombre;
     private ImageView iv_imagenDepartamento;
+    private RecyclerView recView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +117,12 @@ public class NuevoDepartamentoActivity extends AppCompatActivity {
                 startActivityForResult(abrirGaleriaIntent,1000);
             }
         });
+
+        //Inicialización del recycler view
+        recView= findViewById(R.id.rv_empleadosDpt);
+        //Creación del layout y asignación al recycler
+        LinearLayoutManager layoutManager= new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
+        recView.setLayoutManager(layoutManager);
 
         //Cargar la imagen de departamento
         StorageReference perfilRef= storageReference.child("departments/"+did+"/cover.jpg");
@@ -221,6 +233,9 @@ public class NuevoDepartamentoActivity extends AppCompatActivity {
                     empleado = xempleado.getValue(Empleado.class);
                     empleados.add(empleado);
                     empleadosNombres.add(empleado.getNombreEmpleado() +" " +empleado.getApellidoEmpleado());
+
+                    AdaptadorEmpleadosDpt adaptadorEmpleados= new AdaptadorEmpleadosDpt(empleados,getApplicationContext());
+                    recView.setAdapter(adaptadorEmpleados);
                     Log.e("onDataChange", "onDataChange:" + xempleado.getValue().toString());
                 }
             }
