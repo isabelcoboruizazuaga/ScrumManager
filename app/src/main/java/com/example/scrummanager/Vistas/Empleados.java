@@ -126,8 +126,6 @@ public class Empleados extends Fragment {private FirebaseAuth mAuthAdmin, mAuthW
             case R.id.menuAnEmp:
                 startActivity(new Intent(getContext(), NuevoEmpleadoActivity.class));
                 break;
-
-
         }
         return super.onOptionsItemSelected(item);
     }

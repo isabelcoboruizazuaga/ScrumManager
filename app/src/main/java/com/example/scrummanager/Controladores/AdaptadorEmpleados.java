@@ -17,18 +17,24 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.scrummanager.Modelos.Departamento;
 import com.example.scrummanager.Modelos.Empleado;
 import com.example.scrummanager.R;
 import com.example.scrummanager.Vistas.EditarEmpleadoActivity;
 import com.example.scrummanager.Vistas.VerEmpleadoActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.EventListener;
 
 public class AdaptadorEmpleados extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<Empleado> empleados;
@@ -69,14 +75,36 @@ public class AdaptadorEmpleados extends RecyclerView.Adapter<RecyclerView.ViewHo
         String apellidoEmpleado = empleado.getApellidoEmpleado();
         String emailEmpleado = empleado.getEmailEmpleado();
         String departamentoEmpleado = empleado.getIdDepartamento();
+        String eid= empleado.getIdEmpresa();
 
         //Si se está mostrando el Empleado
         if (holder instanceof AdaptadorEmpleadosViewHolder) {
+            //Se obtiene el nombre de departamento y se muestra
+            DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference().child(eid).child("Departamentos");
+            dbReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot xempleado : snapshot.getChildren() ){
+                        //Se añaden los empleados a la lista
+                        Departamento departamento = xempleado.getValue(Departamento.class);
+                        String dptNombre= departamento.getNombreDepartamento();
+                        String did= departamento.getIdDepartamento();
+                        try {
+                            if (departamentoEmpleado.equals(did)) {
+                                ((AdaptadorEmpleadosViewHolder) holder).tv_departamentoEmpleado.setText(dptNombre);
+                            } else {
+                                ((AdaptadorEmpleadosViewHolder) holder).tv_departamentoEmpleado.setText("Sin departamento");
+                            }
+                        }catch ( java.lang.NullPointerException e){}
+                    }
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {  }
+            });
 
             //Se incluye el empleado en el layout
             ((AdaptadorEmpleadosViewHolder) holder).tv_nombreEmpleado.setText(nombreEmpleado);
             ((AdaptadorEmpleadosViewHolder) holder).tv_apellidoEmpleado.setText(apellidoEmpleado);
-            ((AdaptadorEmpleadosViewHolder) holder).tv_departamentoEmpleado.setText(departamentoEmpleado);
             ((AdaptadorEmpleadosViewHolder) holder).tv_emailEmpleado.setText(emailEmpleado);
 
             //Imagen de perfil

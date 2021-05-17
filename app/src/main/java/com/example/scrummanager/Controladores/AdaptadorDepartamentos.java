@@ -58,6 +58,7 @@ public class AdaptadorDepartamentos extends RecyclerView.Adapter<RecyclerView.Vi
         Departamento departamento= departamentos.get(position);
 
         String nombreDepartamento= departamento.getNombreDepartamento();
+        String did= departamento.getIdDepartamento();
 
         //Si se está mostrando el Departamento
         if(holder instanceof AdaptadorDepartamentosViewHolder){
@@ -67,18 +68,23 @@ public class AdaptadorDepartamentos extends RecyclerView.Adapter<RecyclerView.Vi
 
             //Imagen de departamento
             storageReference= FirebaseStorage.getInstance().getReference();
-            StorageReference perfilRef= storageReference.child("departments/"+departamento.getIdDepartamento()+"/cover.jpg");
-            perfilRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
-                    Picasso.get().load(uri).into(((AdaptadorDepartamentos.AdaptadorDepartamentosViewHolder) holder).iv_fotoDepartamento);
-                }
-            });
+            if((storageReference.child("departments/"+did+"/cover.jpg")).getDownloadUrl()!=null) {
+                StorageReference perfilRef = storageReference.child("departments/" + did + "/cover.jpg");
+                perfilRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Picasso.get().load(uri).into(((AdaptadorDepartamentos.AdaptadorDepartamentosViewHolder) holder).iv_fotoDepartamento);
+                    }
+                });
+            }
 
             //Si se mantiene pulsado se abre el menú de opciones
             ((AdaptadorDepartamentosViewHolder)holder).itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
+                    System.out.println(did);
+                    ImageView image = ((AdaptadorDepartamentos.AdaptadorDepartamentosViewHolder) holder).iv_fotoDepartamento;
+                    Picasso.get().cancelRequest(image);
                     mostrarMenu(position);
                     return true;
                 }

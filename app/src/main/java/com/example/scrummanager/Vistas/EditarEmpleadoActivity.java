@@ -53,10 +53,10 @@ public class EditarEmpleadoActivity extends AppCompatActivity {
     private ValueEventListener eventListener;
     StorageReference storageReference;
 
-    private ArrayList<Departamento> departamentos;
-    private ArrayList<String> departamentosNombres;
+    private ArrayList<Departamento> departamentos=new ArrayList<>();
+    private ArrayList<String> departamentosNombres=new ArrayList<>();
     private Empleado empleado;
-    private String uid;
+    private String uid,eid;
     private String idDepartamento;
     Uri imagenUri;
 
@@ -74,6 +74,7 @@ public class EditarEmpleadoActivity extends AppCompatActivity {
         Intent intent = getIntent();
         empleado = (Empleado) intent.getSerializableExtra("empleado");
         uid= empleado.getUid();
+        eid=empleado.getIdEmpresa();
 
         //Inicialización variables del layout
         spinnerDepartamento= findViewById(R.id.spinner_departamentos);
@@ -92,22 +93,41 @@ public class EditarEmpleadoActivity extends AppCompatActivity {
         et_dni.setText(empleado.getNifEmpleado());
         et_email.setText(empleado.getEmailEmpleado());
 
-        //Firebase database initialization
+        //Firebase database inicialización
         database= FirebaseDatabase.getInstance();
         dbReference=database.getReference();
         storageReference= FirebaseStorage.getInstance().getReference();
+        setEventListener();
 
-        //
-        departamentos= new ArrayList<>();
-        departamentosNombres= new ArrayList<>();
-        Departamento dpt= new Departamento("dpt1","Dpt1", "empresa");
-        departamentosNombres.add(dpt.getNombreDepartamento());
-        departamentos.add(dpt);
-        dpt= new Departamento("dpt2","dpt2", "empresa");
-        departamentosNombres.add(dpt.getNombreDepartamento());
-        departamentos.add(dpt);
+        //Se coloca el departamento actual el primero
+        if(empleado.getIdDepartamento()!=null && !empleado.getIdDepartamento().equals("-1")) {
+            dbReference.child(eid).child("Departamentos").child(empleado.getIdDepartamento()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Departamento departamento1 = snapshot.getValue(Departamento.class);
+                    departamentos.add(0, departamento1);
+                    departamentosNombres.add(0, departamento1.getNombreDepartamento());
 
-        rellenarSpinnerDepartamento();
+                    //Se añade la opción de dejar sin departamento
+                    Departamento dpt= new Departamento("-1","Sin Departamento", eid);
+                    departamentosNombres.add(dpt.getNombreDepartamento());
+                    departamentos.add(dpt);
+
+                    rellenarSpinnerDepartamento();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
+            });
+        }else{
+            //Se añade la opción de dejar sin departamento
+            Departamento dpt= new Departamento("-1","Sin Departamento", eid);
+            departamentosNombres.add(dpt.getNombreDepartamento());
+            departamentos.add(dpt);
+
+            rellenarSpinnerDepartamento();
+        }
 
         spinnerDepartamento.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
@@ -160,23 +180,25 @@ public class EditarEmpleadoActivity extends AppCompatActivity {
 
     //Método para subir la imagen a la database y cargarla en el layout
     private void subirImagenFirebase(Uri imagenUri){
-        StorageReference archivoRef= storageReference.child("users/"+uid+"/profile.jpg");
-        archivoRef.putFile(imagenUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                archivoRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        System.out.println("Añadido correctamente a la bd");
-                    }
-                });
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getBaseContext(),"Error al subir la imagen",Toast.LENGTH_SHORT).show();
-            }
-        });
+        try {
+            StorageReference archivoRef = storageReference.child("users/" + uid + "/profile.jpg");
+            archivoRef.putFile(imagenUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    archivoRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            System.out.println("Añadido correctamente a la bd");
+                        }
+                    });
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getBaseContext(), "Error al subir la imagen", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }catch (java.lang.IllegalArgumentException e){}
     }
 
     //Método para rellenar las opciones de departamento
@@ -209,6 +231,25 @@ public class EditarEmpleadoActivity extends AppCompatActivity {
         subirImagenFirebase(imagenUri);
 
         finish();
+    }
+    //Valores del spinner
+    private Departamento departamento;
+    private void setEventListener(){
+        eventListener= new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot xempleado : snapshot.getChildren() ){
+                    //Se añaden los empleados a la lista
+                    departamento = xempleado.getValue(Departamento.class);
+                    departamentos.add(departamento);
+                    departamentosNombres.add(departamento.getNombreDepartamento());
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
     }
 
 

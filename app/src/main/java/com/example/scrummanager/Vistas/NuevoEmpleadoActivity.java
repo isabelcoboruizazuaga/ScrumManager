@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.scrummanager.Modelos.Departamento;
@@ -57,16 +58,23 @@ public class NuevoEmpleadoActivity extends AppCompatActivity {
     private ArrayList<String> departamentosNombres;
     private Empleado empleadoManager;
     private String idDepartamento;
+    private  String eid;
+    private Uri imagenUri;
 
 
     private Spinner spinnerDepartamento;
     private Button btn_registrar;
     private EditText et_nombre, et_apellidos, et_dni, et_email, et_contrasenia;
+    private TextView tv_eid;
     private ImageView iv_imagenEmpleado;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nuevo_empleado);
+
+        //Recuperación del id de empresa
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        eid= sp.getString("eid","-1");
 
         //Inicialización variables del layout
         spinnerDepartamento= findViewById(R.id.spinner_departamentos);
@@ -77,9 +85,13 @@ public class NuevoEmpleadoActivity extends AppCompatActivity {
         et_email=findViewById(R.id.et_emailEmpleado);
         et_contrasenia=findViewById(R.id.et_contraseniaEmpleado);
         iv_imagenEmpleado=findViewById(R.id.iv_imagenEmpleado);
+        tv_eid= findViewById(R.id.tv_eid);
+        tv_eid.setText(eid);
 
         //Initialización de Firebase
         mAuthAdmin = FirebaseAuth.getInstance();
+        dbReference=FirebaseDatabase.getInstance().getReference();
+        storageReference= FirebaseStorage.getInstance().getReference();
 
         /*storageReference= FirebaseStorage.getInstance().getReference();*/
 
@@ -95,31 +107,18 @@ public class NuevoEmpleadoActivity extends AppCompatActivity {
             mAuthWorker = FirebaseAuth.getInstance(FirebaseApp.getInstance("ScrumManager"));
         }
 
-        //Firebase database initialization
-        database= FirebaseDatabase.getInstance();
-        dbReference=database.getReference();
-
-        //
+        //Extracción de los datos de departamentos de la base de datos
         departamentos= new ArrayList<>();
         departamentosNombres= new ArrayList<>();
-        Departamento dpt= new Departamento("dpt1","Dpt1", "empresa");
-        departamentosNombres.add(dpt.getNombreDepartamento());
-        departamentos.add(dpt);
-        dpt= new Departamento("dpt2","dpt2", "empresa");
-        departamentosNombres.add(dpt.getNombreDepartamento());
-        departamentos.add(dpt);
-        dpt= new Departamento("dpt3","dpt3", "empresa");
-        departamentosNombres.add(dpt.getNombreDepartamento());
-        departamentos.add(dpt);
-        dpt= new Departamento("dpt4","dpt4", "empresa");
-        departamentosNombres.add(dpt.getNombreDepartamento());
-        departamentos.add(dpt);
-        dpt= new Departamento("dpt5","dpt5", "empresa");
+        setEventListener();
+        dbReference.child(eid).child("Departamentos").addValueEventListener(eventListener);
+
+        Departamento dpt= new Departamento("-1","Sin Departamento", eid);
         departamentosNombres.add(dpt.getNombreDepartamento());
         departamentos.add(dpt);
 
+        //Control del spinner
         rellenarSpinnerDepartamento();
-
         spinnerDepartamento.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parentView,View selectedItemView, int position, long id) {
                 //La posición del nombre de departamento equivale a la de la lista de objetos departamento
@@ -131,10 +130,19 @@ public class NuevoEmpleadoActivity extends AppCompatActivity {
             }
 
         });
+
+        //ON CLICK LISTENERS
         btn_registrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 crearCuenta();
+            }
+        });
+        iv_imagenEmpleado.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent abrirGaleriaIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(abrirGaleriaIntent,1000);
             }
         });
 
@@ -192,6 +200,41 @@ public class NuevoEmpleadoActivity extends AppCompatActivity {
         });
     }*/
 
+    //Método que se activará cuando la imagen de pérfil se pulse y se abra la galería
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==1000){
+            if(resultCode== Activity.RESULT_OK){
+                imagenUri= data.getData();
+                Picasso.get().load(imagenUri).into(iv_imagenEmpleado);
+            }
+        }
+    }
+
+    //Método para subir la imagen a la database y cargarla en el layout
+    private void subirImagenFirebase(Uri imagenUri){
+        try {
+            StorageReference archivoRef = storageReference.child("users/" + mAuthWorker.getCurrentUser().getUid() + "/profile.jpg");
+            archivoRef.putFile(imagenUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    archivoRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            //Si se sube correctamente se accede a la base de datos y la carga en el layout
+                            Picasso.get().load(uri).into(iv_imagenEmpleado);
+                        }
+                    });
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                }
+            });
+        }catch (java.lang.IllegalArgumentException e){}
+    }
+
     //Método para rellenar las opciones de departamento
     private void rellenarSpinnerDepartamento(){
         ArrayAdapter<String> departamentoAdapter= new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, departamentosNombres);
@@ -221,10 +264,6 @@ public class NuevoEmpleadoActivity extends AppCompatActivity {
                                     FirebaseUser user = mAuthWorker.getCurrentUser();
                                     verificarEmail(user);
 
-                                    //Se añade a la empresa
-                                    SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-                                    String eid= sp.getString("eid","-1");
-
                                     //Se crea el perfil de usuario y se envía a la base de datos
                                     String uid = user.getUid();
                                     Empleado empleadoObjeto= new Empleado(uid,nombre,apellido,eid);
@@ -252,6 +291,7 @@ public class NuevoEmpleadoActivity extends AppCompatActivity {
     //Redirige al usuario o muestra un error
     private void updateUI(FirebaseUser account){
         if(account != null){
+            subirImagenFirebase(imagenUri);
             //Si es correcto sale de la cuenta creada para seguir en la cuenta de administrador
             mAuthWorker.signOut();
             this.finish();
@@ -273,27 +313,22 @@ public class NuevoEmpleadoActivity extends AppCompatActivity {
         });
     }
 
-
-    //Database listener
-    public void setEventListener(){
+    //Valores del spinner
+    private Departamento departamento;
+    private void setEventListener(){
         eventListener= new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                //The data of the logged user are extracted
-                //empleadoManager = dataSnapshot.getValue(Empleado.class);
-
-                //The list of the received messages is gotten
-                //empleadoManager.get;
-
-                //Same with the sent messages
-                //getCurrentUserSentMessages();
-
-                //RV_creation();
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot xempleado : snapshot.getChildren() ){
+                    //Se añaden los empleados a la lista
+                    departamento = xempleado.getValue(Departamento.class);
+                    departamentos.add(departamento);
+                    departamentosNombres.add(departamento.getNombreDepartamento());
+                }
             }
-
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e("onDataChange", "Error!", databaseError.toException());
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         };
     }

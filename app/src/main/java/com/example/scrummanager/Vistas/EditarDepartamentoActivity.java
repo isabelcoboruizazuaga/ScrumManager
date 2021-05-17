@@ -105,7 +105,7 @@ public class EditarDepartamentoActivity extends AppCompatActivity {
                     empleados.add(empleado);
                     empleadosNombres.add(empleado.getNombreEmpleado() + empleado.getApellidoEmpleado());
 
-                    rellenarSpinnerEmpleados(empleado);
+                    rellenarSpinnerEmpleados();
                 }
 
                 @Override
@@ -118,7 +118,7 @@ public class EditarDepartamentoActivity extends AppCompatActivity {
             empleados.add(empleado);
             empleadosNombres.add(empleado.getNombreEmpleado() + empleado.getApellidoEmpleado());
 
-            rellenarSpinnerEmpleados(empleado);
+            rellenarSpinnerEmpleados();
         }
 
         //Control del spinner de selección de jefe de departamento
@@ -196,7 +196,10 @@ public class EditarDepartamentoActivity extends AppCompatActivity {
         //Si el departamento se crea sin jefe se añade sin más a la base de datos
         if(uidJefeDpt.equals("-1")){
             dbReference.child("Departamentos").child(did).setValue(departamento);
-            Toast.makeText(getApplicationContext(), "Departamento creado", Toast.LENGTH_SHORT).show();
+
+            //Se actualiza la imagen
+            subirImagenFirebase(imagenUri);
+            Toast.makeText(getApplicationContext(), "Departamento editado", Toast.LENGTH_SHORT).show();
             finish();
         }else {
             //Se obtiene el empleado a añadir
@@ -215,7 +218,7 @@ public class EditarDepartamentoActivity extends AppCompatActivity {
                             //Se introduce el empleado al departamento y se añade a la bd
                             departamento.setUidJefeDepartamento(uidJefeDpt);
                             dbReference.child("Departamentos").child(did).setValue(departamento);
-                            Toast.makeText(getApplicationContext(), "Departamento creado", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Departamento editado", Toast.LENGTH_SHORT).show();
 
                             //Se actualiza la imagen
                             subirImagenFirebase(imagenUri);
@@ -237,7 +240,7 @@ public class EditarDepartamentoActivity extends AppCompatActivity {
     }
 
     //Método para rellenar las opciones de empleados
-    private void rellenarSpinnerEmpleados(Empleado empleado){
+    private void rellenarSpinnerEmpleados(){
         ArrayAdapter<String> empleadoAdapter= new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, empleadosNombres);
         empleadoAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerEmpleado.setAdapter(empleadoAdapter);

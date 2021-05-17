@@ -147,24 +147,26 @@ public class NuevoDepartamentoActivity extends AppCompatActivity {
 
     //Método para subir la imagen a la database y cargarla en el layout
     private void subirImagenFirebase(Uri imagenUri){
-        StorageReference archivoRef= storageReference.child("departments/"+did+"/cover.jpg");
-        archivoRef.putFile(imagenUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                archivoRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        //Si se sube correctamente se accede a la base de datos y la carga en el layout
-                        Picasso.get().load(uri).into(iv_imagenDepartamento);
-                    }
-                });
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getBaseContext(),"errooor",Toast.LENGTH_SHORT).show();
-            }
-        });
+        try {
+            StorageReference archivoRef = storageReference.child("departments/" + did + "/cover.jpg");
+            archivoRef.putFile(imagenUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    archivoRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            //Si se sube correctamente se accede a la base de datos y la carga en el layout
+                            Picasso.get().load(uri).into(iv_imagenDepartamento);
+                        }
+                    });
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getBaseContext(), "errooor", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }catch (java.lang.IllegalArgumentException e){}
     }
 
     private void crearDepartamento(View v){
