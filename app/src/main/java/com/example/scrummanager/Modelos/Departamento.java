@@ -22,6 +22,8 @@ public class Departamento implements Serializable {
         this.idDepartamento = idDepartamento;
         this.nombreDepartamento = nombreDepartamento;
         this.idEmpresa= idEmpresa;
+        miembrosDepartamento= new ArrayList<>();
+        ListaProyectosDepartamento= new ArrayList<>();
     }
 
     public boolean isShowMenu() {
@@ -78,5 +80,36 @@ public class Departamento implements Serializable {
 
     public void setListaProyectosDepartamento(ArrayList<Proyecto> listaProyectosDepartamento) {
         this.ListaProyectosDepartamento = listaProyectosDepartamento;
+    }
+
+    public void aniadirEmpleado(String uid){
+        try {
+            if(!comprobarListaEmpleados(uid)) {
+                this.miembrosDepartamento.add(uid);
+            }
+        }catch (java.lang.NullPointerException e){
+            miembrosDepartamento = new ArrayList<>();
+            if(!comprobarListaEmpleados(uid)) {
+                this.miembrosDepartamento.add(uid);
+            }
+        }
+    }
+    public boolean comprobarListaEmpleados(String uid){
+        boolean existe= false;
+        for(int i= 0; i<miembrosDepartamento.size();i++){
+            if(uid.equals(miembrosDepartamento.get(i))){
+                existe=true;
+            }
+        }
+        return existe;
+    }
+    public void eliminarEmpleado(String uid){
+        try {
+            if(comprobarListaEmpleados(uid)) {
+                this.miembrosDepartamento.remove(uid);
+            }
+        }catch (java.lang.NullPointerException e){
+
+        }
     }
 }

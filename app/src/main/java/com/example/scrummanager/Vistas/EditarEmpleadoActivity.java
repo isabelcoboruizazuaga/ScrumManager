@@ -47,19 +47,18 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 public class EditarEmpleadoActivity extends AppCompatActivity {
-    private FirebaseAuth mAuthAdmin, mAuthWorker;
     private DatabaseReference dbReference;
     private FirebaseDatabase database;
     private ValueEventListener eventListener;
     StorageReference storageReference;
+    private FirebaseAuth mAuthAdmin, mAuthWorker;
 
     private ArrayList<Departamento> departamentos=new ArrayList<>();
     private ArrayList<String> departamentosNombres=new ArrayList<>();
     private Empleado empleado;
     private String uid,eid;
-    private String idDepartamento;
+    private String idDepartamento, idAntiguoDepartamento;
     Uri imagenUri;
-
 
     private Spinner spinnerDepartamento;
     private Button btn_registrar;
@@ -75,6 +74,7 @@ public class EditarEmpleadoActivity extends AppCompatActivity {
         empleado = (Empleado) intent.getSerializableExtra("empleado");
         uid= empleado.getUid();
         eid=empleado.getIdEmpresa();
+        idAntiguoDepartamento=empleado.getIdDepartamento();
 
         //Inicialización variables del layout
         spinnerDepartamento= findViewById(R.id.spinner_departamentos);
@@ -85,6 +85,7 @@ public class EditarEmpleadoActivity extends AppCompatActivity {
         et_email=findViewById(R.id.et_emailEmpleado);
         iv_imagenEmpleado=findViewById(R.id.iv_imagenEmpleado);
 
+        btn_registrar.setText("Editar");
         et_email.setEnabled(false);
 
         //Se rellenan los campos con los datos originales del empleado
@@ -93,11 +94,12 @@ public class EditarEmpleadoActivity extends AppCompatActivity {
         et_dni.setText(empleado.getNifEmpleado());
         et_email.setText(empleado.getEmailEmpleado());
 
-        //Firebase database inicialización
+        //Inicialización de firebaseDatabase
         database= FirebaseDatabase.getInstance();
         dbReference=database.getReference();
         storageReference= FirebaseStorage.getInstance().getReference();
         setEventListener();
+        dbReference.child(eid).child("Departamentos").addValueEventListener(eventListener);
 
         //Se coloca el departamento actual el primero
         if(empleado.getIdDepartamento()!=null && !empleado.getIdDepartamento().equals("-1")) {
@@ -195,8 +197,7 @@ public class EditarEmpleadoActivity extends AppCompatActivity {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getBaseContext(), "Error al subir la imagen", Toast.LENGTH_SHORT).show();
-                }
+                    }
             });
         }catch (java.lang.IllegalArgumentException e){}
     }
@@ -216,21 +217,56 @@ public class EditarEmpleadoActivity extends AppCompatActivity {
         String apellido = et_apellidos.getText().toString();
         String dni=et_dni.getText().toString();
 
-        //Se añade a la empresa
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        String eid= sp.getString("eid","-1");
-
         //Se crea el perfil de usuario y se envía a la base de datos
         Empleado empleadoObjeto= new Empleado(uid,nombre,apellido,eid);
         empleadoObjeto.setEmailEmpleado(email);
         empleadoObjeto.setNifEmpleado(dni);
         empleadoObjeto.setIdDepartamento(idDepartamento);
-        dbReference.child(eid).child("Empleados").child(uid).setValue(empleadoObjeto);
 
-        //Se actualiza la imagen
-        subirImagenFirebase(imagenUri);
+        //Si el empleado se edita sin departamento se añade sin más a la base de datos
+        if(idDepartamento.equals("-1")){
+            dbReference.child(eid).child("Empleados").child(uid).setValue(empleadoObjeto);
+            //Se actualiza la imagen
+            subirImagenFirebase(imagenUri);
+            Toast.makeText(getApplicationContext(), "Empleado editado", Toast.LENGTH_SHORT).show();
+            finish();
+        }else{
+            //Se obtiene el departamento, se edita y se devuelve a la bd
+            DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference().child(eid);
+            dbReference.child("Departamentos").child(idDepartamento).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    //Se añade al departamento
+                    Departamento departamento = snapshot.getValue(Departamento.class);
+                    departamento.aniadirEmpleado(uid);
 
-        finish();
+                    dbReference.child("Departamentos").child(idDepartamento).setValue(departamento);
+                    dbReference.child("Empleados").child(uid).setValue(empleadoObjeto);
+
+                    //Se obtiene el antiguo departamento, se edita eliminando el empleado y se devuelve a la bd
+                    DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference().child(eid);
+                    dbReference.child("Departamentos").child(idAntiguoDepartamento).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            //Se añade al departamento
+                            Departamento departamento = snapshot.getValue(Departamento.class);
+                            departamento.eliminarEmpleado(uid);
+
+                            dbReference.child("Departamentos").child(idAntiguoDepartamento).setValue(departamento);
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {  }
+                    });
+
+                    //Se actualiza la imagen
+                    subirImagenFirebase(imagenUri);
+                    Toast.makeText(getApplicationContext(), "Empleado editado", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {  }
+            });
+        }
     }
     //Valores del spinner
     private Departamento departamento;

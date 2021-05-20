@@ -46,9 +46,7 @@ public class EditarDepartamentoActivity extends AppCompatActivity {
 
     private ArrayList<Empleado> empleados;
     private ArrayList<String> empleadosNombres;
-    private String uidJefeDpt;
-    private String eid;
-    private String did;
+    private String uidJefeDpt, eid, did;
     private Departamento departamento;
     private Uri imagenUri;
 
@@ -92,18 +90,26 @@ public class EditarDepartamentoActivity extends AppCompatActivity {
         dbReference.child("Empleados").addValueEventListener(eventListener);
 
         //Se coloca el empleado actual el primero
-        if(departamento.getUidJefeDepartamento()!=null) {
+        if(departamento.getUidJefeDepartamento()!=null && !departamento.getUidJefeDepartamento().equals("-1")) {
             dbReference.child("Empleados").child(departamento.getUidJefeDepartamento()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    Empleado empleado1 = snapshot.getValue(Empleado.class);
-                    empleados.add(0, empleado1);
-                    empleadosNombres.add(0, empleado1.getNombreEmpleado() + " " + empleado1.getApellidoEmpleado());
+                    //Si el departamento tiene jefe y nada falla
+                    try{
+                        Empleado empleado1 = snapshot.getValue(Empleado.class);
+                        empleados.add(0, empleado1);
+                        empleadosNombres.add(0, empleado1.getNombreEmpleado() + " " + empleado1.getApellidoEmpleado());
 
-                    //Se añade la opción de dejar sin jefe
-                    Empleado empleado = new Empleado("-1", "Sin", "Jefe", eid);
-                    empleados.add(empleado);
-                    empleadosNombres.add(empleado.getNombreEmpleado() + empleado.getApellidoEmpleado());
+                        //Se añade la opción de dejar sin jefe
+                        Empleado empleado = new Empleado("-1", "Sin", "Jefe", eid);
+                        empleados.add(1,empleado);
+                        empleadosNombres.add(1,empleado.getNombreEmpleado() + empleado.getApellidoEmpleado());
+                    }catch (java.lang.NullPointerException e){
+                        //Si no tiene jefe o falla al recuperarlo
+                        Empleado empleado = new Empleado("-1", "Sin", "Jefe", eid);
+                        empleados.add(0,empleado);
+                        empleadosNombres.add(0,empleado.getNombreEmpleado() + empleado.getApellidoEmpleado());
+                    }
 
                     rellenarSpinnerEmpleados();
                 }
@@ -115,8 +121,8 @@ public class EditarDepartamentoActivity extends AppCompatActivity {
         }else{
             //Se añade la opción de dejar sin jefe
             Empleado empleado = new Empleado("-1", "Sin", "Jefe", eid);
-            empleados.add(empleado);
-            empleadosNombres.add(empleado.getNombreEmpleado() + empleado.getApellidoEmpleado());
+            empleados.add(0,empleado);
+            empleadosNombres.add(0,empleado.getNombreEmpleado() + empleado.getApellidoEmpleado());
 
             rellenarSpinnerEmpleados();
         }
@@ -134,7 +140,7 @@ public class EditarDepartamentoActivity extends AppCompatActivity {
             }
         });
 
-        btn_crear.setOnClickListener(this::crearDepartamento);
+        btn_crear.setOnClickListener(this::editarDepartamento);
 
         //Al clickar en la imagen se selecciona en la galería
         iv_imagenDepartamento.setOnClickListener(new View.OnClickListener() {
@@ -168,32 +174,39 @@ public class EditarDepartamentoActivity extends AppCompatActivity {
 
     //Método para subir la imagen a la database y cargarla en el layout
     private void subirImagenFirebase(Uri imagenUri){
-        StorageReference archivoRef= storageReference.child("departments/"+did+"/cover.jpg");
-        archivoRef.putFile(imagenUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                archivoRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        //Si se sube correctamente se accede a la base de datos y la carga en el layout
-                        Picasso.get().load(uri).into(iv_imagenDepartamento);
-                    }
-                });
-                Toast.makeText(getBaseContext(),"ok",Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getBaseContext(),"errooor",Toast.LENGTH_SHORT).show();
-            }
-        });
+        try {
+            StorageReference archivoRef = storageReference.child("departments/" + did + "/cover.jpg");
+            archivoRef.putFile(imagenUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    archivoRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            //Si se sube correctamente se accede a la base de datos y la carga en el layout
+                            Picasso.get().load(uri).into(iv_imagenDepartamento);
+                        }
+                    });
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                }
+            });
+        }catch (java.lang.IllegalArgumentException e){}
     }
 
-    private void crearDepartamento(View v){
-        String nombre= et_nombre.getText().toString();
-        Departamento departamento= new Departamento(did,nombre,eid);
+    //Método para rellenar las opciones de empleados
+    private void rellenarSpinnerEmpleados(){
+        ArrayAdapter<String> empleadoAdapter= new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, empleadosNombres);
+        empleadoAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerEmpleado.setAdapter(empleadoAdapter);
+    }
 
-        //Si el departamento se crea sin jefe se añade sin más a la base de datos
+    private void editarDepartamento(View v){
+        String nombre= et_nombre.getText().toString();
+        departamento.setNombreDepartamento(nombre);
+
+        //Si el departamento se edita sin jefe se añade sin más a la base de datos
         if(uidJefeDpt.equals("-1")){
             dbReference.child("Departamentos").child(did).setValue(departamento);
 
@@ -209,7 +222,8 @@ public class EditarDepartamentoActivity extends AppCompatActivity {
                     if (snapshot.exists()) {
                         Empleado empleado = snapshot.getValue(Empleado.class);
                         //Si el empleado pertenece ya a un departamento no puede añadirse como jefe del nuevo
-                        if (empleado.getNivelJerarquia() != 2) {
+                        if (empleado.getNivelJerarquia() != 2 || empleado.getIdDepartamento().equals(did)) {
+                            String antiguoDpt= empleado.getIdDepartamento();
                             //Se actualiza el departamento del empleado en la base de datos
                             empleado.setIdDepartamento(did);
                             empleado.setNivelJerarquia(2);
@@ -218,8 +232,21 @@ public class EditarDepartamentoActivity extends AppCompatActivity {
                             //Se introduce el empleado al departamento y se añade a la bd
                             departamento.setUidJefeDepartamento(uidJefeDpt);
                             dbReference.child("Departamentos").child(did).setValue(departamento);
-                            Toast.makeText(getApplicationContext(), "Departamento editado", Toast.LENGTH_SHORT).show();
 
+                            //Se elimina el jefe como jefe de anterior departamento
+                            dbReference.child("Departamentos").child(antiguoDpt).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    //Se elimina del departamento
+                                    Departamento departamento = snapshot.getValue(Departamento.class);
+                                    departamento.setUidJefeDepartamento("-1");
+                                    dbReference.child("Departamentos").child(antiguoDpt).setValue(departamento);
+                                }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {  }
+                            });
+
+                            Toast.makeText(getApplicationContext(), "Departamento editado", Toast.LENGTH_SHORT).show();
                             //Se actualiza la imagen
                             subirImagenFirebase(imagenUri);
 
@@ -237,13 +264,6 @@ public class EditarDepartamentoActivity extends AppCompatActivity {
                 }
             });
         }
-    }
-
-    //Método para rellenar las opciones de empleados
-    private void rellenarSpinnerEmpleados(){
-        ArrayAdapter<String> empleadoAdapter= new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, empleadosNombres);
-        empleadoAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerEmpleado.setAdapter(empleadoAdapter);
     }
     private Empleado empleado;
     private void setEventListener(){

@@ -80,23 +80,24 @@ public class AdaptadorEmpleados extends RecyclerView.Adapter<RecyclerView.ViewHo
         //Si se está mostrando el Empleado
         if (holder instanceof AdaptadorEmpleadosViewHolder) {
             //Se obtiene el nombre de departamento y se muestra
-            DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference().child(eid).child("Departamentos");
+            DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference().child(eid).child("Departamentos").child(departamentoEmpleado);
             dbReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    for (DataSnapshot xempleado : snapshot.getChildren() ){
-                        //Se añaden los empleados a la lista
-                        Departamento departamento = xempleado.getValue(Departamento.class);
-                        String dptNombre= departamento.getNombreDepartamento();
-                        String did= departamento.getIdDepartamento();
+                        //Se añaden el departamento
+                        Departamento departamento = snapshot.getValue(Departamento.class);
                         try {
-                            if (departamentoEmpleado.equals(did)) {
-                                ((AdaptadorEmpleadosViewHolder) holder).tv_departamentoEmpleado.setText(dptNombre);
-                            } else {
+                            String did= departamento.getIdDepartamento();
+                            if (departamentoEmpleado.equals("-1")) {
                                 ((AdaptadorEmpleadosViewHolder) holder).tv_departamentoEmpleado.setText("Sin departamento");
+                            } else {
+                                String dptNombre= departamento.getNombreDepartamento();
+                                ((AdaptadorEmpleadosViewHolder) holder).tv_departamentoEmpleado.setText(dptNombre);
                             }
-                        }catch ( java.lang.NullPointerException e){}
-                    }
+                        }catch ( Exception e){
+                            ((AdaptadorEmpleadosViewHolder) holder).tv_departamentoEmpleado.setText("Sin departamento");
+                        }
+
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {  }
