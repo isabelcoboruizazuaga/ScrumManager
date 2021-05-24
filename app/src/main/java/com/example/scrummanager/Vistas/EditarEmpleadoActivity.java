@@ -243,20 +243,28 @@ public class EditarEmpleadoActivity extends AppCompatActivity {
                     dbReference.child("Departamentos").child(idDepartamento).setValue(departamento);
                     dbReference.child("Empleados").child(uid).setValue(empleadoObjeto);
 
-                    //Se obtiene el antiguo departamento, se edita eliminando el empleado y se devuelve a la bd
-                    DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference().child(eid);
-                    dbReference.child("Departamentos").child(idAntiguoDepartamento).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            //Se añade al departamento
-                            Departamento departamento = snapshot.getValue(Departamento.class);
-                            departamento.eliminarEmpleado(uid);
+                    if(!idAntiguoDepartamento.equals(idDepartamento)&&!idAntiguoDepartamento.equals("-1")) {
+                        //Se obtiene el antiguo departamento, se edita eliminando el empleado y se devuelve a la bd
+                        DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference().child(eid);
+                        dbReference.child("Departamentos").child(idAntiguoDepartamento).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                //Se elimina del departamento
+                                Departamento departamento = snapshot.getValue(Departamento.class);
+                                departamento.eliminarEmpleado(uid);
 
-                            dbReference.child("Departamentos").child(idAntiguoDepartamento).setValue(departamento);
-                        }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {  }
-                    });
+                                if(departamento.getUidJefeDepartamento().equals(uid)){
+                                    departamento.setUidJefeDepartamento("-1");
+                                }
+
+                                dbReference.child("Departamentos").child(idAntiguoDepartamento).setValue(departamento);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                            }
+                        });
+                    }
 
                     //Se actualiza la imagen
                     subirImagenFirebase(imagenUri);

@@ -188,8 +188,32 @@ public class NuevoDepartamentoActivity extends AppCompatActivity {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.exists()) {
                         Empleado empleado = snapshot.getValue(Empleado.class);
-                        //Si el empleado pertenece ya a un departamento no puede añadirse como jefe del nuevo
-                        if (empleado.getNivelJerarquia() != 2) {
+                        //Si el empleado es jefe de otro departamento no puede añadirse como jefe del nuevo
+                        if(empleado.getNivelJerarquia()==2 && !empleado.getIdDepartamento().equals(did)) {
+                            Toast.makeText(getApplicationContext(), "Este empleado ya es jefe de otro departamento", Toast.LENGTH_SHORT).show();
+                        }else{
+                            String antiguoDpt= empleado.getIdDepartamento();
+                            //Si el empleado pertenecía a otro departamento
+                            if(!antiguoDpt.equals(did)) {
+                                if(!antiguoDpt.equals("-1")&&!antiguoDpt.equals(did)) {
+                                    //Se elimina el jefe como jefe de anterior departamento
+                                    dbReference.child("Departamentos").child(antiguoDpt).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            //Se elimina del departamento
+                                            Departamento departamento = snapshot.getValue(Departamento.class);
+                                            departamento.setUidJefeDepartamento("-1");
+                                            dbReference.child("Departamentos").child(antiguoDpt).setValue(departamento);
+
+                                        }
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+                                        }
+                                    });
+                                }
+                                //se añade al nuevo
+                                departamento.aniadirEmpleado(empleado.getUid());
+                            }
                             //Se actualiza el departamento del empleado en la base de datos
                             empleado.setIdDepartamento(did);
                             empleado.setNivelJerarquia(2);
@@ -204,8 +228,6 @@ public class NuevoDepartamentoActivity extends AppCompatActivity {
                             subirImagenFirebase(imagenUri);
 
                             finish();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Este empleado ya es jefe de otro departamento", Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         Toast.makeText(getApplicationContext(), "Ha ocurrido un error al recuperar los datos del empleado", Toast.LENGTH_SHORT).show();

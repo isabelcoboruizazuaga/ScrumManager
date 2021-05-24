@@ -16,7 +16,7 @@
         <activity android:name=".Vistas.NuevoEmpleadoActivity" />
         <activity
             android:name=".Vistas.LoginActivity"
-            android:label="@string/title_activity_login"
+            android:label="@string/app_name"
             android:theme="@style/Theme.ScrumManager.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

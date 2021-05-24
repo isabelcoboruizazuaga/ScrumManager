@@ -271,8 +271,32 @@ public class NuevoEmpleadoActivity extends AppCompatActivity {
                                     empleadoObjeto.setNifEmpleado(dni);
                                     empleadoObjeto.setIdDepartamento(idDepartamento);
                                     dbReference.child(eid).child("Empleados").child(uid).setValue(empleadoObjeto);
+                                    //Si el empleado se edita sin departamento se añade sin más a la base de datos
+                                    if(idDepartamento.equals("-1")){
+                                        dbReference.child(eid).child("Empleados").child(uid).setValue(empleadoObjeto);
 
-                                    updateUI(user);
+                                        updateUI(user);
+                                    }else {
+                                        //Se obtiene el departamento, se edita y se devuelve a la bd
+                                        DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference().child(eid);
+                                        dbReference.child("Departamentos").child(idDepartamento).addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                //Se añade al departamento
+                                                Departamento departamento = snapshot.getValue(Departamento.class);
+                                                departamento.aniadirEmpleado(uid);
+
+                                                dbReference.child("Departamentos").child(idDepartamento).setValue(departamento);
+                                                dbReference.child("Empleados").child(uid).setValue(empleadoObjeto);
+
+                                                updateUI(user);
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+                                            }
+                                        });
+                                    }
                                 } else {
                                     //Si falla el usuario es informado
                                     updateUI(null);
