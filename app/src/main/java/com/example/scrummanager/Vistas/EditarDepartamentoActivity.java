@@ -207,15 +207,45 @@ public class EditarDepartamentoActivity extends AppCompatActivity {
         departamento.setNombreDepartamento(nombre);
         departamento.setShowMenu(false);
 
-        Log.e("uid2: ",  uidJefeDpt);
-
-        //Si el departamento se edita sin jefe se añade sin más a la base de datos
+        //Si el departamento se edita sin jefe
         if(uidJefeDpt.equals("-1")){
-            dbReference.child("Departamentos").child(did).setValue(departamento);
-            //Se actualiza la imagen
-            subirImagenFirebase(imagenUri);
-            Toast.makeText(getApplicationContext(), "Departamento editado", Toast.LENGTH_SHORT).show();
-            finish();
+            //se busca el antiguo jefe y se edita en la bd
+            dbReference.child("Empleados").child(departamento.getUidJefeDepartamento()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    //Si el jefe antes era un empleado
+                    if (snapshot.exists()) {
+                        Empleado empleado = snapshot.getValue(Empleado.class);
+                            //Se actualizan los datos del empleado en la base de dato
+                            empleado.setIdDepartamento(did);
+                            empleado.setNivelJerarquia(4);
+                            dbReference.child("Empleados").child(departamento.getUidJefeDepartamento()).setValue(empleado);
+
+                            //Se añade el departamento a la bd ahora sin jefe
+                            departamento.setUidJefeDepartamento(uidJefeDpt); //uidJefeDtp="-1"
+                            dbReference.child("Departamentos").child(did).setValue(departamento);
+
+                            Toast.makeText(getApplicationContext(), "Departamento editado", Toast.LENGTH_SHORT).show();
+                            //Se actualiza la imagen
+                            subirImagenFirebase(imagenUri);
+                            finish();
+                    } else {
+                        //Si antes también era sin jefe
+                        //Se añade el departamento a la bd ahora sin jefe
+                        departamento.setUidJefeDepartamento(uidJefeDpt); //uidJefeDtp="-1"
+                        dbReference.child("Departamentos").child(did).setValue(departamento);
+
+                        Toast.makeText(getApplicationContext(), "Departamento editado", Toast.LENGTH_SHORT).show();
+                        //Se actualiza la imagen
+                        subirImagenFirebase(imagenUri);
+                        finish();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
+            });
         }else {
             //Se obtiene el empleado a añadir
             dbReference.child("Empleados").child(uidJefeDpt).addListenerForSingleValueEvent(new ValueEventListener() {
