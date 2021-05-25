@@ -54,6 +54,9 @@ public class AdaptadorEmpleadosDpt extends RecyclerView.Adapter<RecyclerView.Vie
 
         //Se incluye el empleado en el layout
         ((AdaptadorEmpleadosDptViewHolder) holder).tv_nombreEmpleadoDpt.setText(nombre);
+        if(empleado.getNivelJerarquia()<=2){
+            ((AdaptadorEmpleadosDptViewHolder) holder).tv_nombreEmpleadoDpt.setTextColor(contexto.getResources().getColor(R.color.teal_700));
+        }
 
         //Imagen de perfil
         storageReference= FirebaseStorage.getInstance().getReference();

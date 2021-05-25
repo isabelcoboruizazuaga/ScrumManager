@@ -247,6 +247,25 @@ public class EditarDepartamentoActivity extends AppCompatActivity {
                 }
             });
         }else {
+            //se busca el antiguo jefe y se edita en la bd
+            dbReference.child("Empleados").child(departamento.getUidJefeDepartamento()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    //Si el jefe antes era un empleado
+                    if (snapshot.exists()) {
+                        Empleado empleado = snapshot.getValue(Empleado.class);
+                        //Se actualizan los datos del empleado en la base de dato
+                        empleado.setIdDepartamento(did);
+                        empleado.setNivelJerarquia(4);
+                        dbReference.child("Empleados").child(departamento.getUidJefeDepartamento()).setValue(empleado);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
+            });
+
             //Se obtiene el empleado a añadir
             dbReference.child("Empleados").child(uidJefeDpt).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override

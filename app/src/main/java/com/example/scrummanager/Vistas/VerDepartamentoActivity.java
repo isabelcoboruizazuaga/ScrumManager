@@ -54,26 +54,26 @@ public class VerDepartamentoActivity extends AppCompatActivity {
         //Se recogen los datos del departamento a editar
         Intent intent = getIntent();
         departamento = (Departamento) intent.getSerializableExtra("departamento");
-        did= departamento.getIdDepartamento();
-        miembrosDpt= departamento.getMiembrosDepartamento();
+        did = departamento.getIdDepartamento();
+        miembrosDpt = departamento.getMiembrosDepartamento();
 
         //Inicialización variables del layout
-        tv_nombreDepartamento=findViewById(R.id.tv_nombreDepartamento);
-        iv_imagenDepartamento=findViewById(R.id.iv_imagenDepartamento);
+        tv_nombreDepartamento = findViewById(R.id.tv_nombreDepartamento);
+        iv_imagenDepartamento = findViewById(R.id.iv_imagenDepartamento);
         tv_nombreDepartamento.setText(departamento.getNombreDepartamento());
 
         //Obtención del id de empresa
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        eid= sp.getString("eid","-1");
+        eid = sp.getString("eid", "-1");
 
         //Inicialización de firebaseDatabase
-        database= FirebaseDatabase.getInstance();
+        database = FirebaseDatabase.getInstance();
         dbReference = database.getReference().child(eid);
-        storageReference= FirebaseStorage.getInstance().getReference();
+        storageReference = FirebaseStorage.getInstance().getReference();
 
         //Imagen de perfil
-        storageReference= FirebaseStorage.getInstance().getReference();
-        StorageReference perfilRef= storageReference.child("departments/"+did+"/cover.jpg");
+        storageReference = FirebaseStorage.getInstance().getReference();
+        StorageReference perfilRef = storageReference.child("departments/" + did + "/cover.jpg");
         perfilRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
@@ -84,26 +84,32 @@ public class VerDepartamentoActivity extends AppCompatActivity {
         //Inicialización del recycler view
         recView = findViewById(R.id.rv_empleadosDpt);
         //Creación del layout y asignación al recycler
-        LinearLayoutManager layoutManager= new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recView.setLayoutManager(layoutManager);
 
         //Extracción de los datos de empleados de la base de datos
-        empleados= new ArrayList<>();
+        empleados = new ArrayList<>();
         //Se recorre la lista de miembros y se extraen los datos de cada uno para rellenar el recycler view
-        for(int i=0; i<miembrosDpt.size();i++){
-            String uid= miembrosDpt.get(i);
-            dbReference.child("Empleados").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    Empleado empld= snapshot.getValue(Empleado.class);
-                    empleados.add(empld);
+        try {
+            for (int i = 0; i < miembrosDpt.size(); i++) {
+                String uid = miembrosDpt.get(i);
+                dbReference.child("Empleados").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Empleado empld = snapshot.getValue(Empleado.class);
+                        empleados.add(empld);
 
-                    AdaptadorEmpleadosDpt adaptadorEmpleados= new AdaptadorEmpleadosDpt(empleados,getApplicationContext());
-                    recView.setAdapter(adaptadorEmpleados);
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) { }
-            });
+                        AdaptadorEmpleadosDpt adaptadorEmpleados = new AdaptadorEmpleadosDpt(empleados, getApplicationContext());
+                        recView.setAdapter(adaptadorEmpleados);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
+            }
+        } catch (NullPointerException e){
+
         }
     }
 }

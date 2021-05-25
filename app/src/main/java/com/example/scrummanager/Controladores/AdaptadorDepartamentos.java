@@ -79,11 +79,18 @@ public class AdaptadorDepartamentos extends RecyclerView.Adapter<RecyclerView.Vi
                 });
             }
 
+            //Un click simple muestra el departamento
+            ((AdaptadorDepartamentosViewHolder)holder).itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    verDepartamento(departamento);
+                }
+            });
+
             //Si se mantiene pulsado se abre el menú de opciones
             ((AdaptadorDepartamentosViewHolder)holder).itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    System.out.println(did);
                     ImageView image = ((AdaptadorDepartamentos.AdaptadorDepartamentosViewHolder) holder).iv_fotoDepartamento;
                     Picasso.get().cancelRequest(image);
                     mostrarMenu(position);
