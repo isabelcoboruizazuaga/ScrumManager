@@ -33,7 +33,6 @@ public class AdaptadorEmpleadosDpt extends RecyclerView.Adapter<RecyclerView.Vie
     public AdaptadorEmpleadosDpt(ArrayList<Empleado> empleados, Context contexto) {
         this.empleados = empleados;
         this.contexto = contexto;
-        this.fragment=fragment;
     }
 
     @NonNull
@@ -65,24 +64,15 @@ public class AdaptadorEmpleadosDpt extends RecyclerView.Adapter<RecyclerView.Vie
                 Picasso.get().load(uri).into((( AdaptadorEmpleadosDpt.AdaptadorEmpleadosDptViewHolder) holder).iv_fotoEmpleadoDpt);
             }
         });
-
-        //Si se mantiene pulsado se abre el menú de opciones
-        ((AdaptadorEmpleadosDpt.AdaptadorEmpleadosDptViewHolder) holder).itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                empleados.remove(empleado);
-                return true;
-            }
-        });
-        /*//Si se hace un click simple se muestra el contenido
-        ((AdaptadorEmpleados.AdaptadorEmpleadosViewHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
+        //Si se hace un click simple se muestra el contenido
+        ((AdaptadorEmpleadosDpt.AdaptadorEmpleadosDptViewHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent= new Intent(contexto, VerEmpleadoActivity.class);
                 intent.putExtra("empleado",empleado);
                 contexto.startActivity(intent);
             }
-        });*/
+        });
     }
 
     @Override

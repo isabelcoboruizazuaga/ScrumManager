@@ -60,7 +60,6 @@ public class NuevoDepartamentoActivity extends AppCompatActivity {
     private Button btn_crear;
     private EditText et_nombre;
     private ImageView iv_imagenDepartamento;
-    private RecyclerView recView;
 
 
     @Override
@@ -118,11 +117,6 @@ public class NuevoDepartamentoActivity extends AppCompatActivity {
             }
         });
 
-        //Inicialización del recycler view
-        recView= findViewById(R.id.rv_empleadosDpt);
-        //Creación del layout y asignación al recycler
-        LinearLayoutManager layoutManager= new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
-        recView.setLayoutManager(layoutManager);
 
         //Cargar la imagen de departamento
         StorageReference perfilRef= storageReference.child("departments/"+did+"/cover.jpg");
@@ -247,6 +241,7 @@ public class NuevoDepartamentoActivity extends AppCompatActivity {
         empleadoAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerEmpleado.setAdapter(empleadoAdapter);
     }
+
  private Empleado empleado;
     private void setEventListener(){
         eventListener= new ValueEventListener() {
@@ -257,10 +252,6 @@ public class NuevoDepartamentoActivity extends AppCompatActivity {
                     empleado = xempleado.getValue(Empleado.class);
                     empleados.add(empleado);
                     empleadosNombres.add(empleado.getNombreEmpleado() +" " +empleado.getApellidoEmpleado());
-
-                    AdaptadorEmpleadosDpt adaptadorEmpleados= new AdaptadorEmpleadosDpt(empleados,getApplicationContext());
-                    recView.setAdapter(adaptadorEmpleados);
-                    Log.e("onDataChange", "onDataChange:" + xempleado.getValue().toString());
                 }
             }
             @Override

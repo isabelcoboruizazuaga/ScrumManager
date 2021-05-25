@@ -18,6 +18,7 @@ import com.example.scrummanager.Modelos.Departamento;
 import com.example.scrummanager.R;
 import com.example.scrummanager.Vistas.EditarDepartamentoActivity;
 import com.example.scrummanager.Vistas.EditarEmpleadoActivity;
+import com.example.scrummanager.Vistas.VerDepartamentoActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -106,7 +107,7 @@ public class AdaptadorDepartamentos extends RecyclerView.Adapter<RecyclerView.Vi
             ((MenuViewHolder) holder).btn_verDepartamento.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    verDepartamento();
+                    verDepartamento(departamento);
                 }
             });
             ((MenuViewHolder) holder).btn_editarDepartamento.setOnClickListener(new View.OnClickListener() {
@@ -218,9 +219,10 @@ public class AdaptadorDepartamentos extends RecyclerView.Adapter<RecyclerView.Vi
         contexto.startActivity(intent);
     }
 
-    public void verDepartamento(){
-        System.out.println("VIENDOOOOOOO");
-        Toast.makeText(contexto,"VIENDO SEÑORES", Toast.LENGTH_LONG);
+    public void verDepartamento(Departamento departamento){
+        Intent intent= new Intent(contexto, VerDepartamentoActivity.class);
+        intent.putExtra("departamento",departamento);
+        contexto.startActivity(intent);
     }
 
     public void borrarDepartamento(){
