@@ -1,6 +1,8 @@
 package com.example.scrummanager.Controladores;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -134,7 +136,7 @@ public class AdaptadorDepartamentos extends RecyclerView.Adapter<RecyclerView.Vi
             ((MenuViewHolder) holder).btn_borrarDepartamento.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    borrarDepartamento(departamento);
+                    borrarConfirmacion(departamento);
                 }
             });
 
@@ -239,6 +241,28 @@ public class AdaptadorDepartamentos extends RecyclerView.Adapter<RecyclerView.Vi
         intent.putExtra("departamento",departamento);
         contexto.startActivity(intent);
     }
+    private void borrarConfirmacion(Departamento departamento) {
+        //Inicialización
+        AlertDialog.Builder alertDialogBu = new AlertDialog.Builder(contexto);
+        alertDialogBu.setTitle("Borrar");
+        alertDialogBu.setMessage("¿Seguro que quiere eliminar " + departamento.getNombreDepartamento() +"? Esta acción no se puede deshacer");
+
+        //Opción positiva
+        alertDialogBu.setPositiveButton("Borrar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                borrarDepartamento(departamento);
+            }
+        });
+        //Opción negativa
+        alertDialogBu.setNegativeButton("Cancelar·", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(contexto, "Cancelado", Toast.LENGTH_SHORT).show();
+            }
+        });
+        //Creación del dialog
+        AlertDialog alertDialog = alertDialogBu.create();
+        alertDialog.show();
+    }
 
     public void borrarDepartamento(Departamento departamento){
         //Obtención del id de empresa
@@ -252,6 +276,7 @@ public class AdaptadorDepartamentos extends RecyclerView.Adapter<RecyclerView.Vi
         DatabaseReference dbReference=FirebaseDatabase.getInstance().getReference().child(eid);
         dbReference.child("Departamentos").child(departamento.getIdDepartamento()).removeValue();
 
+        //Saltará al catch si no hay miembros
         try {
             //Se accede a cada miembro en la bd
             for (int i = 0; i < miembrosdpt.size(); i++) {
@@ -268,7 +293,7 @@ public class AdaptadorDepartamentos extends RecyclerView.Adapter<RecyclerView.Vi
                         //Se devuelve a la bd
                         dbReference.child("Empleados").child(uid).setValue(empld);
 
-                        Toast.makeText(contexto,"Departamento borrado",Toast.LENGTH_SHORT);
+                        Toast.makeText(contexto,"Departamento borrado",Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -277,7 +302,7 @@ public class AdaptadorDepartamentos extends RecyclerView.Adapter<RecyclerView.Vi
                 });
             }
         }catch (Exception e){
-            Toast.makeText(contexto,"Departamento borrado",Toast.LENGTH_SHORT);
+            Toast.makeText(contexto,"Departamento borrado",Toast.LENGTH_SHORT).show();
         }
     }
 

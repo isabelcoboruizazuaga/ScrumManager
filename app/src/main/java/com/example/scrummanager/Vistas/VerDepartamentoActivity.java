@@ -6,6 +6,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -134,7 +136,7 @@ public class VerDepartamentoActivity extends AppCompatActivity {
                 return true;
 
             case R.id.action_borrarDepartamento:
-                borrarDepartamento();
+                borrarConfirmacion();
                 finish();
                 return true;
             default:
@@ -147,6 +149,7 @@ public class VerDepartamentoActivity extends AppCompatActivity {
         DatabaseReference dbReference=FirebaseDatabase.getInstance().getReference().child(eid);
         dbReference.child("Departamentos").child(departamento.getIdDepartamento()).removeValue();
 
+        //Saltará al catch si no hay miembros
         try {
             //Se accede a cada miembro en la bd
             for (int i = 0; i < miembrosDpt.size(); i++) {
@@ -163,7 +166,7 @@ public class VerDepartamentoActivity extends AppCompatActivity {
                         //Se devuelve a la bd
                         dbReference.child("Empleados").child(uid).setValue(empld);
 
-                        Toast.makeText(getApplicationContext(),"Departamento borrado",Toast.LENGTH_SHORT);
+                        Toast.makeText(getApplicationContext(),"Departamento borrado",Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -172,7 +175,30 @@ public class VerDepartamentoActivity extends AppCompatActivity {
                 });
             }
         }catch (Exception e){
-            Toast.makeText(getApplicationContext(),"Departamento borrado",Toast.LENGTH_SHORT);
+            Toast.makeText(getApplicationContext(),"Departamento borrado",Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void borrarConfirmacion() {
+        //Inicialización
+        AlertDialog.Builder alertDialogBu = new AlertDialog.Builder(getApplicationContext());
+        alertDialogBu.setTitle("Borrar");
+        alertDialogBu.setMessage("¿Seguro que quiere eliminar " + departamento.getNombreDepartamento() +"? Esta acción no se puede deshacer");
+
+        //Opción positiva
+        alertDialogBu.setPositiveButton("Borrar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                borrarDepartamento();
+            }
+        });
+        //Opción negativa
+        alertDialogBu.setNegativeButton("Cancelar·", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(getApplicationContext(), "Cancelado", Toast.LENGTH_SHORT).show();
+            }
+        });
+        //Creación del dialog
+        AlertDialog alertDialog = alertDialogBu.create();
+        alertDialog.show();
     }
 }

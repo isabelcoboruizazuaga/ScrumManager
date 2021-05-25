@@ -166,7 +166,7 @@ public class AdaptadorEmpleados extends RecyclerView.Adapter<RecyclerView.ViewHo
             ((MenuViewHolder) holder).btn_borrarEmpleado.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    borrarConfirmacion(v, empleado);
+                    borrarConfirmacion(empleado);
                 }
             });
 
@@ -275,7 +275,7 @@ public class AdaptadorEmpleados extends RecyclerView.Adapter<RecyclerView.ViewHo
         contexto.startActivity(intent);
     }
 
-    private void borrarConfirmacion(View view, Empleado empleado) {
+    private void borrarConfirmacion(Empleado empleado) {
         //Inicialización
         AlertDialog.Builder alertDialogBu = new AlertDialog.Builder(contexto);
         alertDialogBu.setTitle("Borrar");

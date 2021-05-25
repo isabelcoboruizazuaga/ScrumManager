@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -84,7 +86,7 @@ public class VerEmpleadoActivity extends AppCompatActivity {
                 return true;
 
             case R.id.action_borrarEmpleado:
-                borrarEmpleado();
+                borrarConfirmacion();
                 finish();
                 return true;
             default:
@@ -127,6 +129,29 @@ public class VerEmpleadoActivity extends AppCompatActivity {
             dbReference.child("Empleados").child(uid).removeValue();
         }
         Toast.makeText(getApplicationContext(), empleado.getNombreEmpleado() +" "+empleado.getApellidoEmpleado() + " borrado", Toast.LENGTH_LONG).show();
+    }
+
+    private void borrarConfirmacion() {
+        //Inicialización
+        AlertDialog.Builder alertDialogBu = new AlertDialog.Builder(getApplicationContext());
+        alertDialogBu.setTitle("Borrar");
+        alertDialogBu.setMessage("¿Seguro que quiere eliminar a " + empleado.getNombreEmpleado() +"? Esta acción no se puede deshacer");
+
+        //Opción positiva
+        alertDialogBu.setPositiveButton("Borrar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                borrarEmpleado();
+            }
+        });
+        //Opción negativa
+        alertDialogBu.setNegativeButton("Cancelar·", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(getApplicationContext(), "Cancelado", Toast.LENGTH_SHORT).show();
+            }
+        });
+        //Creación del dialog
+        AlertDialog alertDialog = alertDialogBu.create();
+        alertDialog.show();
     }
 
 }
