@@ -166,7 +166,7 @@ public class AdaptadorEmpleados extends RecyclerView.Adapter<RecyclerView.ViewHo
             ((MenuViewHolder) holder).btn_borrarEmpleado.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    borrarEmpleado(v, empleado);
+                    borrarConfirmacion(v, empleado);
                 }
             });
 
@@ -275,26 +275,16 @@ public class AdaptadorEmpleados extends RecyclerView.Adapter<RecyclerView.ViewHo
         contexto.startActivity(intent);
     }
 
-    public void borrarEmpleado(View view, Empleado empleado) {
-        borrarConfirmacion(view, empleado.getUid(), empleado.getNombreEmpleado()+" "+empleado.getApellidoEmpleado(),empleado.getIdEmpresa());
-    }
-
-    private void borrarConfirmacion(View view, String uidEmpleado, String nombreEmpleado, String eid) {
-        //Inicialización de la base de datos
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference dbReference = database.getReference();
-
+    private void borrarConfirmacion(View view, Empleado empleado) {
         //Inicialización
         AlertDialog.Builder alertDialogBu = new AlertDialog.Builder(contexto);
         alertDialogBu.setTitle("Borrar");
-        alertDialogBu.setMessage("¿Seguro que quiere eliminar a " + nombreEmpleado +"? Esta acción no se puede deshacer");
+        alertDialogBu.setMessage("¿Seguro que quiere eliminar a " + empleado.getNombreEmpleado() +"? Esta acción no se puede deshacer");
 
         //Opción positiva
         alertDialogBu.setPositiveButton("Borrar", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                dbReference.child(eid).child("Empleados").child(uidEmpleado).removeValue();
-
-                Toast.makeText(contexto, nombreEmpleado + " borrado", Toast.LENGTH_SHORT).show();
+                borrarEmpleado(empleado);
             }
         });
         //Opción negativa
@@ -306,5 +296,40 @@ public class AdaptadorEmpleados extends RecyclerView.Adapter<RecyclerView.ViewHo
         //Creación del dialog
         AlertDialog alertDialog = alertDialogBu.create();
         alertDialog.show();
+    }
+    public void borrarEmpleado(Empleado empleado) {
+        String eid= empleado.getIdEmpresa();
+        String uid= empleado.getUid();
+        String did= empleado.getIdDepartamento();
+
+        //Inicialización de la base de datos
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference dbReference = database.getReference().child(eid);
+
+        //Obtengo el departamento al que pertenecía si lo hacía
+        if(!did.equals("-1")){
+            dbReference.child("Departamentos").child(did).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Departamento dpt= snapshot.getValue(Departamento.class);
+                    //Si el empleado era jefe se deja el departamento sin jefe
+                    if(empleado.getNivelJerarquia()<=2){
+                        dpt.setUidJefeDepartamento("-1");
+                    }
+                    //Se elimina de la lista de miembros
+                    dpt.eliminarEmpleado(uid);
+                    //Se devuelve a la bd
+                    dbReference.child("Departamentos").child(did).setValue(dpt);
+                    //Se elimina el empleado
+                    dbReference.child("Empleados").child(uid).removeValue();
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) { }
+            });
+        }else{
+            //Se elimina el empleado
+            dbReference.child("Empleados").child(uid).removeValue();
+        }
+        Toast.makeText(contexto, empleado.getNombreEmpleado() +" "+empleado.getApellidoEmpleado() + " borrado", Toast.LENGTH_LONG).show();
     }
 }

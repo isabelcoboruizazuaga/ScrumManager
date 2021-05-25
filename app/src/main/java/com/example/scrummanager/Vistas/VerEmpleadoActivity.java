@@ -1,5 +1,6 @@
 package com.example.scrummanager.Vistas;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -12,9 +13,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.scrummanager.Modelos.Departamento;
 import com.example.scrummanager.Modelos.Empleado;
 import com.example.scrummanager.R;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
@@ -77,12 +84,49 @@ public class VerEmpleadoActivity extends AppCompatActivity {
                 return true;
 
             case R.id.action_borrarEmpleado:
-                Toast.makeText(getApplicationContext(),"Borrar no implementado aún", Toast.LENGTH_SHORT).show();
+                borrarEmpleado();
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
 
         }
+    }
+
+    private void borrarEmpleado(){
+        String eid= empleado.getIdEmpresa();
+        String uid= empleado.getUid();
+        String did= empleado.getIdDepartamento();
+
+        //Inicialización de la base de datos
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference dbReference = database.getReference().child(eid);
+
+        //Obtengo el departamento al que pertenecía si lo hacía
+        if(!did.equals("-1")){
+            dbReference.child("Departamentos").child(did).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Departamento dpt= snapshot.getValue(Departamento.class);
+                    //Si el empleado era jefe se deja el departamento sin jefe
+                    if(empleado.getNivelJerarquia()<=2){
+                        dpt.setUidJefeDepartamento("-1");
+                    }
+                    //Se elimina de la lista de miembros
+                    dpt.eliminarEmpleado(uid);
+                    //Se devuelve a la bd
+                    dbReference.child("Departamentos").child(did).setValue(dpt);
+                    //Se elimina el empleado
+                    dbReference.child("Empleados").child(uid).removeValue();
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) { }
+            });
+        }else{
+            //Se elimina el empleado
+            dbReference.child("Empleados").child(uid).removeValue();
+        }
+        Toast.makeText(getApplicationContext(), empleado.getNombreEmpleado() +" "+empleado.getApellidoEmpleado() + " borrado", Toast.LENGTH_LONG).show();
     }
 
 }

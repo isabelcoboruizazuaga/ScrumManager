@@ -135,6 +135,7 @@ public class VerDepartamentoActivity extends AppCompatActivity {
 
             case R.id.action_borrarDepartamento:
                 borrarDepartamento();
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
