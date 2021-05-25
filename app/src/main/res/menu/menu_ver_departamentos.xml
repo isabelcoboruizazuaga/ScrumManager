@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/action_editarDepartamento"
+        android:title="Editar Departamento"
+        app:showAsAction="never"/>
+    <item android:id="@+id/action_borrarDepartamento"
+        android:title="Borrar Departamento"
+        app:showAsAction="never"/>
+
+</menu>

@@ -2,6 +2,7 @@ package com.example.scrummanager.Vistas;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -11,9 +12,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.scrummanager.Controladores.AdaptadorEmpleadosDpt;
 import com.example.scrummanager.Modelos.Departamento;
@@ -50,6 +54,9 @@ public class VerDepartamentoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ver_departamento);
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setTitle("Ver Departamento");
 
         //Se recogen los datos del departamento a editar
         Intent intent = getIntent();
@@ -109,6 +116,28 @@ public class VerDepartamentoActivity extends AppCompatActivity {
                 });
             }
         } catch (NullPointerException e){
+
+        }
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_ver_departamentos, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_editarDepartamento:
+                Intent intent= new Intent(getApplicationContext(), EditarDepartamentoActivity.class);
+                intent.putExtra("departamento",departamento);
+                startActivity(intent);
+                return true;
+
+            case R.id.action_borrarDepartamento:
+                Toast.makeText(getApplicationContext(),"Borrar no implementado aún", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
 
         }
     }

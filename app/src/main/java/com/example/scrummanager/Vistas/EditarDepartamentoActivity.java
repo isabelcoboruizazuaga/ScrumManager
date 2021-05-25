@@ -3,6 +3,7 @@ package com.example.scrummanager.Vistas;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -58,7 +59,10 @@ public class EditarDepartamentoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_nuevo_departamento);
+        setContentView(R.layout.activity_editar_departamento);
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setTitle("Editar departamento");
 
         //Se recogen los datos del departamento a editar
         Intent intent = getIntent();

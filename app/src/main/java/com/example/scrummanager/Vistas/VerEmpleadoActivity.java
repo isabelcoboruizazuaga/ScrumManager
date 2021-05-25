@@ -1,12 +1,16 @@
 package com.example.scrummanager.Vistas;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.scrummanager.Modelos.Empleado;
 import com.example.scrummanager.R;
@@ -25,6 +29,9 @@ public class VerEmpleadoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ver_empleado);
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setTitle("Ver empleado");
 
         //Se recogen los datos del empleado
         Intent intent = getIntent();
@@ -54,4 +61,28 @@ public class VerEmpleadoActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_ver_empleados, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_editarEmpleado:
+                Intent intent= new Intent(getApplicationContext(), EditarEmpleadoActivity.class);
+                intent.putExtra("empleado",empleado);
+                startActivity(intent);
+                return true;
+
+            case R.id.action_borrarEmpleado:
+                Toast.makeText(getApplicationContext(),"Borrar no implementado aún", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
+
 }
