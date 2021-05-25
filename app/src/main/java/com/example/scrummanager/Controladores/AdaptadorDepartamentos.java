@@ -2,7 +2,9 @@ package com.example.scrummanager.Controladores;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +17,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.scrummanager.Modelos.Departamento;
+import com.example.scrummanager.Modelos.Empleado;
 import com.example.scrummanager.R;
 import com.example.scrummanager.Vistas.EditarDepartamentoActivity;
 import com.example.scrummanager.Vistas.EditarEmpleadoActivity;
 import com.example.scrummanager.Vistas.VerDepartamentoActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
@@ -126,7 +134,7 @@ public class AdaptadorDepartamentos extends RecyclerView.Adapter<RecyclerView.Vi
             ((MenuViewHolder) holder).btn_borrarDepartamento.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    borrarDepartamento();
+                    borrarDepartamento(departamento);
                 }
             });
 
@@ -232,9 +240,45 @@ public class AdaptadorDepartamentos extends RecyclerView.Adapter<RecyclerView.Vi
         contexto.startActivity(intent);
     }
 
-    public void borrarDepartamento(){
-        System.out.println("BORRANDOOOOOOO");
-        Toast.makeText(contexto,"BORRANDO SEÑORES", Toast.LENGTH_LONG);
+    public void borrarDepartamento(Departamento departamento){
+        //Obtención del id de empresa
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(contexto);
+        String eid = sp.getString("eid", "-1");
+
+        //Se extraen los miembros del departamento
+        ArrayList<String> miembrosdpt= departamento.getMiembrosDepartamento();
+
+        //Se borra el departamento de la bd
+        DatabaseReference dbReference=FirebaseDatabase.getInstance().getReference().child(eid);
+        dbReference.child("Departamentos").child(departamento.getIdDepartamento()).removeValue();
+
+        try {
+            //Se accede a cada miembro en la bd
+            for (int i = 0; i < miembrosdpt.size(); i++) {
+                String uid = miembrosdpt.get(i);
+                dbReference.child("Empleados").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        //Se actualiza para no pertenecer ya al departamento y no ser jefe si lo era
+                        Empleado empld = snapshot.getValue(Empleado.class);
+                        empld.setIdDepartamento("-1");
+                        if(empld.getNivelJerarquia()==2){
+                            empld.setNivelJerarquia(4);
+                        }
+                        //Se devuelve a la bd
+                        dbReference.child("Empleados").child(uid).setValue(empld);
+
+                        Toast.makeText(contexto,"Departamento borrado",Toast.LENGTH_SHORT);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
+            }
+        }catch (Exception e){
+            Toast.makeText(contexto,"Departamento borrado",Toast.LENGTH_SHORT);
+        }
     }
 
 }

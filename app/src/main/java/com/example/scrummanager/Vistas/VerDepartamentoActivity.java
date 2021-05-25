@@ -134,11 +134,44 @@ public class VerDepartamentoActivity extends AppCompatActivity {
                 return true;
 
             case R.id.action_borrarDepartamento:
-                Toast.makeText(getApplicationContext(),"Borrar no implementado aún", Toast.LENGTH_SHORT).show();
+                borrarDepartamento();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
 
+        }
+    }
+    public void borrarDepartamento(){
+        //Se borra el departamento de la bd
+        DatabaseReference dbReference=FirebaseDatabase.getInstance().getReference().child(eid);
+        dbReference.child("Departamentos").child(departamento.getIdDepartamento()).removeValue();
+
+        try {
+            //Se accede a cada miembro en la bd
+            for (int i = 0; i < miembrosDpt.size(); i++) {
+                String uid = miembrosDpt.get(i);
+                dbReference.child("Empleados").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        //Se actualiza para no pertenecer ya al departamento y no ser jefe si lo era
+                        Empleado empld = snapshot.getValue(Empleado.class);
+                        empld.setIdDepartamento("-1");
+                        if(empld.getNivelJerarquia()==2){
+                            empld.setNivelJerarquia(4);
+                        }
+                        //Se devuelve a la bd
+                        dbReference.child("Empleados").child(uid).setValue(empld);
+
+                        Toast.makeText(getApplicationContext(),"Departamento borrado",Toast.LENGTH_SHORT);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
+            }
+        }catch (Exception e){
+            Toast.makeText(getApplicationContext(),"Departamento borrado",Toast.LENGTH_SHORT);
         }
     }
 }
