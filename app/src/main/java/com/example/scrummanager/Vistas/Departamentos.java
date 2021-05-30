@@ -107,7 +107,7 @@ public class Departamentos extends Fragment {
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         //Se ocultan las opciones del menú que no pertenecen a este fragment
-        MenuItem item=menu.findItem(R.id.menuCosaInutil);
+        MenuItem item=menu.findItem(R.id.menuAnCli);
         if(item!=null)
             item.setVisible(false);
         item=menu.findItem(R.id.menuAnEmp);

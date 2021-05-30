@@ -86,16 +86,7 @@ public class Empleados extends Fragment {private FirebaseAuth mAuthAdmin, mAuthW
         rellenarRecyclerView();
     }
 
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        //Se ocultan las opciones del menú que no pertenecen a este fragment
-        MenuItem item=menu.findItem(R.id.menuCosaInutil);
-        if(item!=null)
-            item.setVisible(false);
-        item=menu.findItem(R.id.menuAnDept);
-        if(item!=null)
-            item.setVisible(false);
-    }
+
     //Database listener
     public void rellenarRecyclerView (){
         dbReference.child(eid).child("Empleados").addValueEventListener(new ValueEventListener() {
@@ -119,6 +110,16 @@ public class Empleados extends Fragment {private FirebaseAuth mAuthAdmin, mAuthW
         });
     }
 
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        //Se ocultan las opciones del menú que no pertenecen a este fragment
+        MenuItem item=menu.findItem(R.id.menuAnCli);
+        if(item!=null)
+            item.setVisible(false);
+        item=menu.findItem(R.id.menuAnDept);
+        if(item!=null)
+            item.setVisible(false);
+    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {

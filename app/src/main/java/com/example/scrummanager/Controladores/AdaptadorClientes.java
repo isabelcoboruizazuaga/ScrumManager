@@ -1,10 +1,12 @@
 package com.example.scrummanager.Controladores;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -13,6 +15,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.scrummanager.Modelos.Cliente;
 import com.example.scrummanager.R;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -21,6 +27,7 @@ public class AdaptadorClientes extends RecyclerView.Adapter<RecyclerView.ViewHol
     private Context contexto;
     private Cliente cliente;
     private final int MOSTRAR_MENU = 1, OCULTAR_MENU = 2;
+    StorageReference storageReference;
 
     public AdaptadorClientes(ArrayList<Cliente> clientes, Context contexto) {
         this.clientes = clientes;
@@ -49,12 +56,29 @@ public class AdaptadorClientes extends RecyclerView.Adapter<RecyclerView.ViewHol
         cliente = clientes.get(position);
 
         String nombreCliente = cliente.getNombreCliente();
+        String email= cliente.getEmailCliente();
+        String tipo= cliente.getTipoCliente();
+        String apellido= cliente.getApellidoCliente();
 
         //Si se está mostrando el Empleado
         if (holder instanceof AdaptadorClientesViewHolder) {
 
             //Se incluye el empleado en el layout
             ((AdaptadorClientesViewHolder) holder).tv_nombreCliente.setText(nombreCliente.toString());
+            ((AdaptadorClientesViewHolder) holder).tv_apellidoCliente.setText(apellido.toString());
+            ((AdaptadorClientesViewHolder) holder).tv_tipoCliente.setText(tipo.toString());
+            ((AdaptadorClientesViewHolder) holder).tv_emailCliente.setText(email.toString());
+
+            //Imagen de perfil
+            storageReference= FirebaseStorage.getInstance().getReference();
+            StorageReference perfilRef= storageReference.child("clients/"+cliente.getNifCliente()+"/profile.jpg");
+            perfilRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Picasso.get().load(uri).into(((AdaptadorClientes.AdaptadorClientesViewHolder) holder).iv_imagenCliente);
+                }
+            });
+
 
             //Si se mantiene pulsado se abre el menú de opciones
             ((AdaptadorClientesViewHolder) holder).itemView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -126,7 +150,8 @@ public class AdaptadorClientes extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public class AdaptadorClientesViewHolder extends RecyclerView.ViewHolder {
         //items del layout
-        private TextView tv_nombreCliente, iv_fotoEmpleado;
+        private TextView tv_nombreCliente, tv_apellidoCliente, tv_tipoCliente, tv_emailCliente;
+        private ImageView iv_imagenCliente;
 
         public AdaptadorClientesViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -136,7 +161,10 @@ public class AdaptadorClientes extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             //inicializacón de los elementos del layout
             tv_nombreCliente = itemView.findViewById(R.id.tv_nombreCliente);
-            //iv_fotoDepartamento= itemView.findViewById(R.id.iv_fotoDepartamento);
+            tv_apellidoCliente = itemView.findViewById(R.id.tv_apellidoCliente);
+            tv_tipoCliente = itemView.findViewById(R.id.tv_empresaCliente);
+            tv_emailCliente = itemView.findViewById(R.id.tv_emailCliente);
+            iv_imagenCliente= itemView.findViewById(R.id.fotoCliente);
 
         }
     }

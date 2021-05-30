@@ -57,7 +57,7 @@ public class Proyectos extends Fragment {
         LinearLayoutManager layoutManager= new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
         recView.setLayoutManager(layoutManager);
 
-        proyectos =new ArrayList<Proyecto>();
+        proyectos =new ArrayList<Proyecto>();/*
         proyecto = new Proyecto("id01","Proyecto especial de Isa","especs", new Cliente("a","a","a","a"));
         proyectos.add(proyecto);
         proyecto = new Proyecto("id01","Proyecto 3","especs", new Cliente("a","a","a","a"));
@@ -77,7 +77,7 @@ public class Proyectos extends Fragment {
         proyectos.add(proyecto);
         proyecto = new Proyecto("id01","Proyecto especi9","especs", new Cliente("a","a","a","a"));
 
-        proyectos.add(proyecto);
+        proyectos.add(proyecto);*/
 
         AdaptadorProyectos adaptadorProyectos= new AdaptadorProyectos(proyectos,getContext(), this);
         recView.setAdapter(adaptadorProyectos);

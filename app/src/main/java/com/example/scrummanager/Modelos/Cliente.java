@@ -11,17 +11,18 @@ public class Cliente implements Serializable {
     private String emailCliente;
     private String telefonoCliente;
     private Direccion direccionCliente;
-    private String tipoCliente; //Company or individual
+    private String  tipoCliente; //Company or individual
     private boolean showMenu= false;
 
     public Cliente() {
     }
 
-    public Cliente(String nifCliente, String nombreCliente, String apellidoCliente, String emailCliente) {
+    public Cliente(String nifCliente, String nombreCliente, String apellidoCliente, String emailCliente, String eid) {
         this.nifCliente = nifCliente;
         this.nombreCliente = nombreCliente;
         this.apellidoCliente = apellidoCliente;
         this.emailCliente = emailCliente;
+        this.idEmpresa= eid;
     }
 
     public boolean isShowMenu() {

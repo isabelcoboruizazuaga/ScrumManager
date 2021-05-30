@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:title="AñadirEmpleado"
         android:id="@+id/menuAnEmp"/>
-    <item android:title="CosaInutil"
-        android:id="@+id/menuCosaInutil"/>
+    <item android:title="AñadirCliente"
+        android:id="@+id/menuAnCli"/>
     <item android:title="AñadirDepartamento"
         android:id="@+id/menuAnDept"/>
     <item android:title="Item" />
