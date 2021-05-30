@@ -9,7 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".Vistas.NuevoClienteActivity"></activity>
+        <activity android:name=".Vistas.VerClienteActivity"></activity>
+        <activity android:name=".Vistas.EditarClienteActivity" />
+        <activity android:name=".Vistas.NuevoClienteActivity" />
         <activity android:name=".Vistas.VerDepartamentoActivity" />
         <activity android:name=".Vistas.EditarDepartamentoActivity" />
         <activity android:name=".Vistas.NuevoDepartamentoActivity" />

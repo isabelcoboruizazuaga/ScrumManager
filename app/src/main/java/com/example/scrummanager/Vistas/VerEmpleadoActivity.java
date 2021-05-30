@@ -87,7 +87,6 @@ public class VerEmpleadoActivity extends AppCompatActivity {
 
             case R.id.action_borrarEmpleado:
                 borrarConfirmacion();
-                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -129,11 +128,12 @@ public class VerEmpleadoActivity extends AppCompatActivity {
             dbReference.child("Empleados").child(uid).removeValue();
         }
         Toast.makeText(getApplicationContext(), empleado.getNombreEmpleado() +" "+empleado.getApellidoEmpleado() + " borrado", Toast.LENGTH_LONG).show();
+        finish();
     }
 
     private void borrarConfirmacion() {
         //Inicialización
-        AlertDialog.Builder alertDialogBu = new AlertDialog.Builder(getApplicationContext());
+        AlertDialog.Builder alertDialogBu = new AlertDialog.Builder(VerEmpleadoActivity.this);
         alertDialogBu.setTitle("Borrar");
         alertDialogBu.setMessage("¿Seguro que quiere eliminar a " + empleado.getNombreEmpleado() +"? Esta acción no se puede deshacer");
 

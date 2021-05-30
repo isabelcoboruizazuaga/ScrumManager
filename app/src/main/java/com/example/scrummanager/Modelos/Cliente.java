@@ -29,6 +29,10 @@ public class Cliente implements Serializable {
         return showMenu;
     }
 
+    public String getIdEmpresa() {
+        return idEmpresa;
+    }
+
     public void setShowMenu(boolean showMenu) {
         this.showMenu = showMenu;
     }

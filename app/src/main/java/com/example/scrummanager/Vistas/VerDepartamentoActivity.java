@@ -137,7 +137,6 @@ public class VerDepartamentoActivity extends AppCompatActivity {
 
             case R.id.action_borrarDepartamento:
                 borrarConfirmacion();
-                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -167,6 +166,7 @@ public class VerDepartamentoActivity extends AppCompatActivity {
                         dbReference.child("Empleados").child(uid).setValue(empld);
 
                         Toast.makeText(getApplicationContext(),"Departamento borrado",Toast.LENGTH_SHORT).show();
+                        finish();
                     }
 
                     @Override
@@ -176,12 +176,13 @@ public class VerDepartamentoActivity extends AppCompatActivity {
             }
         }catch (Exception e){
             Toast.makeText(getApplicationContext(),"Departamento borrado",Toast.LENGTH_SHORT).show();
+            finish();
         }
     }
 
     private void borrarConfirmacion() {
         //Inicialización
-        AlertDialog.Builder alertDialogBu = new AlertDialog.Builder(getApplicationContext());
+        AlertDialog.Builder alertDialogBu = new AlertDialog.Builder(VerDepartamentoActivity.this);
         alertDialogBu.setTitle("Borrar");
         alertDialogBu.setMessage("¿Seguro que quiere eliminar " + departamento.getNombreDepartamento() +"? Esta acción no se puede deshacer");
 
@@ -195,6 +196,7 @@ public class VerDepartamentoActivity extends AppCompatActivity {
         alertDialogBu.setNegativeButton("Cancelar·", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 Toast.makeText(getApplicationContext(), "Cancelado", Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
         //Creación del dialog

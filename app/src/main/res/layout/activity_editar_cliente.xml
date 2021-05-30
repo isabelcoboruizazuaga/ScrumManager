@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Vistas.NuevoClienteActivity">
+    tools:context=".Vistas.EditarClienteActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/my_toolbar"
@@ -51,7 +51,7 @@
                 android:ems="10"
                 android:hint="NIF Cliente"
                 android:inputType="textPersonName"
-                android:padding="10dp" />
+                android:padding="10dp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -119,7 +119,7 @@
                 android:ems="10"
                 android:hint="Telefono Cliente"
                 android:inputType="phone"
-                android:padding="10dp" />
+                android:padding="10dp"/>
         </LinearLayout>
 
         <LinearLayout

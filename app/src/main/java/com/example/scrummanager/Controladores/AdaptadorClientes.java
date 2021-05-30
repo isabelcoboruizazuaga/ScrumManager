@@ -1,6 +1,9 @@
 package com.example.scrummanager.Controladores;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,18 +17,31 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.scrummanager.Modelos.Cliente;
+import com.example.scrummanager.Modelos.Departamento;
+import com.example.scrummanager.Modelos.Empleado;
 import com.example.scrummanager.R;
+import com.example.scrummanager.Vistas.EditarClienteActivity;
+import com.example.scrummanager.Vistas.EditarEmpleadoActivity;
+import com.example.scrummanager.Vistas.VerClienteActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+/**
+ * @author Isabel Cobo Ruiz-Azuaga
+ * Actividad de prueba
+ */
 public class AdaptadorClientes extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<Cliente> clientes;
     private Context contexto;
-    private Cliente cliente;
     private final int MOSTRAR_MENU = 1, OCULTAR_MENU = 2;
     StorageReference storageReference;
 
@@ -53,17 +69,17 @@ public class AdaptadorClientes extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        cliente = clientes.get(position);
+        Cliente cliente = clientes.get(position);
 
         String nombreCliente = cliente.getNombreCliente();
         String email= cliente.getEmailCliente();
         String tipo= cliente.getTipoCliente();
         String apellido= cliente.getApellidoCliente();
 
-        //Si se está mostrando el Empleado
+        //Si se está mostrando el Cliente
         if (holder instanceof AdaptadorClientesViewHolder) {
 
-            //Se incluye el empleado en el layout
+            //Se incluye el cliente en el layout
             ((AdaptadorClientesViewHolder) holder).tv_nombreCliente.setText(nombreCliente.toString());
             ((AdaptadorClientesViewHolder) holder).tv_apellidoCliente.setText(apellido.toString());
             ((AdaptadorClientesViewHolder) holder).tv_tipoCliente.setText(tipo.toString());
@@ -79,6 +95,13 @@ public class AdaptadorClientes extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
             });
 
+            //Un click simple muestra el departamento
+            ((AdaptadorClientes.AdaptadorClientesViewHolder)holder).itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    verCliente(cliente);
+                }
+            });
 
             //Si se mantiene pulsado se abre el menú de opciones
             ((AdaptadorClientesViewHolder) holder).itemView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -102,19 +125,19 @@ public class AdaptadorClientes extends RecyclerView.Adapter<RecyclerView.ViewHol
             ((MenuViewHolder) holder).btn_verCliente.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    verCliente();
+                    verCliente(cliente);
                 }
             });
             ((MenuViewHolder) holder).btn_editarCliente.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    editarCliente();
+                    editarCliente(cliente);
                 }
             });
             ((MenuViewHolder) holder).btn_borrarCliente.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    borrarCliente();
+                    borrarConfirmacion(cliente);
                 }
             });
 
@@ -148,6 +171,9 @@ public class AdaptadorClientes extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
+    /**
+     * Metodo de prueba
+     */
     public class AdaptadorClientesViewHolder extends RecyclerView.ViewHolder {
         //items del layout
         private TextView tv_nombreCliente, tv_apellidoCliente, tv_tipoCliente, tv_emailCliente;
@@ -212,18 +238,50 @@ public class AdaptadorClientes extends RecyclerView.Adapter<RecyclerView.ViewHol
         notifyDataSetChanged();
     }
 
-    public void editarCliente() {
-        System.out.println("Editandooooo");
-        Toast.makeText(contexto, "EDITANDO SEÑORES", Toast.LENGTH_LONG);
+    public void editarCliente(Cliente cliente) {
+        Intent intent= new Intent(contexto, EditarClienteActivity.class);
+        intent.putExtra("cliente",cliente);
+        contexto.startActivity(intent);
     }
 
-    public void verCliente() {
-        System.out.println("VIENDOOOOOOO");
-        Toast.makeText(contexto, "VIENDO SEÑORES", Toast.LENGTH_LONG);
+    public void verCliente(Cliente cliente) {
+        Intent intent= new Intent(contexto, VerClienteActivity.class);
+        intent.putExtra("cliente",cliente);
+        contexto.startActivity(intent);
     }
 
-    public void borrarCliente() {
-        System.out.println("BORRANDOOOOOOO");
-        Toast.makeText(contexto, "BORRANDO SEÑORES", Toast.LENGTH_LONG);
+    private void borrarConfirmacion(Cliente cliente) {
+        //Inicialización
+        AlertDialog.Builder alertDialogBu = new AlertDialog.Builder(contexto);
+        alertDialogBu.setTitle("Borrar");
+        alertDialogBu.setMessage("¿Seguro que quiere eliminar a " + cliente.getNombreCliente() +" "+ cliente.getApellidoCliente() +"? Esta acción no se puede deshacer");
+
+        //Opción positiva
+        alertDialogBu.setPositiveButton("Borrar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                borrarCliente(cliente);
+            }
+        });
+        //Opción negativa
+        alertDialogBu.setNegativeButton("Cancelar·", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(contexto, "Cancelado", Toast.LENGTH_SHORT).show();
+            }
+        });
+        //Creación del dialog
+        AlertDialog alertDialog = alertDialogBu.create();
+        alertDialog.show();
+    }
+    public void borrarCliente(Cliente cliente) {
+        String eid= cliente.getIdEmpresa();
+        String nif= cliente.getNifCliente();
+
+        //Inicialización de la base de datos
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference dbReference = database.getReference().child(eid);
+
+        dbReference.child("Clientes").child(nif).removeValue();
+
+        Toast.makeText(contexto, cliente.getNombreCliente() +" "+cliente.getApellidoCliente() + " borrado", Toast.LENGTH_LONG).show();
     }
 }
