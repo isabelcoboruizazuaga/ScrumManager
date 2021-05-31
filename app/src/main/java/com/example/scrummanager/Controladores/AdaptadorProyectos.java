@@ -10,14 +10,19 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.scrummanager.Modelos.Cliente;
 import com.example.scrummanager.Modelos.Empleado;
 import com.example.scrummanager.Modelos.Proyecto;
+import com.example.scrummanager.Modelos.Sprint;
 import com.example.scrummanager.R;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class AdaptadorProyectos extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<Proyecto> proyectos;
@@ -70,8 +75,19 @@ public class AdaptadorProyectos extends RecyclerView.Adapter<RecyclerView.ViewHo
                 public boolean onLongClick(View v) {
                     TextView tv= fragment.getView().findViewById(R.id.textView2);
                     tv.setText("a");
+
                     mostrarMenu(position);
                     return true;
+                }
+            });
+            ((AdaptadorProyectosViewHolder)holder).itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Se rellena la información del proyecto
+                    recyclerViewEquipo();
+                    recyclerViewSprint();
+
+
                 }
             });
 
@@ -114,6 +130,13 @@ public class AdaptadorProyectos extends RecyclerView.Adapter<RecyclerView.ViewHo
             });
         }
     }
+    public static Date parseDate(String date){
+        try {
+            return new SimpleDateFormat("dd/MM/yyyy").parse(date);
+        } catch (ParseException e) {
+            return null;
+        }
+    }
 
     @Override
     public int getItemCount() {
@@ -131,6 +154,64 @@ public class AdaptadorProyectos extends RecyclerView.Adapter<RecyclerView.ViewHo
         } else {
             return OCULTAR_MENU;
         }
+    }
+
+    /**
+     * Método que inicializa el recycler view de la vista de un equipo dentro de un proyecto
+     */
+    private void recyclerViewEquipo(){
+        //Creación del Recycler View para el equipo
+        RecyclerView recView= fragment.getView().findViewById(R.id.rv_equipoProyecto);
+        LinearLayoutManager layoutManager= new LinearLayoutManager(contexto,LinearLayoutManager.HORIZONTAL,false);
+        recView.setLayoutManager(layoutManager);
+
+        ArrayList empleados =new ArrayList<Empleado>();
+        Empleado empleado= new Empleado("ad96328d-ce92-4da7-88cf-b7ff81d0e6d3","Mariano","Perez", "id");
+        empleados.add(empleado);
+        empleado= new Empleado("rjk44oQjxlOaoIerBReJjhsa14E3","Sevilla","Perez", "id");
+        empleados.add(empleado);
+        empleado= new Empleado("ad96328d-ce92-4da7-88cf-b7ff81d0e6d3","Mariano","Perez", "id");
+        empleados.add(empleado);
+        empleado= new Empleado("rjk44oQjxlOaoIerBReJjhsa14E3","Sevilla","Perez", "id");
+        empleados.add(empleado);
+        empleado= new Empleado("ad96328d-ce92-4da7-88cf-b7ff81d0e6d3","Mariano","Perez", "id");
+        empleados.add(empleado);
+        empleado= new Empleado("rjk44oQjxlOaoIerBReJjhsa14E3","Sevilla","Perez", "id");
+        empleados.add(empleado);
+
+        //Asignación del equipo al recyclerView
+        AdaptadorEmpleadosDpt adaptadorEmpleadosDpt= new AdaptadorEmpleadosDpt(empleados,contexto);
+        recView.setAdapter(adaptadorEmpleadosDpt);
+    }
+
+    /**
+     * Método que inicializa el recycler view de la vista de los sprints dentro de un proyecto
+     */
+    private void recyclerViewSprint(){
+        //Creación del Recycler View para el equipo
+        RecyclerView recView3= fragment.getView().findViewById(R.id.rv_sprints);
+        LinearLayoutManager layoutManager3= new LinearLayoutManager(contexto,LinearLayoutManager.HORIZONTAL,false);
+        recView3.setLayoutManager(layoutManager3);
+
+        Date fechaFin= parseDate("13/07/2021");
+        Date fechaInicio= parseDate("31/05/2021");
+        ArrayList<Date> fechas= new ArrayList<>();
+        fechas.add(fechaInicio);
+        fechas.add(fechaFin);
+
+        ArrayList sprints =new ArrayList<Empleado>();
+        Sprint sprint= new Sprint("Sprint 1",fechas);
+        sprints.add(sprint);
+        sprint= new Sprint("Sprint 2",fechas);
+        sprints.add(sprint);
+        sprint= new Sprint("Sprint 3",fechas);
+        sprints.add(sprint);
+        sprint= new Sprint("Sprint 4",fechas);
+        sprints.add(sprint);
+
+        //Asignación del equipo al recyclerView
+        AdaptadorSprints adaptadorSprints= new AdaptadorSprints(sprints,contexto);
+        recView3.setAdapter(adaptadorSprints);
     }
 
     public class AdaptadorProyectosViewHolder extends RecyclerView.ViewHolder {

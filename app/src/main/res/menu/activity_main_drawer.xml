@@ -12,10 +12,10 @@
             android:id="@+id/departamentos"
             android:icon="@drawable/departments_icon"
             android:title="@string/menu_departamentos" />
-        <item
+        <!--<item
             android:id="@+id/equipos"
             android:icon="@drawable/teams_icon"
-            android:title="@string/menu_equipos" />
+            android:title="@string/menu_equipos" />-->
         <item
             android:id="@+id/proyectos"
             android:icon="@drawable/projects_icon"

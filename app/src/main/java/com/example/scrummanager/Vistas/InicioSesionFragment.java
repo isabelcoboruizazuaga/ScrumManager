@@ -83,12 +83,14 @@ public class InicioSesionFragment extends Fragment {
         //Obtención de las preferencias
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getContext());
         String eid= sp.getString("eid","-1");
+        String email= sp.getString("email","");
         if(eid.equals("-1")){
             primeraVez= true;
             et_idEmpresa.setVisibility(View.VISIBLE);
         }else{
             primeraVez=false;
             et_idEmpresa.setText(eid);
+            et_correo.setText(email);
         }
 
         bt_login.setOnClickListener(new View.OnClickListener() {
@@ -100,14 +102,12 @@ public class InicioSesionFragment extends Fragment {
 
                 //Si es la primera vez que se inicia sesión se necesitará el id de empresa, si no no es necesario
                 if(primeraVez){
-                    Toast.makeText(getContext(),"aaaaaaa",Toast.LENGTH_SHORT).show();
                     inicioPrimeraVez(correo,contrasena,idEmpresa);
                 } else{
                     //La contraseña y correo no deben estar vacíos
                     if(!TextUtils.isEmpty(correo)&& !TextUtils.isEmpty(contrasena)) {
                         //Si el inicio de sesión es correcto pasa a la actividad principal
                         if (iniciaSesion(correo, contrasena)) {
-                            Toast.makeText(getContext(), idEmpresa, Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(getContext(), NavigationDrawerActivity.class));
                         }
                     }
@@ -170,10 +170,11 @@ public class InicioSesionFragment extends Fragment {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if(dataSnapshot.exists()) {
-                                //Se añade el id de empresa a las preferencias para no tener que recuperarlo más
+                                //Se añade el id de empresa a las preferencias para no tener que recuperarlo más, igual con el correo
                                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
                                 SharedPreferences.Editor edit_pref = prefs.edit();
                                 edit_pref.putString("eid", idEmpresa);
+                                edit_pref.putString("email", correo);
                                 edit_pref.commit();
 
                                 startActivity(new Intent(getContext(), NavigationDrawerActivity.class));
@@ -224,6 +225,7 @@ public class InicioSesionFragment extends Fragment {
                                     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
                                     SharedPreferences.Editor edit_pref = prefs.edit();
                                     edit_pref.putString("eid", eid);
+                                    edit_pref.putString("email", "isabel@gemil.com");
                                     edit_pref.commit();
 
                                     startActivity(new Intent(getContext(),NavigationDrawerActivity.class));
@@ -239,6 +241,7 @@ public class InicioSesionFragment extends Fragment {
                                     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
                                     SharedPreferences.Editor edit_pref = prefs.edit();
                                     edit_pref.putString("eid", eid);
+                                    edit_pref.putString("email", "isabel@gemil.com");
                                     edit_pref.commit();
 
                                     //String uid, String nombreEmpleado, String apellidoEmpleado, String idEmpresa

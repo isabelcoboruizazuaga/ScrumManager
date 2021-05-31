@@ -3,12 +3,16 @@ package com.example.scrummanager.Modelos;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Sprint implements Serializable {
     private String idSprint;
     private ArrayList<Tarea> listaTareasSprint;
     private ArrayList<Date> fechasSprint;
     private String objetivoSprint;
+    private String color;
+    private ArrayList<String> colors= new ArrayList<>();
+    private boolean showMenu= false;
 
     public Sprint() {
     }
@@ -16,6 +20,36 @@ public class Sprint implements Serializable {
     public Sprint(String idSprint, ArrayList<Date> fechasSprint) {
         this.idSprint = idSprint;
         this.fechasSprint = fechasSprint;
+        this.setColors();
+        this.setColor();
+    }
+
+    private void setColors(){
+        colors.add("#A9E7EF9D");
+        colors.add("#A99F80D3");
+        colors.add("#A8C483DC");
+        colors.add("#A996EA9A");
+        colors.add("#A868AAC8");
+        colors.add("#089f80");
+        colors.add("#8BC56B89");
+    }
+
+    private void setColor(){
+        int numeroAleatorio = ThreadLocalRandom.current().nextInt(0, colors.size());
+        this.color=colors.get(numeroAleatorio);
+    }
+
+    public String getColor(){
+        return this.color;
+    }
+
+
+    public boolean isShowMenu() {
+        return showMenu;
+    }
+
+    public void setShowMenu(boolean showMenu) {
+        this.showMenu = showMenu;
     }
 
     public String getIdSprint() {

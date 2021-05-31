@@ -1,11 +1,23 @@
 package com.example.scrummanager;
 
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.Menu;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
+
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -24,23 +36,38 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_navigation_drawer);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
+
+        //Se obtiene el usuario
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        String email= sp.getString("email","");
+        FirebaseAuth mAuth= FirebaseAuth.getInstance();
+        String uid= mAuth.getUid();
+
+        //Se añade a la barra lateral
+        TextView tv_email = (TextView) navigationView.getHeaderView(0).findViewById(R.id.tv_navigationEmail);
+        tv_email.setText(email);
+
+        ImageView iv_imagenPerfil = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.iv_navigationImagen);
+
+        //Imagen de perfil
+        StorageReference storageReference= FirebaseStorage.getInstance().getReference();
+        StorageReference perfilRef= storageReference.child("users/"+uid+"/profile.jpg");
+        perfilRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Picasso.get().load(uri).into(iv_imagenPerfil);
+            }
+        });
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.inicio,
                 R.id.empleados,
                 R.id.departamentos,
-                R.id.equipos,
                 R.id.proyectos,
                 R.id.clientes)
                 .setDrawerLayout(drawer)

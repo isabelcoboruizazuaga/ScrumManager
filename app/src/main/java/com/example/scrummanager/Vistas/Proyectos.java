@@ -57,27 +57,26 @@ public class Proyectos extends Fragment {
         LinearLayoutManager layoutManager= new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
         recView.setLayoutManager(layoutManager);
 
-        proyectos =new ArrayList<Proyecto>();/*
-        proyecto = new Proyecto("id01","Proyecto especial de Isa","especs", new Cliente("a","a","a","a"));
+        proyectos =new ArrayList<Proyecto>();
+        proyecto = new Proyecto("id01","Proyecto especial de Isa","especs", new Cliente("a","a","a","a","a"));
         proyectos.add(proyecto);
-        proyecto = new Proyecto("id01","Proyecto 3","especs", new Cliente("a","a","a","a"));
+        proyecto = new Proyecto("id01","Proyecto 3","especs", new Cliente("a","a","a","a","a"));
+        proyectos.add(proyecto);
+        proyecto = new Proyecto("id01","Proyecto 4","especs", new Cliente("a","a","a","a","a"));
 
         proyectos.add(proyecto);
-        proyecto = new Proyecto("id01","Proyecto 4","especs", new Cliente("a","a","a","a"));
+        proyecto = new Proyecto("id01","Proyectosd ds ad asd","especs", new Cliente("a","a","a","a","a"));
 
         proyectos.add(proyecto);
-        proyecto = new Proyecto("id01","Proyectosd ds ad asd","especs", new Cliente("a","a","a","a"));
+        proyecto = new Proyecto("id01","Proyecto 6","especs", new Cliente("a","a","a","a","a"));
 
         proyectos.add(proyecto);
-        proyecto = new Proyecto("id01","Proyecto 6","especs", new Cliente("a","a","a","a"));
+        proyecto = new Proyecto("id01","Proyecto 8","especs", new Cliente("a","a","a","a","a"));
 
         proyectos.add(proyecto);
-        proyecto = new Proyecto("id01","Proyecto 8","especs", new Cliente("a","a","a","a"));
+        proyecto = new Proyecto("id01","Proyecto especi9","especs", new Cliente("a","a","a","a","a"));
 
         proyectos.add(proyecto);
-        proyecto = new Proyecto("id01","Proyecto especi9","especs", new Cliente("a","a","a","a"));
-
-        proyectos.add(proyecto);*/
 
         AdaptadorProyectos adaptadorProyectos= new AdaptadorProyectos(proyectos,getContext(), this);
         recView.setAdapter(adaptadorProyectos);
