@@ -208,6 +208,18 @@ public class AdaptadorProyectos extends RecyclerView.Adapter<RecyclerView.ViewHo
         sprints.add(sprint);
         sprint= new Sprint("Sprint 4",fechas);
         sprints.add(sprint);
+        sprint= new Sprint("Sprint 2",fechas);
+        sprints.add(sprint);
+        sprint= new Sprint("Sprint 3",fechas);
+        sprints.add(sprint);
+        sprint= new Sprint("Sprint 4",fechas);
+        sprints.add(sprint);
+        sprint= new Sprint("Sprint 2",fechas);
+        sprints.add(sprint);
+        sprint= new Sprint("Sprint 3",fechas);
+        sprints.add(sprint);
+        sprint= new Sprint("Sprint 4",fechas);
+        sprints.add(sprint);
 
         //Asignación del equipo al recyclerView
         AdaptadorSprints adaptadorSprints= new AdaptadorSprints(sprints,contexto);

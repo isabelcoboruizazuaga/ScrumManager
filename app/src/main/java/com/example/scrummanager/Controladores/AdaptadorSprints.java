@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,22 +60,25 @@ public class AdaptadorSprints extends RecyclerView.Adapter<RecyclerView.ViewHold
         String idSprint = sprint.getIdSprint();
         String objetivoSprint = sprint.getObjetivoSprint();
         ArrayList<Date> fechas = sprint.getFechasSprint();
+        int color= Color.parseColor(sprint.getColor());
 
         DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         String inicioSprint = formatter.format(fechas.get(0));
         String finSprint = formatter.format(fechas.get(1));
 
-        //Si se está mostrando el Cliente
+        //Si se está mostrando el Sprint
         if (holder instanceof AdaptadorSprints.AdaptadorSprintsViewHolder) {
 
-            //Se incluye el cliente en el layout
+            //Se incluye el sprint en el layout
             ((AdaptadorSprintsViewHolder) holder).tv_sprintId.setText(idSprint);
             ((AdaptadorSprintsViewHolder) holder).tv_objetivoSprint.setText(objetivoSprint);
             ((AdaptadorSprintsViewHolder) holder).tv_inicioSprint.setText(inicioSprint);
             ((AdaptadorSprintsViewHolder) holder).tv_finSprint.setText(finSprint);
+            ((AdaptadorSprintsViewHolder) holder).cardViewSprint.setCardBackgroundColor(color);
 
 
-            //Un click simple muestra el departamento
+
+            //Un click simple muestra el sprint
             ((AdaptadorSprints.AdaptadorSprintsViewHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
