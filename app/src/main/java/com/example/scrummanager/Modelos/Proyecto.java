@@ -11,11 +11,12 @@ public class Proyecto implements Serializable {
     
     private String nombreProyecto;
     private Dictionary<Empleado, String> equipoProyecto;
-    private Cliente cliente;
+    private String did;
+    private String nifCliente;
     private String especificacionesProyecto; //TODO maybe make it a class
     private ArrayList<Sprint> listaSprints;
     private ArrayList<Date> fechasProyecto;
-    private long presupuesto;
+    private String presupuesto;
     private boolean showMenu= false;
     //TODO SLA implementation
 
@@ -23,14 +24,21 @@ public class Proyecto implements Serializable {
     public Proyecto() {
     }
 
-    public Proyecto(String idProyecto, String nombreProyecto, String especificacionesProyecto, Cliente cliente) {
+    public Proyecto(String idProyecto, String nombreProyecto, String nifCliente, String did) {
         this.nombreProyecto =nombreProyecto; 
         this.idProyecto = idProyecto;
-        this.cliente = cliente;
-        this.especificacionesProyecto = especificacionesProyecto;
+        this.nifCliente = nifCliente;
+        this.did=did;
     }
 
 
+    public String getDid() {
+        return did;
+    }
+
+    public void setDid(String did) {
+        this.did = did;
+    }
 
     public String getIdProyecto() {
         return idProyecto;
@@ -60,12 +68,12 @@ public class Proyecto implements Serializable {
         this.equipoProyecto = equipoProyecto;
     }
 
-    public Cliente getCliente() {
-        return cliente;
+    public String getCliente() {
+        return nifCliente;
     }
 
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
+    public void setCliente(String nifCliente) {
+        this.nifCliente = nifCliente;
     }
 
     public String getEspecificacionesProyecto() {
@@ -92,11 +100,11 @@ public class Proyecto implements Serializable {
         this.fechasProyecto = fechasProyecto;
     }
 
-    public long getPresupuesto() {
+    public String getPresupuesto() {
         return presupuesto;
     }
 
-    public void setPresupuesto(long presupuesto) {
+    public void setPresupuesto(String presupuesto) {
         this.presupuesto = presupuesto;
     }
 }

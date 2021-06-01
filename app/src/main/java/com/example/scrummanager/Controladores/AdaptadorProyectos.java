@@ -59,7 +59,7 @@ public class AdaptadorProyectos extends RecyclerView.Adapter<RecyclerView.ViewHo
         proyecto = proyectos.get(position);
 
         String nombreProyecto = proyecto.getNombreProyecto();
-        Cliente nombreClienteProyecto = proyecto.getCliente();
+        //Cliente nombreClienteProyecto = proyecto.getCliente();
 
 
         //Si se está mostrando el Empleado

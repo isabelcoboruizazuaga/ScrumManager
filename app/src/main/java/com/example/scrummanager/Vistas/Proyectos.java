@@ -1,5 +1,6 @@
 package com.example.scrummanager.Vistas;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,6 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -39,6 +42,7 @@ public class Proyectos extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -57,28 +61,53 @@ public class Proyectos extends Fragment {
         LinearLayoutManager layoutManager= new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
         recView.setLayoutManager(layoutManager);
 
-        proyectos =new ArrayList<Proyecto>();
-        proyecto = new Proyecto("id01","Proyecto especial de Isa","especs", new Cliente("a","a","a","a","a"));
+        proyectos =new ArrayList<Proyecto>();/*
+        proyecto = new Proyecto("id01","Proyecto especial de Isa", new Cliente("a","a","a","a","a"));
         proyectos.add(proyecto);
-        proyecto = new Proyecto("id01","Proyecto 3","especs", new Cliente("a","a","a","a","a"));
+        proyecto = new Proyecto("id01","Proyecto 3", new Cliente("a","a","a","a","a"));
         proyectos.add(proyecto);
-        proyecto = new Proyecto("id01","Proyecto 4","especs", new Cliente("a","a","a","a","a"));
+        proyecto = new Proyecto("id01","Proyecto 4", new Cliente("a","a","a","a","a"));
 
         proyectos.add(proyecto);
-        proyecto = new Proyecto("id01","Proyectosd ds ad asd","especs", new Cliente("a","a","a","a","a"));
+        proyecto = new Proyecto("id01","Proyectosd ds ad asd", new Cliente("a","a","a","a","a"));
 
         proyectos.add(proyecto);
-        proyecto = new Proyecto("id01","Proyecto 6","especs", new Cliente("a","a","a","a","a"));
+        proyecto = new Proyecto("id01","Proyecto 6", new Cliente("a","a","a","a","a"));
 
         proyectos.add(proyecto);
-        proyecto = new Proyecto("id01","Proyecto 8","especs", new Cliente("a","a","a","a","a"));
+        proyecto = new Proyecto("id01","Proyecto 8", new Cliente("a","a","a","a","a"));
 
         proyectos.add(proyecto);
-        proyecto = new Proyecto("id01","Proyecto especi9","especs", new Cliente("a","a","a","a","a"));
+        proyecto = new Proyecto("id01","Proyecto especi9", new Cliente("a","a","a","a","a"));
 
-        proyectos.add(proyecto);
+        proyectos.add(proyecto);*/
 
         AdaptadorProyectos adaptadorProyectos= new AdaptadorProyectos(proyectos,getContext(), this);
         recView.setAdapter(adaptadorProyectos);
+    }
+
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        //Se ocultan las opciones del menú que no pertenecen a este fragment
+        MenuItem item=menu.findItem(R.id.menuAnCli);
+        if(item!=null)
+            item.setVisible(false);
+        item=menu.findItem(R.id.menuAnDept);
+        if(item!=null)
+            item.setVisible(false);
+        item=menu.findItem(R.id.menuAnEmp);
+        if(item!=null)
+            item.setVisible(false);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menuAnProy:
+                startActivity(new Intent(getContext(), NuevoProyectoActivity.class));
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
