@@ -27,11 +27,12 @@ public class Proyecto implements Serializable {
     public Proyecto() {
     }
 
-    public Proyecto(String idProyecto, String nombreProyecto, String nifCliente, String did) {
+    public Proyecto(String idProyecto, String nombreProyecto, String nifCliente, String did,String idEmpresa) {
         this.nombreProyecto =nombreProyecto; 
         this.idProyecto = idProyecto;
         this.nifCliente = nifCliente;
         this.did=did;
+        this.idEmpresa=idEmpresa;
         this.setColors();
         this.setColor();
     }
@@ -49,6 +50,14 @@ public class Proyecto implements Serializable {
     private void setColor(){
         int numeroAleatorio = ThreadLocalRandom.current().nextInt(0, colors.size());
         this.color=colors.get(numeroAleatorio);
+    }
+
+    public String getIdEmpresa() {
+        return idEmpresa;
+    }
+
+    public void setIdEmpresa(String idEmpresa) {
+        this.idEmpresa = idEmpresa;
     }
 
     public String getDid() {

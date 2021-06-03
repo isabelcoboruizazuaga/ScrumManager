@@ -233,7 +233,7 @@ public class NuevoProyectoActivity extends AppCompatActivity {
                         fechasProyecto.add(0, fechaIni);
                         fechasProyecto.add(1, fechaFin);
 
-                        Proyecto proyecto = new Proyecto(pid, nombre, nifCliente, idDepartamento);
+                        Proyecto proyecto = new Proyecto(pid, nombre, nifCliente, idDepartamento,eid);
                         proyecto.setEspecificacionesProyecto(especificaciones);
                         proyecto.setFechasProyecto(fechasProyecto);
                         proyecto.setPresupuesto(presupuesto);
