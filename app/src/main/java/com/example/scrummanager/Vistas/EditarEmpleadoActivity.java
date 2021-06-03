@@ -73,13 +73,8 @@ public class EditarEmpleadoActivity extends AppCompatActivity {
         setSupportActionBar(myToolbar);
         getSupportActionBar().setTitle("Editar empleado");
 
-
         //Se recogen los datos del empleado a editar
-        Intent intent = getIntent();
-        empleado = (Empleado) intent.getSerializableExtra("empleado");
-        uid= empleado.getUid();
-        eid=empleado.getIdEmpresa();
-        idAntiguoDepartamento=empleado.getIdDepartamento();
+        recogerEmpleado();
 
         //Inicialización variables del layout
         spinnerDepartamento= findViewById(R.id.spinner_departamentos);
@@ -171,6 +166,14 @@ public class EditarEmpleadoActivity extends AppCompatActivity {
                 Picasso.get().load(uri).into(iv_imagenEmpleado);
             }
         });
+    }
+
+    private void recogerEmpleado(){
+        Intent intent = getIntent();
+        empleado = (Empleado) intent.getSerializableExtra("empleado");
+        uid= empleado.getUid();
+        eid=empleado.getIdEmpresa();
+        idAntiguoDepartamento=empleado.getIdDepartamento();
     }
 
     //Método que se activará cuando la imagen de pérfil se pulse y se abra la galería

@@ -1,35 +1,24 @@
 package com.example.scrummanager.Vistas;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.scrummanager.Modelos.Cliente;
 import com.example.scrummanager.Modelos.Departamento;
-import com.example.scrummanager.Modelos.Empleado;
 import com.example.scrummanager.Modelos.Proyecto;
 import com.example.scrummanager.R;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -37,16 +26,17 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.UUID;
 
-public class NuevoProyectoActivity extends AppCompatActivity {
+/**
+ * Permite editar un proyecto que se le pasa como parte de un intent
+ */
+public class EditarProyectoActivity extends AppCompatActivity {
     private DatabaseReference dbReference;
     private ValueEventListener eventListenerDepartamentos,eventListenerClientes ;
     StorageReference storageReference;
@@ -54,8 +44,8 @@ public class NuevoProyectoActivity extends AppCompatActivity {
     private ArrayList<Departamento> departamentos=new ArrayList<>();
     private ArrayList<Cliente> clientes=new ArrayList<>();
     private ArrayList<String> departamentosNombres=new ArrayList<>(),clientesNombres=new ArrayList<>();
-    private String pid;
-    private  String eid,nifCliente,idDepartamento;
+    private String eid,nifCliente,idDepartamento, pid, idAntiguoDepartamento,idAntiguoCliente;
+    private Proyecto proyecto;
 
     private Spinner spinnerDepartamento,spinnerClientes;
     private Button btn_aniadir;
@@ -64,47 +54,58 @@ public class NuevoProyectoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_nuevo_proyecto);
+        setContentView(R.layout.activity_editar_proyecto);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
-        getSupportActionBar().setTitle("Crear proyecto");
+        getSupportActionBar().setTitle("Editar proyecto");
 
-        //Recuperación del id de empresa
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        eid= sp.getString("eid","-1");
+        //Se recogen los datos del proyecto a editar
+        recogerProyecto();
+        ArrayList <Date>fechas= proyecto.getFechasProyecto();
 
-        //Inicialización variables del layout
+        String fechaInicio;
+        String fechaFin;
+        //Conversión de la fecha al formato correcto
+        try {
+            DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            fechaInicio = formatter.format(fechas.get(0));
+            fechaFin = formatter.format(fechas.get(1));
+        }catch (Exception e){
+            fechaInicio = "dd/MM/yyyy";
+            fechaFin = "dd/MM/yyyy";
+        }
+
+        //Inicialización del layout
         spinnerDepartamento= findViewById(R.id.spinner_departamentosProy);
         spinnerClientes= findViewById(R.id.spinner_clientesProy);
-        btn_aniadir= findViewById(R.id.btn_addProyecto);
+        btn_aniadir= findViewById(R.id.btn_editarProyecto);
         et_nombre=findViewById(R.id.et_nombreProyecto);
         et_FechaInicioProyecto=findViewById(R.id.et_FechaInicioProyecto);
         et_FechaFinProyecto=findViewById(R.id.et_FechaFinProyecto);
         et_presupuestoProyecto=findViewById(R.id.et_presupuestoProyecto);
         et_especificacionesProyecto=findViewById(R.id.et_especificacionesProyecto);
 
+        et_FechaInicioProyecto.setText(fechaInicio);
+        et_FechaFinProyecto.setText(fechaFin);
+        et_nombre.setText(proyecto.getNombreProyecto());
+        et_presupuestoProyecto.setText(proyecto.getPresupuesto());
+        et_especificacionesProyecto.setText(proyecto.getEspecificacionesProyecto());
+
         //Inicialización de Firebase
         dbReference= FirebaseDatabase.getInstance().getReference().child(eid);
         storageReference= FirebaseStorage.getInstance().getReference();
 
         //Extracción de los datos del spinner departamentos
+        controlInicialRellenarDepartamentos();
         setEventListenerDepartamentos();
         dbReference.child("Departamentos").addValueEventListener(eventListenerDepartamentos);
 
-        Departamento dpt= new Departamento("-1","Departamentos", eid);
-        departamentosNombres.add(dpt.getNombreDepartamento());
-        departamentos.add(dpt);
-
         //Extracción de los datos del spinner clientes
+        controlInicialRellenarClientes();
         setEventListenerClientes();
         dbReference.child("Clientes").addValueEventListener(eventListenerClientes);
 
-        Cliente cli= new Cliente( "-1", "Clientes", "","",eid);
-        clientesNombres.add(cli.getNombreCliente()+""+cli.getApellidoCliente());
-        clientes.add(cli);
-
         //Control de los spinners
-        rellenarSpinnerDepartamentos();
         spinnerDepartamento.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 //La posición del nombre de departamento equivale a la de la lista de objetos departamento
@@ -115,7 +116,7 @@ public class NuevoProyectoActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> arg0) {// do nothing
             }
         });
-        rellenarSpinnerClientes();
+
         spinnerClientes.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 //La posición del nombre de departamento equivale a la de la lista de objetos departamento
@@ -127,7 +128,6 @@ public class NuevoProyectoActivity extends AppCompatActivity {
             }
         });
 
-        //ON CLICK LISTENERS
         btn_aniadir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -136,6 +136,70 @@ public class NuevoProyectoActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Obtiene el proyecto enviado por el intent que llamaba a la Activity
+     */
+    private void recogerProyecto(){
+        Intent intent = getIntent();
+        proyecto = (Proyecto) intent.getSerializableExtra("proyecto");
+        pid= proyecto.getIdProyecto();
+        eid=proyecto.getIdEmpresa();
+        idAntiguoDepartamento=proyecto.getDid();
+        idAntiguoCliente=proyecto.getCliente();
+    }
+
+    /**
+     * Extrae de la base de datos los datos del departamento actual de un proyecto y los guarda en el array duplicando los datos para que sea distinguible
+     * Llama al método que rellena el spinner
+     */
+    private void controlInicialRellenarDepartamentos(){
+        //Se coloca el departamento actual el primero
+        dbReference.child("Departamentos").child(proyecto.getDid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Departamento departamento1 = snapshot.getValue(Departamento.class);
+                departamentos.add(0, departamento1);
+                departamentosNombres.add(0, departamento1.getNombreDepartamento());
+
+                //Se indica que es el spinner de departamentos separando ademas el actual del resto
+                Departamento dpt= new Departamento("-1","Departamentos", eid);
+                departamentosNombres.add(1,dpt.getNombreDepartamento());
+                departamentos.add(1,dpt);
+
+                rellenarSpinnerDepartamentos();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+    }
+
+    /**
+     * Extrae de la base de datos los datos del cliente actual de un proyecto y los guarda en el array duplicando los datos para que sea distinguible
+     * Llama al método que rellena el spinner
+     */
+    private void controlInicialRellenarClientes(){
+        //Se coloca el departamento actual el primero
+        dbReference.child("Clientes").child(proyecto.getCliente()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Cliente cliente = snapshot.getValue(Cliente.class);
+                clientes.add(0, cliente);
+                clientesNombres.add(0,cliente.getNombreCliente()+" "+cliente.getApellidoCliente());
+
+                Cliente cli= new Cliente( "-1", "Clientes", "","",eid);
+                clientesNombres.add(1,cli.getNombreCliente()+""+cli.getApellidoCliente());
+                clientes.add(1,cli);
+
+                rellenarSpinnerClientes();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+    }
 
     /**
      * Este método rellena el spinner de los departamentos con un array de nombres presente en la clase
@@ -223,13 +287,14 @@ public class NuevoProyectoActivity extends AppCompatActivity {
             if(fechaFin!=null&& fechaIni!=null){
                 if(fechaFin.compareTo(fechaIni)==1) {
                     if (!TextUtils.isEmpty(nombre)) {
-                        //Se crea el proyecto y se guarda
-                        pid = UUID.randomUUID().toString();
+                        //Se actualiza el proyecto y se guarda
                         ArrayList<Date> fechasProyecto = new ArrayList<>();
                         fechasProyecto.add(0, fechaIni);
                         fechasProyecto.add(1, fechaFin);
 
-                        Proyecto proyecto = new Proyecto(pid, nombre, nifCliente, idDepartamento,eid);
+                        proyecto.setNombreProyecto(nombre);
+                        proyecto.setCliente(nifCliente);
+                        proyecto.setDid(idDepartamento);
                         proyecto.setEspecificacionesProyecto(especificaciones);
                         proyecto.setFechasProyecto(fechasProyecto);
                         proyecto.setPresupuesto(presupuesto);
@@ -237,7 +302,7 @@ public class NuevoProyectoActivity extends AppCompatActivity {
                         dbReference.child("Proyectos").child(pid).setValue(proyecto);
 
                         finish();
-                        Toast.makeText(getApplicationContext(), "Proyecto creado", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Proyecto editado", Toast.LENGTH_LONG).show();
                     }
                 }else {
                     Toast.makeText(getApplicationContext(),"¡La fecha de fin debe ser mayor que la de inicio!",Toast.LENGTH_LONG).show();
@@ -275,6 +340,5 @@ public class NuevoProyectoActivity extends AppCompatActivity {
                 return null;
             }
         }
-
     }
 }

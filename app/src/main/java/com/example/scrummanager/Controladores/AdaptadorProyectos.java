@@ -3,6 +3,7 @@ package com.example.scrummanager.Controladores;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -24,6 +25,8 @@ import com.example.scrummanager.Modelos.Empleado;
 import com.example.scrummanager.Modelos.Proyecto;
 import com.example.scrummanager.Modelos.Sprint;
 import com.example.scrummanager.R;
+import com.example.scrummanager.Vistas.EditarEmpleadoActivity;
+import com.example.scrummanager.Vistas.EditarProyectoActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -78,8 +81,8 @@ public class AdaptadorProyectos extends RecyclerView.Adapter<RecyclerView.ViewHo
         int color= Color.parseColor(proyecto.getColor());
         String especificaciones= proyecto.getEspecificacionesProyecto();
         String presupuesto= proyecto.getPresupuesto();
-        ArrayList <Date>fechas= proyecto.getFechasProyecto();
         findCliente(proyecto.getCliente(), eid);
+        ArrayList <Date>fechas= proyecto.getFechasProyecto();
 
         String fechaInicio;
         String fechaFin;
@@ -364,8 +367,9 @@ public class AdaptadorProyectos extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 
     public void editarProyecto(Proyecto proyecto) {
-        System.out.println("Editandooooo");
-        Toast.makeText(contexto, "EDITANDO SEÑORES", Toast.LENGTH_LONG);
+        Intent intent= new Intent(contexto, EditarProyectoActivity.class);
+        intent.putExtra("proyecto",proyecto);
+        contexto.startActivity(intent);
     }
 
     public void verProyecto(Proyecto proyecto) {
