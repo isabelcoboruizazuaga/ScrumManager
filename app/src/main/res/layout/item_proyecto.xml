@@ -14,6 +14,7 @@
         app:cardElevation="@dimen/cardview_default_elevation">
 
         <LinearLayout
+            android:id="@+id/layoutProyecto"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"

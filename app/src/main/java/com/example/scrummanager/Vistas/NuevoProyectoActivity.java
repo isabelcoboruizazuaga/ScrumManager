@@ -1,9 +1,11 @@
 package com.example.scrummanager.Vistas;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -25,6 +27,8 @@ import com.example.scrummanager.Modelos.Departamento;
 import com.example.scrummanager.Modelos.Empleado;
 import com.example.scrummanager.Modelos.Proyecto;
 import com.example.scrummanager.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,6 +37,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -41,9 +47,7 @@ import java.util.Date;
 import java.util.UUID;
 
 public class NuevoProyectoActivity extends AppCompatActivity {
-    private FirebaseAuth mAuthAdmin, mAuthWorker;
     private DatabaseReference dbReference;
-    private FirebaseDatabase database;
     private ValueEventListener eventListenerDepartamentos,eventListenerClientes ;
     StorageReference storageReference;
 
@@ -51,7 +55,7 @@ public class NuevoProyectoActivity extends AppCompatActivity {
     ;
     private ArrayList<Cliente> clientes=new ArrayList<>();
     private ArrayList<String> departamentosNombres=new ArrayList<>(),clientesNombres=new ArrayList<>();
-    private Empleado empleadoManager;
+    private String pid;
     private  String eid,nifCliente,idDepartamento;
     private Uri imagenUri;
 
@@ -60,7 +64,6 @@ public class NuevoProyectoActivity extends AppCompatActivity {
     private Button btn_aniadir;
     private EditText et_nombre, et_FechaInicioProyecto, et_FechaFinProyecto, et_presupuestoProyecto, et_especificacionesProyecto;
     private TextView tv_eid;
-    private ImageView iv_imagenProyecto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +86,6 @@ public class NuevoProyectoActivity extends AppCompatActivity {
         et_FechaFinProyecto=findViewById(R.id.et_FechaFinProyecto);
         et_presupuestoProyecto=findViewById(R.id.et_presupuestoProyecto);
         et_especificacionesProyecto=findViewById(R.id.et_especificacionesProyecto);
-        iv_imagenProyecto=findViewById(R.id.iv_imagenProyecto);
 
         //Initialización de Firebase
         dbReference= FirebaseDatabase.getInstance().getReference().child(eid);
@@ -136,14 +138,8 @@ public class NuevoProyectoActivity extends AppCompatActivity {
                 crearProyecto();
             }
         });
-        iv_imagenProyecto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent abrirGaleriaIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(abrirGaleriaIntent,1000);
-            }
-        });
     }
+
 
     /**
      * Este método rellena el spinner de los departamentos con un array de nombres presente en la clase
@@ -227,27 +223,33 @@ public class NuevoProyectoActivity extends AppCompatActivity {
 
             Date fechaIni=parseDate(fechaInicio);
             Date fechaFin= parseDate(fechaFinal);
-            //Si las fechas son nulas no son correctas
+            //Si las fechas son nulas no son correctas, lo mismo sucede si la de fin es menor que la de inicia
             if(fechaFin!=null&& fechaIni!=null){
-                if(!TextUtils.isEmpty(nombre)){
-                    String pid= UUID.randomUUID().toString();
-                    ArrayList<Date> fechasProyecto= new ArrayList<>();
-                    fechasProyecto.add(0,fechaIni);
-                    fechasProyecto.add(1,fechaFin);
+                if(fechaFin.compareTo(fechaIni)==1) {
+                    if (!TextUtils.isEmpty(nombre)) {
+                        //Se crea el proyecto y se guarda
+                        pid = UUID.randomUUID().toString();
+                        ArrayList<Date> fechasProyecto = new ArrayList<>();
+                        fechasProyecto.add(0, fechaIni);
+                        fechasProyecto.add(1, fechaFin);
 
-                    Proyecto proyecto= new Proyecto(pid, nombre,nifCliente,idDepartamento);
-                    proyecto.setEspecificacionesProyecto(especificaciones);
-                    proyecto.setFechasProyecto(fechasProyecto);
-                    proyecto.setPresupuesto(presupuesto);
+                        Proyecto proyecto = new Proyecto(pid, nombre, nifCliente, idDepartamento);
+                        proyecto.setEspecificacionesProyecto(especificaciones);
+                        proyecto.setFechasProyecto(fechasProyecto);
+                        proyecto.setPresupuesto(presupuesto);
 
-                    dbReference.child("Proyectos").child(pid).setValue(proyecto);
+                        dbReference.child("Proyectos").child(pid).setValue(proyecto);
+
+                        finish();
+                        Toast.makeText(getApplicationContext(), "Proyecto creado", Toast.LENGTH_LONG).show();
+                    }
+                }else {
+                    Toast.makeText(getApplicationContext(),"¡La fecha de fin debe ser mayor que la de inicio!",Toast.LENGTH_LONG).show();
 
                 }
-
             }else{
                 Toast.makeText(getApplicationContext(),"¡Debe introducir dos fechas en formato correcto!",Toast.LENGTH_LONG).show();
             }
-
         }else{
             Toast.makeText(getApplicationContext(),"¡El proyecto debe tener un cliente y un departamento válidos!",Toast.LENGTH_LONG).show();
         }

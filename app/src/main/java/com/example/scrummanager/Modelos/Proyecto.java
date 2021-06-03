@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Dictionary;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Proyecto implements Serializable {
     private String idProyecto;
@@ -18,6 +19,8 @@ public class Proyecto implements Serializable {
     private ArrayList<Date> fechasProyecto;
     private String presupuesto;
     private boolean showMenu= false;
+    private String color;
+    private ArrayList<String> colors= new ArrayList<>();
     //TODO SLA implementation
 
 
@@ -29,8 +32,24 @@ public class Proyecto implements Serializable {
         this.idProyecto = idProyecto;
         this.nifCliente = nifCliente;
         this.did=did;
+        this.setColors();
+        this.setColor();
     }
 
+    private void setColors(){
+        colors.add("#A9E7EF9D");
+        colors.add("#A99F80D3");
+        colors.add("#A8C483DC");
+        colors.add("#A996EA9A");
+        colors.add("#A868AAC8");
+        colors.add("#089f80");
+        colors.add("#8BC56B89");
+    }
+
+    private void setColor(){
+        int numeroAleatorio = ThreadLocalRandom.current().nextInt(0, colors.size());
+        this.color=colors.get(numeroAleatorio);
+    }
 
     public String getDid() {
         return did;
@@ -106,5 +125,9 @@ public class Proyecto implements Serializable {
 
     public void setPresupuesto(String presupuesto) {
         this.presupuesto = presupuesto;
+    }
+
+    public String getColor() {
+        return this.color;
     }
 }

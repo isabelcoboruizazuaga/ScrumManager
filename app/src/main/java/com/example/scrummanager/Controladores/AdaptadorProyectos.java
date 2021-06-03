@@ -1,10 +1,16 @@
 package com.example.scrummanager.Controladores;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.media.Image;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +24,10 @@ import com.example.scrummanager.Modelos.Empleado;
 import com.example.scrummanager.Modelos.Proyecto;
 import com.example.scrummanager.Modelos.Sprint;
 import com.example.scrummanager.R;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,6 +38,7 @@ public class AdaptadorProyectos extends RecyclerView.Adapter<RecyclerView.ViewHo
     private ArrayList<Proyecto> proyectos;
     private Context contexto;
     private Proyecto proyecto;
+    StorageReference storageReference;
     private final int MOSTRAR_MENU = 1, OCULTAR_MENU = 2;
     private Fragment fragment;
 
@@ -59,6 +70,7 @@ public class AdaptadorProyectos extends RecyclerView.Adapter<RecyclerView.ViewHo
         proyecto = proyectos.get(position);
 
         String nombreProyecto = proyecto.getNombreProyecto();
+        int color= Color.parseColor(proyecto.getColor());
         //Cliente nombreClienteProyecto = proyecto.getCliente();
 
 
@@ -68,6 +80,7 @@ public class AdaptadorProyectos extends RecyclerView.Adapter<RecyclerView.ViewHo
             //Se incluye el empleado en el layout
             ((AdaptadorProyectosViewHolder) holder).tv_nombreProyecto.setText(nombreProyecto.toString());
             ((AdaptadorProyectosViewHolder) holder).tv_nombreClienteProyecto.setText("UN CLIENTE");
+            ((AdaptadorProyectosViewHolder) holder).layoutProyecto.setBackgroundTintList(ColorStateList.valueOf(color));
 
             //Si se mantiene pulsado se abre el menú de opciones
             ((AdaptadorProyectosViewHolder) holder).itemView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -229,6 +242,7 @@ public class AdaptadorProyectos extends RecyclerView.Adapter<RecyclerView.ViewHo
     public class AdaptadorProyectosViewHolder extends RecyclerView.ViewHolder {
         //items del layout
         private TextView tv_nombreProyecto, tv_nombreClienteProyecto;
+        private LinearLayout layoutProyecto;
 
         public AdaptadorProyectosViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -240,7 +254,7 @@ public class AdaptadorProyectos extends RecyclerView.Adapter<RecyclerView.ViewHo
 
             tv_nombreProyecto = itemView.findViewById(R.id.tv_nombreProyecto);
             tv_nombreClienteProyecto = itemView.findViewById(R.id.tv_nombreClienteProyecto);
-            //iv_fotoDepartamento= itemView.findViewById(R.id.iv_fotoDepartamento);
+            layoutProyecto= itemView.findViewById(R.id.layoutProyecto);
 
         }
     }
