@@ -22,6 +22,8 @@ import com.example.scrummanager.Modelos.Proyecto;
 import com.example.scrummanager.Modelos.Sprint;
 import com.example.scrummanager.R;
 import com.example.scrummanager.Vistas.EditarSprintActivity;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -122,9 +124,7 @@ public class AdaptadorSprints extends RecyclerView.Adapter<RecyclerView.ViewHold
             });
             ((AdaptadorSprints.MenuViewHolder) holder).btn_borrarCliente.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
-                    borrarConfirmacion(sprint);
-                }
+                public void onClick(View v) { borrarConfirmacion(sprint,proyecto.getIdEmpresa(),proyecto.getIdProyecto());}
             });
 
             //Si se mantiene pulsado se cierra el menú de opciones
@@ -140,7 +140,6 @@ public class AdaptadorSprints extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public int getItemCount() {
-
         try {
             return sprints.size();
         } catch (NullPointerException e) {
@@ -242,16 +241,16 @@ public class AdaptadorSprints extends RecyclerView.Adapter<RecyclerView.ViewHold
         contexto.startActivity(intent);*/
     }
 
-    private void borrarConfirmacion(Sprint sprint) {
+    private void borrarConfirmacion(Sprint sprint,String eid,String pid) {
         //Inicialización
         AlertDialog.Builder alertDialogBu = new AlertDialog.Builder(contexto);
         alertDialogBu.setTitle("Borrar");
-        alertDialogBu.setMessage("¿Seguro que quiere eliminar a " + sprint.getIdSprint() + "? Esta acción no se puede deshacer");
+        alertDialogBu.setMessage("¿Seguro que quiere eliminar a " + sprint.getNombre() + "? Esta acción no se puede deshacer");
 
         //Opción positiva
         alertDialogBu.setPositiveButton("Borrar", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                borrarCliente(sprint);
+                borrarCliente(sprint,eid,pid);
             }
         });
         //Opción negativa
@@ -265,16 +264,12 @@ public class AdaptadorSprints extends RecyclerView.Adapter<RecyclerView.ViewHold
         alertDialog.show();
     }
 
-    public void borrarCliente(Sprint sprint) {
-       /* String eid= cliente.getIdEmpresa();
-        String nif= cliente.getNifCliente();
+    public void borrarCliente(Sprint sprint,String eid,String pid) {
+        proyecto.eliminarSprint(sprint);
 
-        //Inicialización de la base de datos
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference dbReference = database.getReference().child(eid);
+        DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference().child(eid).child("Proyectos").child(pid);
+        dbReference.setValue(proyecto);
 
-        dbReference.child("Clientes").child(nif).removeValue();
-
-        Toast.makeText(contexto, cliente.getNombreCliente() +" "+cliente.getApellidoCliente() + " borrado", Toast.LENGTH_LONG).show();*/
+        Toast.makeText(contexto, sprint.getNombre() +" borrado", Toast.LENGTH_SHORT).show();
     }
 }
