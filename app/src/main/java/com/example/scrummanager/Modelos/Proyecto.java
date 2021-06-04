@@ -2,6 +2,8 @@ package com.example.scrummanager.Modelos;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Dictionary;
 import java.util.concurrent.ThreadLocalRandom;
@@ -142,32 +144,49 @@ public class Proyecto implements Serializable {
 
     public void nuevoSprint(Sprint sprint){
         try {
-            if(!comprobarListaSprints(sprint.getIdSprint())) {
+            if(!comprobarListaSprints(sprint)) {
                 this.listaSprints.add(sprint);
             }
         }catch (java.lang.NullPointerException e){
             listaSprints = new ArrayList<>();
-            if(!comprobarListaSprints(sprint.getIdSprint())) {
+            if(!comprobarListaSprints(sprint)) {
                 this.listaSprints.add(sprint);
             }
         }
     }
-    public boolean comprobarListaSprints(String sid){
+
+    public boolean comprobarListaSprints(Sprint sprint){
         boolean existe= false;
         for(int i= 0; i<listaSprints.size();i++){
-            if(sid.equals(listaSprints.get(i).getIdSprint())){
+            listaSprints.get(i).setShowMenu(false);
+
+            if(sprint.getIdSprint().equals(listaSprints.get(i).getIdSprint())){
                 existe=true;
             }
         }
         return existe;
     }
-    public void eliminarEmpleado(Sprint sprint){
+    public void eliminarSprint(Sprint sprint){
         try {
-            if(comprobarListaSprints(sprint.getIdSprint())) {
+            if(comprobarListaSprints(sprint)) {
+                for (int i=0;i<listaSprints.size();i++){
+                    if(sprint.getIdSprint().equals(listaSprints.get(i).getIdSprint())){
+                        listaSprints.remove(listaSprints.get(i));
+                    }
+                }
                 this.listaSprints.remove(sprint);
             }
         }catch (java.lang.NullPointerException e){
-
         }
+    }
+
+    public void ordenarSprints(){
+        Collections.sort(listaSprints, new Comparator<Sprint>() {
+            public int compare(Sprint o1, Sprint o2) {
+                if (o1.getFechasSprint().get(0) == null || o2.getFechasSprint().get(0) == null)
+                    return 0;
+                return o1.getFechasSprint().get(0).compareTo(o2.getFechasSprint().get(0));
+            }
+        });
     }
 }

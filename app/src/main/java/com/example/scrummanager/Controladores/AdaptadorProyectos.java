@@ -44,7 +44,6 @@ import java.util.Date;
 public class AdaptadorProyectos extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<Proyecto> proyectos;
     private Context contexto;
-    private Proyecto proyecto;
     private Cliente clie= inicializarCliente();
     private final int MOSTRAR_MENU = 1, OCULTAR_MENU = 2;
     private Fragment fragment;
@@ -74,7 +73,7 @@ public class AdaptadorProyectos extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        proyecto = proyectos.get(position);
+        Proyecto proyecto = proyectos.get(position);
         String eid=proyecto.getIdEmpresa();
         String did=proyecto.getDid();
 
@@ -137,7 +136,7 @@ public class AdaptadorProyectos extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 
                     rellenarRecyclerViewEquipo(eid, did);
-                    rellenarRecyclerViewSprint();
+                    rellenarRecyclerViewSprint(proyecto);
                 }
             });
 
@@ -208,6 +207,8 @@ public class AdaptadorProyectos extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     /**
      * Método que inicializa el recycler view de la vista de un equipo dentro de un proyecto
+     * @param eid id de la empresa a la que pertenece el proyecto (y por tanto el equipo)
+     * @param did id del departamento o equipo encargado del proyecto
      */
     private void rellenarRecyclerViewEquipo(String eid, String did){
         ArrayList<Empleado> miembrosDpt= new ArrayList<>();
@@ -262,43 +263,19 @@ public class AdaptadorProyectos extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     /**
      * Método que inicializa el recycler view de la vista de los sprints dentro de un proyecto
+     * @param proyecto proyecto seleccionado al que pertenencen los sprints
      */
-    private void rellenarRecyclerViewSprint(){
+    private void rellenarRecyclerViewSprint(Proyecto proyecto){
+        ArrayList sprints =new ArrayList<Sprint>();
+        sprints= proyecto.getListaSprints();
+
         //Creación del Recycler View para el equipo
         RecyclerView recView3= fragment.getView().findViewById(R.id.rv_sprints);
         LinearLayoutManager layoutManager3= new LinearLayoutManager(contexto,LinearLayoutManager.HORIZONTAL,false);
         recView3.setLayoutManager(layoutManager3);
 
-        Date fechaFin= parseDate("13/07/2021");
-        Date fechaInicio= parseDate("31/05/2021");
-        ArrayList<Date> fechas= new ArrayList<>();
-        fechas.add(fechaInicio);
-        fechas.add(fechaFin);
-
-        ArrayList sprints =new ArrayList<Empleado>();
-        /*Sprint sprint= new Sprint("Sprint 1",fechas);
-        sprints.add(sprint);
-        sprint= new Sprint("Sprint 2",fechas);
-        sprints.add(sprint);
-        sprint= new Sprint("Sprint 3",fechas);
-        sprints.add(sprint);
-        sprint= new Sprint("Sprint 4",fechas);
-        sprints.add(sprint);
-        sprint= new Sprint("Sprint 2",fechas);
-        sprints.add(sprint);
-        sprint= new Sprint("Sprint 3",fechas);
-        sprints.add(sprint);
-        sprint= new Sprint("Sprint 4",fechas);
-        sprints.add(sprint);
-        sprint= new Sprint("Sprint 2",fechas);
-        sprints.add(sprint);
-        sprint= new Sprint("Sprint 3",fechas);
-        sprints.add(sprint);
-        sprint= new Sprint("Sprint 4",fechas);
-        sprints.add(sprint);*/
-
         //Asignación del equipo al recyclerView
-        AdaptadorSprints adaptadorSprints= new AdaptadorSprints(sprints,contexto);
+        AdaptadorSprints adaptadorSprints= new AdaptadorSprints(sprints,proyecto,contexto);
         recView3.setAdapter(adaptadorSprints);
     }
 

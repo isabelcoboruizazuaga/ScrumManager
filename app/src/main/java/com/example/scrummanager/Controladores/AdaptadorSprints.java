@@ -18,8 +18,11 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.scrummanager.Modelos.Proyecto;
 import com.example.scrummanager.Modelos.Sprint;
 import com.example.scrummanager.R;
+import com.example.scrummanager.Vistas.EditarSprintActivity;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
@@ -28,12 +31,14 @@ import java.util.Date;
 
 public class AdaptadorSprints extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<Sprint> sprints;
+    private Proyecto proyecto;
     private Context contexto;
     private final int MOSTRAR_MENU = 1, OCULTAR_MENU = 2;
 
-    public AdaptadorSprints(ArrayList<Sprint> sprints, Context contexto) {
+    public AdaptadorSprints(ArrayList<Sprint> sprints, Proyecto proyecto, Context contexto) {
         this.sprints = sprints;
         this.contexto = contexto;
+        this.proyecto=proyecto;
     }
 
     @NonNull
@@ -57,7 +62,7 @@ public class AdaptadorSprints extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Sprint sprint = sprints.get(position);
 
-        String idSprint = sprint.getIdSprint();
+        String nombre = sprint.getNombre();
         String objetivoSprint = sprint.getObjetivoSprint();
         ArrayList<Date> fechas = sprint.getFechasSprint();
         int color= Color.parseColor(sprint.getColor());
@@ -70,13 +75,11 @@ public class AdaptadorSprints extends RecyclerView.Adapter<RecyclerView.ViewHold
         if (holder instanceof AdaptadorSprints.AdaptadorSprintsViewHolder) {
 
             //Se incluye el sprint en el layout
-            ((AdaptadorSprintsViewHolder) holder).tv_sprintId.setText(idSprint);
+            ((AdaptadorSprintsViewHolder) holder).tv_sprintNombre.setText(nombre);
             ((AdaptadorSprintsViewHolder) holder).tv_objetivoSprint.setText(objetivoSprint);
             ((AdaptadorSprintsViewHolder) holder).tv_inicioSprint.setText(inicioSprint);
             ((AdaptadorSprintsViewHolder) holder).tv_finSprint.setText(finSprint);
             ((AdaptadorSprintsViewHolder) holder).cardViewSprint.setCardBackgroundColor(color);
-
-
 
             //Un click simple muestra el sprint
             ((AdaptadorSprints.AdaptadorSprintsViewHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
@@ -147,11 +150,16 @@ public class AdaptadorSprints extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public int getItemViewType(int position) {
-        if (sprints.get(position).isShowMenu()) {
-            return MOSTRAR_MENU;
-        } else {
-            return OCULTAR_MENU;
+        try {
+            if (sprints.get(position).isShowMenu()) {
+                return MOSTRAR_MENU;
+            } else {
+                return OCULTAR_MENU;
+            }
+        }catch (Exception e){
+
         }
+        return OCULTAR_MENU;
     }
 
     /**
@@ -159,7 +167,7 @@ public class AdaptadorSprints extends RecyclerView.Adapter<RecyclerView.ViewHold
      */
     public class AdaptadorSprintsViewHolder extends RecyclerView.ViewHolder {
         //items del layout
-        private TextView tv_sprintId, tv_inicioSprint, tv_objetivoSprint, tv_finSprint;
+        private TextView tv_sprintNombre, tv_inicioSprint, tv_objetivoSprint, tv_finSprint;
         private CardView cardViewSprint;
 
         public AdaptadorSprintsViewHolder(@NonNull View itemView) {
@@ -169,7 +177,7 @@ public class AdaptadorSprints extends RecyclerView.Adapter<RecyclerView.ViewHold
             contexto = itemView.getContext();
 
             //inicializacón de los elementos del layout
-            tv_sprintId = itemView.findViewById(R.id.tv_sprintId);
+            tv_sprintNombre = itemView.findViewById(R.id.tv_sprintId);
             tv_inicioSprint = itemView.findViewById(R.id.tv_inicioSprint);
             tv_objetivoSprint = itemView.findViewById(R.id.tv_objetivoSprint);
             tv_finSprint = itemView.findViewById(R.id.tv_finSprint);
@@ -222,9 +230,10 @@ public class AdaptadorSprints extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     public void editarSprint(Sprint sprint) {
-        /*Intent intent= new Intent(contexto, EditarSprintActivity.class);
+        Intent intent= new Intent(contexto, EditarSprintActivity.class);
         intent.putExtra("sprint",sprint);
-        contexto.startActivity(intent);*/
+        intent.putExtra("proyecto",proyecto);
+        contexto.startActivity(intent);
     }
 
     public void verSprint(Sprint sprint) {
