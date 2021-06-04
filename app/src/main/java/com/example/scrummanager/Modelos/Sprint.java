@@ -11,13 +11,15 @@ public class Sprint implements Serializable {
     private ArrayList<Date> fechasSprint;
     private String objetivoSprint;
     private String color;
+    private String nombre;
     private ArrayList<String> colors= new ArrayList<>();
     private boolean showMenu= false;
 
     public Sprint() {
     }
 
-    public Sprint(String idSprint, ArrayList<Date> fechasSprint) {
+    public Sprint(String idSprint, String nombre, ArrayList<Date> fechasSprint) {
+        this.nombre=nombre;
         this.idSprint = idSprint;
         this.fechasSprint = fechasSprint;
         this.setColors();
@@ -43,6 +45,13 @@ public class Sprint implements Serializable {
         return this.color;
     }
 
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 
     public boolean isShowMenu() {
         return showMenu;

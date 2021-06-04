@@ -27,6 +27,7 @@ import com.example.scrummanager.Modelos.Sprint;
 import com.example.scrummanager.R;
 import com.example.scrummanager.Vistas.EditarEmpleadoActivity;
 import com.example.scrummanager.Vistas.EditarProyectoActivity;
+import com.example.scrummanager.Vistas.NuevoSprintActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -150,10 +151,10 @@ public class AdaptadorProyectos extends RecyclerView.Adapter<RecyclerView.ViewHo
                     cerrarMenu();
                 }
             });
-            ((MenuViewHolder) holder).btn_verProyecto.setOnClickListener(new View.OnClickListener() {
+            ((MenuViewHolder) holder).btn_nuevoSprint.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    verProyecto(proyecto);
+                    sprintProyecto(proyecto);
                 }
             });
             ((MenuViewHolder) holder).btn_editarProyecto.setOnClickListener(new View.OnClickListener() {
@@ -275,7 +276,7 @@ public class AdaptadorProyectos extends RecyclerView.Adapter<RecyclerView.ViewHo
         fechas.add(fechaFin);
 
         ArrayList sprints =new ArrayList<Empleado>();
-        Sprint sprint= new Sprint("Sprint 1",fechas);
+        /*Sprint sprint= new Sprint("Sprint 1",fechas);
         sprints.add(sprint);
         sprint= new Sprint("Sprint 2",fechas);
         sprints.add(sprint);
@@ -294,7 +295,7 @@ public class AdaptadorProyectos extends RecyclerView.Adapter<RecyclerView.ViewHo
         sprint= new Sprint("Sprint 3",fechas);
         sprints.add(sprint);
         sprint= new Sprint("Sprint 4",fechas);
-        sprints.add(sprint);
+        sprints.add(sprint);*/
 
         //Asignación del equipo al recyclerView
         AdaptadorSprints adaptadorSprints= new AdaptadorSprints(sprints,contexto);
@@ -321,7 +322,7 @@ public class AdaptadorProyectos extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public class MenuViewHolder extends RecyclerView.ViewHolder {
         //items del layout
-        private ImageButton btn_verProyecto, btn_atrasProyecto, btn_borrarProyecto, btn_editarProyecto;
+        private ImageButton btn_nuevoSprint, btn_atrasProyecto, btn_borrarProyecto, btn_editarProyecto;
 
         public MenuViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -330,7 +331,7 @@ public class AdaptadorProyectos extends RecyclerView.Adapter<RecyclerView.ViewHo
             contexto = itemView.getContext();
 
             //inicializacón de los elementos del layout
-            btn_verProyecto = itemView.findViewById(R.id.btn_verProyecto);
+            btn_nuevoSprint = itemView.findViewById(R.id.btn_nuevoSprintProyecto);
             btn_atrasProyecto = itemView.findViewById(R.id.btn_atrasProyecto);
             btn_borrarProyecto = itemView.findViewById(R.id.btn_borrarProyecto);
             btn_editarProyecto = itemView.findViewById(R.id.btn_editarProyecto);
@@ -372,9 +373,10 @@ public class AdaptadorProyectos extends RecyclerView.Adapter<RecyclerView.ViewHo
         contexto.startActivity(intent);
     }
 
-    public void verProyecto(Proyecto proyecto) {
-        System.out.println("VIENDOOOOOOO");
-        Toast.makeText(contexto, "VIENDO SEÑORES", Toast.LENGTH_LONG);
+    public void sprintProyecto(Proyecto proyecto) {
+        Intent intent= new Intent(contexto, NuevoSprintActivity.class);
+        intent.putExtra("proyecto",proyecto);
+        contexto.startActivity(intent);
     }
 
     /**

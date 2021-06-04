@@ -39,7 +39,6 @@ import java.util.Date;
 public class EditarProyectoActivity extends AppCompatActivity {
     private DatabaseReference dbReference;
     private ValueEventListener eventListenerDepartamentos,eventListenerClientes ;
-    StorageReference storageReference;
 
     private ArrayList<Departamento> departamentos=new ArrayList<>();
     private ArrayList<Cliente> clientes=new ArrayList<>();
@@ -93,7 +92,6 @@ public class EditarProyectoActivity extends AppCompatActivity {
 
         //Inicialización de Firebase
         dbReference= FirebaseDatabase.getInstance().getReference().child(eid);
-        storageReference= FirebaseStorage.getInstance().getReference();
 
         //Extracción de los datos del spinner departamentos
         controlInicialRellenarDepartamentos();
@@ -131,7 +129,7 @@ public class EditarProyectoActivity extends AppCompatActivity {
         btn_aniadir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                crearProyecto();
+                editarProyecto();
             }
         });
     }
@@ -272,7 +270,9 @@ public class EditarProyectoActivity extends AppCompatActivity {
     /**
      * Crea un proyecto a partir de los datos proporcionados y lo añade a la base de datos
      */
-    private void crearProyecto(){
+    private void editarProyecto(){
+        proyecto.setShowMenu(false);
+
         //Solo se actúa si se ha seleccionado un cliente o un departamento
         if(!idDepartamento.equals("-1") && !nifCliente.equals("-1")){
             String fechaInicio = et_FechaInicioProyecto.getText().toString();
@@ -303,6 +303,8 @@ public class EditarProyectoActivity extends AppCompatActivity {
 
                         finish();
                         Toast.makeText(getApplicationContext(), "Proyecto editado", Toast.LENGTH_LONG).show();
+                    }else{
+                        Toast.makeText(getApplicationContext(), "¡Debe rellenar el campo del nombre!", Toast.LENGTH_LONG).show();
                     }
                 }else {
                     Toast.makeText(getApplicationContext(),"¡La fecha de fin debe ser mayor que la de inicio!",Toast.LENGTH_LONG).show();
@@ -322,7 +324,7 @@ public class EditarProyectoActivity extends AppCompatActivity {
      * @param date String
      * @return date Date
      */
-    public static Date parseDate(String date) {
+    public Date parseDate(String date) {
         if(date.contains("/")){
             try {
                 return new SimpleDateFormat("dd/MM/yyyy").parse(date);

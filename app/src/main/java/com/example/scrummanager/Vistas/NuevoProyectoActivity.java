@@ -127,7 +127,6 @@ public class NuevoProyectoActivity extends AppCompatActivity {
             }
         });
 
-        //ON CLICK LISTENERS
         btn_aniadir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -238,6 +237,8 @@ public class NuevoProyectoActivity extends AppCompatActivity {
 
                         finish();
                         Toast.makeText(getApplicationContext(), "Proyecto creado", Toast.LENGTH_LONG).show();
+                    }else{
+                        Toast.makeText(getApplicationContext(), "¡Debe rellenar el campo del nombre!", Toast.LENGTH_LONG).show();
                     }
                 }else {
                     Toast.makeText(getApplicationContext(),"¡La fecha de fin debe ser mayor que la de inicio!",Toast.LENGTH_LONG).show();

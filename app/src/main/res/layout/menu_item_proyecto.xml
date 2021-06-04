@@ -30,13 +30,13 @@
                     android:orientation="vertical">
 
                     <com.example.scrummanager.Controladores.ProporcionalImageButton
-                        android:id="@+id/btn_verProyecto"
+                        android:id="@+id/btn_nuevoSprintProyecto"
                         android:backgroundTint="@color/white"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:adjustViewBounds="true"
                         android:scaleType="centerCrop"
-                        app:srcCompat="@drawable/view_icon" />
+                        app:srcCompat="@drawable/newsprint_icon" />
 
                     <com.example.scrummanager.Controladores.ProporcionalImageButton
                         android:id="@+id/btn_atrasProyecto"

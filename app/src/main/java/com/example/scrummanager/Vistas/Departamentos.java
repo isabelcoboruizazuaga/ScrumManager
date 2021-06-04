@@ -87,21 +87,6 @@ public class Departamentos extends Fragment {
         recView.setLayoutManager(gridlayoutManager);
 
         rellenarRecyclerView();
-       /* departamentos=new ArrayList<Departamento>();
-        departamento= new Departamento("id01","dep1","eid");
-        departamentos.add(departamento);
-        departamento= new Departamento("id02","dep2","eid");
-        departamentos.add(departamento);
-        departamento= new Departamento("id03","dep3","eid");
-        departamentos.add(departamento);
-        departamento= new Departamento("id4","dep4","eid");
-        departamentos.add(departamento);
-        departamento= new Departamento("asda","dep5","eid");
-        departamentos.add(departamento);
-        departamento= new Departamento("sad","dep5","eid");
-        departamentos.add(departamento);
-        departamento= new Departamento("ad","dep6","eid");
-        departamentos.add(departamento);*/
     }
 
     @Override

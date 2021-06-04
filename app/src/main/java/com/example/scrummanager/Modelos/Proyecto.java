@@ -139,4 +139,35 @@ public class Proyecto implements Serializable {
     public String getColor() {
         return this.color;
     }
+
+    public void nuevoSprint(Sprint sprint){
+        try {
+            if(!comprobarListaSprints(sprint.getIdSprint())) {
+                this.listaSprints.add(sprint);
+            }
+        }catch (java.lang.NullPointerException e){
+            listaSprints = new ArrayList<>();
+            if(!comprobarListaSprints(sprint.getIdSprint())) {
+                this.listaSprints.add(sprint);
+            }
+        }
+    }
+    public boolean comprobarListaSprints(String sid){
+        boolean existe= false;
+        for(int i= 0; i<listaSprints.size();i++){
+            if(sid.equals(listaSprints.get(i).getIdSprint())){
+                existe=true;
+            }
+        }
+        return existe;
+    }
+    public void eliminarEmpleado(Sprint sprint){
+        try {
+            if(comprobarListaSprints(sprint.getIdSprint())) {
+                this.listaSprints.remove(sprint);
+            }
+        }catch (java.lang.NullPointerException e){
+
+        }
+    }
 }
