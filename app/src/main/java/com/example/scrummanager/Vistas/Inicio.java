@@ -61,15 +61,15 @@ public class Inicio extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         ArrayList<Tarea> tareas= new ArrayList<>();
-        Tarea tarea= new Tarea("1","Depuración", "Dcp",0,1,"uid",new Date());
+        Tarea tarea= new Tarea("1","Depuración", "Dcp",-1,3,"uid",new Date());
         tareas.add(tarea);
-        tarea= new Tarea("1","Falta layout", "Dcp",0,1,"uid",new Date());
+        tarea= new Tarea("1","Falta layout", "Dcp",0,0,"uid",new Date());
         tareas.add(tarea);
-        tarea= new Tarea("1","Nombre3", "Dcp",0,1,"Fernando García Pérez",new Date());
+        tarea= new Tarea("1","Nombre3", "Dcp",1,2,"Fernando García Pérez",new Date());
         tareas.add(tarea);
-        tarea= new Tarea("1","Nombre4", "Dcp",0,1,"uid",new Date());
+        tarea= new Tarea("1","Nombre4", "Dcp",0,3,"uid",new Date());
         tareas.add(tarea);
-        tarea= new Tarea("1","Nombre5", "Dcp",0,1,"uid",new Date());
+        tarea= new Tarea("1","Nombre5", "Dcp",1,1,"uid",new Date());
         tareas.add(tarea);
 
 

@@ -16,10 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.scrummanager.Modelos.Proyecto;
@@ -55,7 +53,7 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
         View v;
         if (viewType == MOSTRAR_MENU) {
             //Se infla la View
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_item_cliente, parent, false);
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_item_departamento, parent, false);
             //Se crea el ViewHolder
             return new AdaptadorTareas.MenuViewHolder(v);
         } else {
@@ -77,26 +75,20 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
         int tipo= tarea.getTipoTarea();
         String encargado= tarea.getEncargadoTarea();
 
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        String fechaCreacion = formatter.format(creacion);
+
 
         //Si se está mostrando la tarea
         if (holder instanceof AdaptadorTareas.AdaptadorTareasViewHolder) {
             //Se incluye la tarea en el layout
             ((AdaptadorTareasViewHolder) holder).tv_nombreTarea.setText(nombre);
-
-            ((AdaptadorTareasViewHolder) holder).tv_fechaCreacion.setText("01/01/2001");
-
+            ((AdaptadorTareasViewHolder) holder).tv_fechaCreacion.setText(fechaCreacion);
             ((AdaptadorTareasViewHolder) holder).tv_encargadoTarea.setText(encargado);
-
-            ImageView tip = ((AdaptadorTareasViewHolder) holder).iv_fondoTarea;
-
-            tip.setBackground(ContextCompat.getDrawable(contexto, R.drawable.task_background_icon));
-            Drawable buttonDrawable = tip.getBackground();
-            buttonDrawable = DrawableCompat.wrap(buttonDrawable);
-            //the color is a direct color int and not a color resource
-            DrawableCompat.setTint(buttonDrawable, Color.RED);
-            tip.setBackground(buttonDrawable);
-
             ((AdaptadorTareasViewHolder) holder).iv_tipoTarea.setImageResource(R.drawable.others_icon);
+
+            setColor(holder,prioridad);
+            setIvTipo(holder,tipo);
 
             //Un click simple muestra el sprint
             ((AdaptadorTareasViewHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
@@ -118,26 +110,28 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
         //Si se está mostrando el menú
         if (holder instanceof AdaptadorTareas.MenuViewHolder) {
+            //Se incluye el nombre de la tarea en el layout
+            ((MenuViewHolder) holder).tv_nombreTarea.setText(nombre);
             //Se asignan onClickListeners para las opciones del menú
-            ((AdaptadorTareas.MenuViewHolder) holder).btn_atrasCliente.setOnClickListener(new View.OnClickListener() {
+            ((MenuViewHolder) holder).btn_atrasTarea.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     cerrarMenu();
                 }
             });
-            ((AdaptadorTareas.MenuViewHolder) holder).btn_verCliente.setOnClickListener(new View.OnClickListener() {
+            ((MenuViewHolder) holder).btn_verTarea.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     verSprint(sprint);
                 }
             });
-            ((AdaptadorTareas.MenuViewHolder) holder).btn_editarCliente.setOnClickListener(new View.OnClickListener() {
+            ((MenuViewHolder) holder).btn_editarTarea.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     editarSprint(sprint);
                 }
             });
-            ((AdaptadorTareas.MenuViewHolder) holder).btn_borrarCliente.setOnClickListener(new View.OnClickListener() {
+            ((MenuViewHolder) holder).btn_borrarTarea.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) { borrarConfirmacion(sprint,proyecto.getIdEmpresa(),proyecto.getIdProyecto());}
             });
@@ -150,6 +144,58 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     return true;
                 }
             });
+        }
+    }
+
+    /**
+     * Evalúa la prioridad de la tarea y establece el color de fonde según esta
+     * @param holder
+     * @param prioridad 0 baja, 1 media, 2 alta, 3 terminal
+     */
+    public void setColor(RecyclerView.ViewHolder holder, int prioridad){
+        ImageView iv_prioridad = ((AdaptadorTareasViewHolder) holder).iv_fondoTarea;
+
+        iv_prioridad.setBackground(ContextCompat.getDrawable(contexto, R.drawable.task_background_icon));
+        Drawable buttonDrawable = iv_prioridad.getBackground();
+        buttonDrawable = DrawableCompat.wrap(buttonDrawable);
+
+        int color=0;
+        switch (prioridad){
+            case 0:
+                color=0xff00ccff;
+                break;
+            case 1:
+                color=0xff1cc990;
+                break;
+            case 2:
+                color=0xffec9879;
+                break;
+            case 3:
+                color=0xffdf4620;
+                break;
+        }
+
+        DrawableCompat.setTint(buttonDrawable, color);
+        iv_prioridad.setBackground(buttonDrawable);
+    }
+
+    /**
+     * Carga el icono de una tarea dependiendo de su tipo
+     * @param holder
+     * @param tipo -1 error, 0 tarea, 1 otro
+     */
+    public void setIvTipo(RecyclerView.ViewHolder holder, int tipo){
+        ImageView iv_prioridad = ((AdaptadorTareasViewHolder) holder).iv_tipoTarea;
+        switch (tipo){
+            case -1:
+                ((AdaptadorTareasViewHolder) holder).iv_tipoTarea.setImageResource(R.drawable.bug_icon);
+                break;
+            case 0:
+                ((AdaptadorTareasViewHolder) holder).iv_tipoTarea.setImageResource(R.drawable.task_icon);
+                break;
+            case 1:
+                ((AdaptadorTareasViewHolder) holder).iv_tipoTarea.setImageResource(R.drawable.others_icon);
+                break;
         }
     }
 
@@ -203,8 +249,8 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     public class MenuViewHolder extends RecyclerView.ViewHolder {
-        //items del layout
-        private ImageButton btn_verCliente, btn_atrasCliente, btn_borrarCliente, btn_editarCliente;
+        private ImageButton btn_verTarea, btn_editarTarea, btn_atrasTarea, btn_borrarTarea;
+        private TextView tv_nombreTarea;
 
         public MenuViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -213,10 +259,11 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
             contexto = itemView.getContext();
 
             //inicializacón de los elementos del layout
-            btn_verCliente = itemView.findViewById(R.id.btn_verCliente);
-            btn_atrasCliente = itemView.findViewById(R.id.btn_atrasCliente);
-            btn_borrarCliente = itemView.findViewById(R.id.btn_borrarCliente);
-            btn_editarCliente = itemView.findViewById(R.id.btn_editarCliente);
+            btn_verTarea = itemView.findViewById(R.id.btn_verDepartamento);
+            btn_editarTarea = itemView.findViewById(R.id.btn_editarDepartamento);
+            btn_atrasTarea = itemView.findViewById(R.id.btn_atrasDepartamento);
+            btn_borrarTarea = itemView.findViewById(R.id.btn_borrarDepartamento);
+            tv_nombreTarea = itemView.findViewById(R.id.tv_nombreDepartamento);
         }
     }
 
