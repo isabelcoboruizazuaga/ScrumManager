@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,13 +17,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.scrummanager.Modelos.Proyecto;
 import com.example.scrummanager.Modelos.Sprint;
 import com.example.scrummanager.R;
 import com.example.scrummanager.Vistas.EditarSprintActivity;
-import com.example.scrummanager.Vistas.NuevaTareaActivity;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -36,12 +38,14 @@ public class AdaptadorSprints extends RecyclerView.Adapter<RecyclerView.ViewHold
     private ArrayList<Sprint> sprints;
     private Proyecto proyecto;
     private Context contexto;
+    private Fragment fragment;
     private final int MOSTRAR_MENU = 1, OCULTAR_MENU = 2;
 
-    public AdaptadorSprints(ArrayList<Sprint> sprints, Proyecto proyecto, Context contexto) {
+    public AdaptadorSprints(ArrayList<Sprint> sprints, Proyecto proyecto, Context contexto, Fragment fragment) {
         this.sprints = sprints;
         this.contexto = contexto;
         this.proyecto=proyecto;
+        this.fragment= fragment;
     }
 
     @NonNull
@@ -237,10 +241,15 @@ public class AdaptadorSprints extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     public void verSprint(Sprint sprint) {
-        Intent intent= new Intent(contexto, NuevaTareaActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("sprint", sprint);
+        NavHostFragment.findNavController(fragment).navigate(R.id.action_proyectos_to_inicio, bundle);
+
+
+        /*Intent intent= new Intent(contexto, NuevaTareaActivity.class);
         intent.putExtra("sprint",sprint);
         intent.putExtra("proyecto",proyecto);
-        contexto.startActivity(intent);
+        contexto.startActivity(intent);*/
     }
 
     private void borrarConfirmacion(Sprint sprint,String eid,String pid) {

@@ -8,7 +8,13 @@
         android:id="@+id/inicio"
         android:name="com.example.scrummanager.Vistas.Inicio"
         android:label="fragment_inicio"
-        tools:layout="@layout/fragment_inicio" />
+        tools:layout="@layout/fragment_inicio" >
+        <argument
+            android:name="sprint"
+            app:argType="com.example.scrummanager.Modelos.Sprint"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
     <fragment
         android:id="@+id/clientes"
         android:name="com.example.scrummanager.Vistas.Clientes"
@@ -23,11 +29,7 @@
         android:id="@+id/empleados"
         android:name="com.example.scrummanager.Vistas.Empleados"
         android:label="fragment_empleados"
-        tools:layout="@layout/fragment_empleados" >
-        <action
-            android:id="@+id/action_empleados_to_verEmpleado"
-            app:destination="@id/verEmpleado" />
-    </fragment>
+        tools:layout="@layout/fragment_empleados" />
     <fragment
         android:id="@+id/equipos"
         android:name="com.example.scrummanager.Vistas.Equipos"
@@ -37,10 +39,9 @@
         android:id="@+id/proyectos"
         android:name="com.example.scrummanager.Vistas.Proyectos"
         android:label="fragment_proyectos"
-        tools:layout="@layout/fragment_proyectos" />
-    <fragment
-        android:id="@+id/verEmpleado"
-        android:name="com.example.scrummanager.VerEmpleado"
-        android:label="fragment_ver_empleado"
-        tools:layout="@layout/fragment_ver_empleado" />
+        tools:layout="@layout/fragment_proyectos" >
+        <action
+            android:id="@+id/action_proyectos_to_inicio"
+            app:destination="@id/inicio" />
+    </fragment>
 </navigation>

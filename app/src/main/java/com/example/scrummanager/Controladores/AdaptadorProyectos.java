@@ -275,7 +275,7 @@ public class AdaptadorProyectos extends RecyclerView.Adapter<RecyclerView.ViewHo
         recView3.setLayoutManager(layoutManager3);
 
         //Asignación del equipo al recyclerView
-        AdaptadorSprints adaptadorSprints= new AdaptadorSprints(sprints,proyecto,contexto);
+        AdaptadorSprints adaptadorSprints= new AdaptadorSprints(sprints,proyecto,contexto,fragment);
         recView3.setAdapter(adaptadorSprints);
     }
 

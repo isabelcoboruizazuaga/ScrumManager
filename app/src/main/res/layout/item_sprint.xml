@@ -70,7 +70,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginRight="5dp"
-                        android:text="empleado@email.com" />
+                        android:text="objetivo" />
 
                     <TextView
                         android:id="@+id/tv_finSprint"
