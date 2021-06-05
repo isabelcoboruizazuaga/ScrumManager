@@ -5,28 +5,41 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Tarea implements Serializable {
-    private int idTarea;
+    private String idTarea;
     private  String nombreTarea;
     private String descripcionTarea;
     private ArrayList<Comentario> listaComentariosTarea;
     private String sprintTarea;
-    private Empleado encargadoTarea;
-    private String estadoTarea;
-    private String tipoTarea;
-    private String prioridadTarea;
+    private String encargadoTarea;
+    private String estadoTarea; //0 por hacer, 1 en progreso, 2 terminada
+    private int tipoTarea; //-1 bug, 0 Tarea, 1 otros
+    private int prioridadTarea; //0 baja, 1 normal, 2 alta, 3 terminal
     private ArrayList<Date> fechaTarea;
+    private Date fechaCreacion;
 
     public Tarea() {
     }
 
-    public Tarea(String nombreTarea, String descripcionTarea, String sprintTarea) {
+    public Tarea(String idTarea,String nombreTarea, String descripcionTarea, int tipoTarea, int prioridadTarea, String encargadoTarea,Date fechaCreacion) {
+        this.idTarea=idTarea;
         this.nombreTarea = nombreTarea;
         this.descripcionTarea = descripcionTarea;
-        this.sprintTarea = sprintTarea;
+        this.tipoTarea = tipoTarea;
+        this.prioridadTarea = prioridadTarea;
+        this.fechaCreacion=fechaCreacion;
+        this.encargadoTarea=encargadoTarea;
     }
 
-    public int getIdTarea() {
+    public String getIdTarea() {
         return idTarea;
+    }
+
+    public Date getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(Date fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
     }
 
     public String getNombreTarea() {
@@ -57,11 +70,11 @@ public class Tarea implements Serializable {
         return sprintTarea;
     }
 
-    public Empleado getEncargadoTarea() {
+    public String getEncargadoTarea() {
         return encargadoTarea;
     }
 
-    public void setEncargadoTarea(Empleado encargadoTarea) {
+    public void setEncargadoTarea(String encargadoTarea) {
         this.encargadoTarea = encargadoTarea;
     }
 
@@ -73,19 +86,19 @@ public class Tarea implements Serializable {
         this.estadoTarea = estadoTarea;
     }
 
-    public String getTipoTarea() {
+    public int getTipoTarea() {
         return tipoTarea;
     }
 
-    public void setTipoTarea(String tipoTarea) {
+    public void setTipoTarea(int tipoTarea) {
         this.tipoTarea = tipoTarea;
     }
 
-    public String getPrioridadTarea() {
+    public int getPrioridadTarea() {
         return prioridadTarea;
     }
 
-    public void setPrioridadTarea(String prioridadTarea) {
+    public void setPrioridadTarea(int prioridadTarea) {
         this.prioridadTarea = prioridadTarea;
     }
 

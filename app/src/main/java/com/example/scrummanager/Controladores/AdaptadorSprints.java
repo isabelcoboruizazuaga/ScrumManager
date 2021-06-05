@@ -22,6 +22,7 @@ import com.example.scrummanager.Modelos.Proyecto;
 import com.example.scrummanager.Modelos.Sprint;
 import com.example.scrummanager.R;
 import com.example.scrummanager.Vistas.EditarSprintActivity;
+import com.example.scrummanager.Vistas.NuevaTareaActivity;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -236,9 +237,10 @@ public class AdaptadorSprints extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     public void verSprint(Sprint sprint) {
-        /*Intent intent= new Intent(contexto, VerClienteActivity.class);
-        intent.putExtra("cliente",cliente);
-        contexto.startActivity(intent);*/
+        Intent intent= new Intent(contexto, NuevaTareaActivity.class);
+        intent.putExtra("sprint",sprint);
+        intent.putExtra("proyecto",proyecto);
+        contexto.startActivity(intent);
     }
 
     private void borrarConfirmacion(Sprint sprint,String eid,String pid) {

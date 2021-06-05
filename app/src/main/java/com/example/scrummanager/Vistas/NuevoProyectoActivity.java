@@ -49,7 +49,6 @@ import java.util.UUID;
 public class NuevoProyectoActivity extends AppCompatActivity {
     private DatabaseReference dbReference;
     private ValueEventListener eventListenerDepartamentos,eventListenerClientes ;
-    StorageReference storageReference;
 
     private ArrayList<Departamento> departamentos=new ArrayList<>();
     private ArrayList<Cliente> clientes=new ArrayList<>();
@@ -85,7 +84,6 @@ public class NuevoProyectoActivity extends AppCompatActivity {
 
         //Inicialización de Firebase
         dbReference= FirebaseDatabase.getInstance().getReference().child(eid);
-        storageReference= FirebaseStorage.getInstance().getReference();
 
         //Extracción de los datos del spinner departamentos
         setEventListenerDepartamentos();
@@ -109,7 +107,7 @@ public class NuevoProyectoActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 //La posición del nombre de departamento equivale a la de la lista de objetos departamento
                 int posNombre =  spinnerDepartamento.getSelectedItemPosition();
-                //Se asigna la id del departamento de esa posición para poder introducirlo en el nuevo empleado
+                //Se asigna la id del departamento de esa posición para poder introducirlo en el nuevo proyecto
                 idDepartamento= departamentos.get(posNombre).getIdDepartamento();
             }
             public void onNothingSelected(AdapterView<?> arg0) {// do nothing
@@ -118,9 +116,9 @@ public class NuevoProyectoActivity extends AppCompatActivity {
         rellenarSpinnerClientes();
         spinnerClientes.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                //La posición del nombre de departamento equivale a la de la lista de objetos departamento
+                //La posición del nombre de cliente equivale a la de la lista de objetos cliente
                 int posNombre =  spinnerClientes.getSelectedItemPosition();
-                //Se asigna la id del departamento de esa posición para poder introducirlo en el nuevo empleado
+                //Se asigna la id del cliente de esa posición para poder introducirlo en el nuevo proyecto
                 nifCliente= clientes.get(posNombre).getNifCliente();
             }
             public void onNothingSelected(AdapterView<?> arg0) {// do nothing
@@ -184,7 +182,7 @@ public class NuevoProyectoActivity extends AppCompatActivity {
     /**
      * Obtiene los datos de los clientes y los pasa a dos arrays.
      * En un array "clientes" guarda los objetos completos.
-     * En un array "clientesNombres" guarda los nombres pora poder usarlos en el spinnerDepartamentos.
+     * En un array "clientesNombres" guarda los nombres pora poder usarlos en el spinnerClientes.
      */
     private void setEventListenerClientes(){
         eventListenerClientes= new ValueEventListener() {

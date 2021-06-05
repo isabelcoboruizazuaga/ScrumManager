@@ -88,4 +88,42 @@ public class Sprint implements Serializable {
     public void setObjetivoSprint(String objetivoSprint) {
         this.objetivoSprint = objetivoSprint;
     }
+
+    public void nuevaTarea(Tarea tarea){
+        try {
+            if(!comprobarListaTareas(tarea)) {
+                this.listaTareasSprint.add(tarea);
+            }
+        }catch (java.lang.NullPointerException e){
+            listaTareasSprint = new ArrayList<>();
+            if(!comprobarListaTareas(tarea)) {
+                this.listaTareasSprint.add(tarea);
+            }
+        }
+    }
+
+    public boolean comprobarListaTareas(Tarea tarea){
+        boolean existe= false;
+        for(int i= 0; i<listaTareasSprint.size();i++){
+            //listaTareasSprint.get(i).setShowMenu(false);
+
+            if(tarea.getIdTarea().equals(listaTareasSprint.get(i).getIdTarea())){
+                existe=true;
+            }
+        }
+        return existe;
+    }
+    public void eliminarTarea(Tarea tarea){
+        try {
+            if(comprobarListaTareas(tarea)) {
+                for (int i=0;i<listaTareasSprint.size();i++){
+                    if(tarea.getIdTarea().equals(listaTareasSprint.get(i).getIdTarea())){
+                        listaTareasSprint.remove(listaTareasSprint.get(i));
+                    }
+                }
+                this.listaTareasSprint.remove(tarea);
+            }
+        }catch (java.lang.NullPointerException e){
+        }
+    }
 }

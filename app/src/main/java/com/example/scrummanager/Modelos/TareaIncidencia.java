@@ -7,7 +7,7 @@ public class TareaIncidencia extends Tarea {
     }
 
     public TareaIncidencia(String nombreTarea, String descripcionTarea, String sprintTarea, String reporteError) {
-        super(nombreTarea,descripcionTarea,sprintTarea);
+        //super(nombreTarea,descripcionTarea,sprintTarea);
         this.reporteError = reporteError;
     }
 
