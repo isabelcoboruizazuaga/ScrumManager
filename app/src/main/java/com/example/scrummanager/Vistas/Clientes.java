@@ -101,22 +101,6 @@ public class Clientes extends Fragment {
 
         rellenarRecyclerView();
 
-        /*clientes =new ArrayList<Cliente>();
-        cliente = new Cliente("1","Cliente1", "Apellido", "cli@email");
-        clientes.add(cliente);
-        cliente = new Cliente("1","Cliente2", "Apellido", "cli@email");
-        clientes.add(cliente);
-        cliente = new Cliente("1","Cliente3", "Apellido", "cli@email");
-        clientes.add(cliente);
-        cliente = new Cliente("1","Cliente4", "Apellido", "cli@email");
-        clientes.add(cliente);
-        cliente = new Cliente("1","Cliente5", "Apellido", "cli@email");
-        clientes.add(cliente);
-        cliente = new Cliente("1","Cliente6", "Apellido", "cli@email");
-        clientes.add(cliente);
-        cliente = new Cliente("1","Cliente7", "Apellido", "cli@email");
-        clientes.add(cliente);*/
-
 
     }
     //Database listener

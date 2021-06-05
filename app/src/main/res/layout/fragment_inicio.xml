@@ -17,6 +17,7 @@
             android:layout_weight="1">
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_tareasPorHacer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </LinearLayout>
@@ -28,6 +29,7 @@
             android:layout_weight="1">
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_tareasEnProceso"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </LinearLayout>
@@ -39,6 +41,7 @@
             android:layout_weight="1">
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_tareasHechas"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </LinearLayout>

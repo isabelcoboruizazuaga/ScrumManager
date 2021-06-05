@@ -16,6 +16,7 @@ public class Tarea implements Serializable {
     private int prioridadTarea; //0 baja, 1 normal, 2 alta, 3 terminal
     private ArrayList<Date> fechaTarea;
     private Date fechaCreacion;
+    private boolean showMenu;
 
     public Tarea() {
     }
@@ -32,6 +33,14 @@ public class Tarea implements Serializable {
 
     public String getIdTarea() {
         return idTarea;
+    }
+
+    public boolean isShowMenu() {
+        return showMenu;
+    }
+
+    public void setShowMenu(boolean showMenu) {
+        this.showMenu = showMenu;
     }
 
     public Date getFechaCreacion() {
