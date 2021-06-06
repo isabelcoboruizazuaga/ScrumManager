@@ -26,6 +26,7 @@ import com.example.scrummanager.Modelos.Tarea;
 import com.example.scrummanager.R;
 import com.example.scrummanager.Vistas.EditarSprintActivity;
 import com.example.scrummanager.Vistas.EditarTareaActivity;
+import com.example.scrummanager.Vistas.VerTareaActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -98,7 +99,6 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
-                    System.out.println("AAAAAAAAAA");
                 }
             });
 
@@ -114,7 +114,7 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
             ((AdaptadorTareasViewHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    verTarea(tarea);
+                    verTarea(tarea,proyecto.getIdEmpresa());
                 }
             });
 
@@ -140,7 +140,7 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
             ((MenuViewHolder) holder).btn_verTarea.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    verTarea(tarea);
+                    verTarea(tarea,proyecto.getIdEmpresa());
                 }
             });
             ((MenuViewHolder) holder).btn_editarTarea.setOnClickListener(new View.OnClickListener() {
@@ -383,17 +383,13 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
-    public void verTarea(Tarea tarea) {
+    public void verTarea(Tarea tarea,String eid) {
         cerrarMenu();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("sprint", sprint);
-        //NavHostFragment.findNavController(fragment).navigate(R.id.action_proyectos_to_inicio, bundle);
 
-
-        /*Intent intent= new Intent(contexto, NuevaTareaActivity.class);
-        intent.putExtra("sprint",sprint);
-        intent.putExtra("proyecto",proyecto);
-        contexto.startActivity(intent);*/
+        Intent intent= new Intent(contexto, VerTareaActivity.class);
+        intent.putExtra("tarea",tarea);
+        intent.putExtra("eid",eid);
+        contexto.startActivity(intent);
     }
 
     private void borrarConfirmacion(Tarea tarea,String eid,String pid) {
@@ -421,11 +417,15 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     public void borrarTarea(Tarea tarea, String eid, String pid) {
-       /* proyecto.eliminarSprint(sprint);
+        proyecto.eliminarSprint(sprint);
+        sprint.eliminarTarea(tarea);
+
+        proyecto.nuevoSprint(sprint);
+        proyecto.ordenarSprints();
 
         DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference().child(eid).child("Proyectos").child(pid);
         dbReference.setValue(proyecto);
-        */
-        Toast.makeText(contexto, sprint.getNombre() +" borrado", Toast.LENGTH_SHORT).show();
+
+        Toast.makeText(contexto, tarea.getNombreTarea() +" borrado", Toast.LENGTH_SHORT).show();
     }
 }

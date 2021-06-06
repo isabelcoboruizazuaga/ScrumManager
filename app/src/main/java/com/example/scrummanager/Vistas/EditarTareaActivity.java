@@ -56,7 +56,7 @@ public class EditarTareaActivity extends AppCompatActivity {
         setContentView(R.layout.activity_nueva_tarea);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
-        getSupportActionBar().setTitle("Crear tarea");
+        getSupportActionBar().setTitle("Editar tarea");
 
         //Se recogen los datos del proyecto y del sprint
         recogerProyecto();
@@ -332,7 +332,7 @@ public class EditarTareaActivity extends AppCompatActivity {
                 dbReference.child("Proyectos").child(pid).setValue(proyecto);
 
                 finish();
-                Toast.makeText(getApplicationContext(), "Tarea añadido", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Tarea editada", Toast.LENGTH_LONG).show();
             }else{
                 Toast.makeText(getApplicationContext(), "¡Debe rellenar todos los campos!", Toast.LENGTH_LONG).show();
             }
