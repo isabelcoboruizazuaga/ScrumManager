@@ -9,7 +9,9 @@
         android:roundIcon="@mipmap/logobig"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".Vistas.NuevaTareaActivity"></activity>
+        <activity android:name=".Vistas.EditarTareaActivity"></activity>
+        <activity android:name=".Vistas.VerTareaActivity" />
+        <activity android:name=".Vistas.NuevaTareaActivity" />
         <activity android:name=".Vistas.EditarSprintActivity" />
         <activity android:name=".Vistas.NuevoSprintActivity" />
         <activity android:name=".Vistas.EditarProyectoActivity" />

@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -20,13 +19,18 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.scrummanager.Modelos.Empleado;
 import com.example.scrummanager.Modelos.Proyecto;
 import com.example.scrummanager.Modelos.Sprint;
 import com.example.scrummanager.Modelos.Tarea;
 import com.example.scrummanager.R;
 import com.example.scrummanager.Vistas.EditarSprintActivity;
+import com.example.scrummanager.Vistas.EditarTareaActivity;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -38,6 +42,7 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private Proyecto proyecto;
     private Context contexto;
     private Sprint sprint;
+    String nombreEm;
     private final int MOSTRAR_MENU = 1, OCULTAR_MENU = 2;
 
     public AdaptadorTareas(ArrayList<Tarea> tareas, Sprint sprint, Proyecto proyecto, Context contexto) {
@@ -69,7 +74,6 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
         Tarea tarea = tareas.get(position);
 
         String nombre = tarea.getNombreTarea();
-        String descripcion = tarea.getDescripcionTarea();
         Date creacion= tarea.getFechaCreacion();
         int prioridad= tarea.getPrioridadTarea();
         int tipo= tarea.getTipoTarea();
@@ -81,10 +85,26 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         //Si se está mostrando la tarea
         if (holder instanceof AdaptadorTareas.AdaptadorTareasViewHolder) {
+            //Se extrae el encargado
+            DatabaseReference dbReference= FirebaseDatabase.getInstance().getReference().child(proyecto.getIdEmpresa());
+            dbReference.child("Empleados").child(encargado).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Empleado empleado = snapshot.getValue(Empleado.class);
+                    nombreEm=empleado.getNombreEmpleado() + " "+empleado.getApellidoEmpleado();
+
+                    ((AdaptadorTareasViewHolder) holder).tv_encargadoTarea.setText(nombreEm);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    System.out.println("AAAAAAAAAA");
+                }
+            });
+
             //Se incluye la tarea en el layout
             ((AdaptadorTareasViewHolder) holder).tv_nombreTarea.setText(nombre);
             ((AdaptadorTareasViewHolder) holder).tv_fechaCreacion.setText(fechaCreacion);
-            ((AdaptadorTareasViewHolder) holder).tv_encargadoTarea.setText(encargado);
             ((AdaptadorTareasViewHolder) holder).iv_tipoTarea.setImageResource(R.drawable.others_icon);
 
             setColor(holder,prioridad);
@@ -94,7 +114,7 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
             ((AdaptadorTareasViewHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    verSprint(sprint);
+                    verTarea(tarea);
                 }
             });
 
@@ -120,18 +140,18 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
             ((MenuViewHolder) holder).btn_verTarea.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    verSprint(sprint);
+                    verTarea(tarea);
                 }
             });
             ((MenuViewHolder) holder).btn_editarTarea.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    editarSprint(sprint);
+                    editarTarea(tarea);
                 }
             });
             ((MenuViewHolder) holder).btn_borrarTarea.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) { borrarConfirmacion(sprint,proyecto.getIdEmpresa(),proyecto.getIdProyecto());}
+                public void onClick(View v) { borrarConfirmacion(tarea,proyecto.getIdEmpresa(),proyecto.getIdProyecto());}
             });
             ((MenuViewHolder) holder).btn_bajarEstado.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -256,7 +276,6 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public class MenuViewHolder extends RecyclerView.ViewHolder {
         private ImageButton btn_verTarea, btn_editarTarea, btn_atrasTarea, btn_borrarTarea,btn_bajarEstado,btn_subirEstado;
-        private TextView tv_nombreTarea;
 
         public MenuViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -269,7 +288,6 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
             btn_editarTarea = itemView.findViewById(R.id.btn_editarTarea);
             btn_atrasTarea = itemView.findViewById(R.id.btn_atrasTarea);
             btn_borrarTarea = itemView.findViewById(R.id.btn_borrarTarea);
-           // tv_nombreTarea = itemView.findViewById(R.id.tv_nombreTarea);
             btn_subirEstado = itemView.findViewById(R.id.btn_subirEstado);
             btn_bajarEstado = itemView.findViewById(R.id.btn_bajarEstado);
         }
@@ -300,11 +318,12 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
         notifyDataSetChanged();
     }
 
-    public void editarSprint(Sprint sprint) {
+    public void editarTarea(Tarea tarea) {
         cerrarMenu();
-        Intent intent= new Intent(contexto, EditarSprintActivity.class);
+        Intent intent= new Intent(contexto, EditarTareaActivity.class);
         intent.putExtra("sprint",sprint);
         intent.putExtra("proyecto",proyecto);
+        intent.putExtra("tarea",tarea);
         contexto.startActivity(intent);
     }
 
@@ -364,7 +383,8 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
-    public void verSprint(Sprint sprint) {
+    public void verTarea(Tarea tarea) {
+        cerrarMenu();
         Bundle bundle = new Bundle();
         bundle.putSerializable("sprint", sprint);
         //NavHostFragment.findNavController(fragment).navigate(R.id.action_proyectos_to_inicio, bundle);
@@ -376,16 +396,17 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
         contexto.startActivity(intent);*/
     }
 
-    private void borrarConfirmacion(Sprint sprint,String eid,String pid) {
+    private void borrarConfirmacion(Tarea tarea,String eid,String pid) {
+        cerrarMenu();
         //Inicialización
         AlertDialog.Builder alertDialogBu = new AlertDialog.Builder(contexto);
         alertDialogBu.setTitle("Borrar");
-        alertDialogBu.setMessage("¿Seguro que quiere eliminar a " + sprint.getNombre() + "? Esta acción no se puede deshacer");
+        alertDialogBu.setMessage("¿Seguro que quiere eliminar " + tarea.getNombreTarea() + "? Esta acción no se puede deshacer");
 
         //Opción positiva
         alertDialogBu.setPositiveButton("Borrar", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                borrarCliente(sprint,eid,pid);
+                borrarTarea(tarea,eid,pid);
             }
         });
         //Opción negativa
@@ -399,12 +420,12 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
         alertDialog.show();
     }
 
-    public void borrarCliente(Sprint sprint,String eid,String pid) {
-        proyecto.eliminarSprint(sprint);
+    public void borrarTarea(Tarea tarea, String eid, String pid) {
+       /* proyecto.eliminarSprint(sprint);
 
         DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference().child(eid).child("Proyectos").child(pid);
         dbReference.setValue(proyecto);
-
+        */
         Toast.makeText(contexto, sprint.getNombre() +" borrado", Toast.LENGTH_SHORT).show();
     }
 }
