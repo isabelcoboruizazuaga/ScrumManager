@@ -3,13 +3,6 @@ package com.example.scrummanager.Vistas;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,8 +10,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.scrummanager.Controladores.AdaptadorProyectos;
-import com.example.scrummanager.Modelos.Cliente;
 import com.example.scrummanager.Modelos.Proyecto;
 import com.example.scrummanager.R;
 import com.google.firebase.database.DataSnapshot;
@@ -61,41 +59,58 @@ public class Proyectos extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        proyectos =new ArrayList<Proyecto>();
-        fragmento= this;
+        proyectos = new ArrayList<Proyecto>();
+        fragmento = this;
         //Recuperación del id de empresa
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getContext());
-        String eid= sp.getString("eid","-1");
+        String eid = sp.getString("eid", "-1");
 
         //Inicializaciónd el RecyclerView
-        recView= view.findViewById(R.id.rv_proyectos);
-        LinearLayoutManager layoutManager= new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
+        recView = view.findViewById(R.id.rv_proyectos);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         recView.setLayoutManager(layoutManager);
 
         //Obtención de los datos
         setEventListenerClientes();
-        DatabaseReference dbReference= FirebaseDatabase.getInstance().getReference().child(eid).child("Proyectos");
+        DatabaseReference dbReference = FirebaseDatabase.getInstance().getReference().child(eid).child("Proyectos");
         dbReference.addValueEventListener(eventListenerProyectos);
     }
 
+    private void setEventListenerClientes() {
+        eventListenerProyectos = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                proyectos.clear();
+                for (DataSnapshot x : snapshot.getChildren()) {
+                    //Se añaden los proyectos a la lista
+                    proyecto = x.getValue(Proyecto.class);
+                    proyectos.add(proyecto);
 
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        //Se ocultan las opciones del menú que no pertenecen a este fragment
-        MenuItem item=menu.findItem(R.id.menuAnCli);
-        if(item!=null)
-            item.setVisible(false);
-        item=menu.findItem(R.id.menuAnDept);
-        if(item!=null)
-            item.setVisible(false);
-        item=menu.findItem(R.id.menuAnEmp);
-        if(item!=null)
-            item.setVisible(false);
+                    //Se rellena el recycler view
+                    AdaptadorProyectos adaptadorProyectos = new AdaptadorProyectos(proyectos, getContext(), fragmento);
+                    recView.setAdapter(adaptadorProyectos);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
+            case R.id.menuAnCli:
+                startActivity(new Intent(getContext(), NuevoClienteActivity.class));
+                break;
+            case R.id.menuAnDept:
+                startActivity(new Intent(getContext(), NuevoDepartamentoActivity.class));
+                break;
+            case R.id.menuAnEmp:
+                startActivity(new Intent(getContext(), NuevoEmpleadoActivity.class));
+                break;
             case R.id.menuAnProy:
                 startActivity(new Intent(getContext(), NuevoProyectoActivity.class));
                 break;
@@ -103,25 +118,14 @@ public class Proyectos extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private void setEventListenerClientes(){
-        eventListenerProyectos = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                proyectos.clear();
-                for (DataSnapshot x : snapshot.getChildren() ){
-                    //Se añaden los proyectos a la lista
-                    proyecto = x.getValue(Proyecto.class);
-                    proyectos.add(proyecto);
-
-                    //Se rellena el recycler view
-                    AdaptadorProyectos adaptadorProyectos= new AdaptadorProyectos(proyectos,getContext(),fragmento);
-                    recView.setAdapter(adaptadorProyectos);
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        };
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        //Se ocultan las opciones del menú que no pertenecen a este fragment
+        MenuItem item = menu.findItem(R.id.menuAnTarea);
+        if (item != null)
+            item.setVisible(false);
+        item = menu.findItem(R.id.menuAnSprint);
+        if (item != null)
+            item.setVisible(false);
     }
 }

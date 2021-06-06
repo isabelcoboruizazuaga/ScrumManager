@@ -1,7 +1,14 @@
 package com.example.scrummanager.Vistas;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -9,15 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.preference.PreferenceManager;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import com.example.scrummanager.Controladores.AdaptadorEmpleados;
 import com.example.scrummanager.Controladores.AdaptadorTareas;
-import com.example.scrummanager.Modelos.Empleado;
 import com.example.scrummanager.Modelos.Proyecto;
 import com.example.scrummanager.Modelos.Sprint;
 import com.example.scrummanager.Modelos.Tarea;
@@ -30,7 +29,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,6 +56,7 @@ public class Inicio extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         if(this.getArguments().getSerializable("sprint")!=null){
             sprint = (Sprint) getArguments().getSerializable("sprint");
             proyecto = (Proyecto) getArguments().getSerializable("proyecto");
@@ -191,5 +190,35 @@ public class Inicio extends Fragment {
                 Log.e("onDataChange", "Error!", databaseError.toException());
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menuAnCli:
+                startActivity(new Intent(getContext(), NuevoClienteActivity.class));
+                break;
+            case R.id.menuAnDept:
+                startActivity(new Intent(getContext(), NuevoDepartamentoActivity.class));
+                break;
+            case R.id.menuAnEmp:
+                startActivity(new Intent(getContext(), NuevoEmpleadoActivity.class));
+                break;
+            case R.id.menuAnProy:
+                startActivity(new Intent(getContext(), NuevoProyectoActivity.class));
+                break;
+            case R.id.menuAnTarea:
+                Intent intent = new Intent(getContext(), NuevaTareaActivity.class);
+                intent.putExtra("sprint", sprint);
+                intent.putExtra("proyecto", proyecto);
+                getContext().startActivity(intent);
+                break;
+            case R.id.menuAnSprint:
+                Intent intent1 = new Intent(getContext(), NuevoSprintActivity.class);
+                intent1.putExtra("proyecto", proyecto);
+                getContext().startActivity(intent1);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

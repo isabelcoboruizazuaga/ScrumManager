@@ -111,23 +111,32 @@ public class Empleados extends Fragment {private FirebaseAuth mAuthAdmin, mAuthW
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        //Se ocultan las opciones del menú que no pertenecen a este fragment
-        MenuItem item=menu.findItem(R.id.menuAnCli);
-        if(item!=null)
-            item.setVisible(false);
-        item=menu.findItem(R.id.menuAnDept);
-        if(item!=null)
-            item.setVisible(false);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
+            case R.id.menuAnCli:
+                startActivity(new Intent(getContext(), NuevoClienteActivity.class));
+                break;
+            case R.id.menuAnDept:
+                startActivity(new Intent(getContext(), NuevoDepartamentoActivity.class));
+                break;
             case R.id.menuAnEmp:
                 startActivity(new Intent(getContext(), NuevoEmpleadoActivity.class));
                 break;
+            case R.id.menuAnProy:
+                startActivity(new Intent(getContext(), NuevoProyectoActivity.class));
+                break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        //Se ocultan las opciones del menú que no pertenecen a este fragment
+        MenuItem item=menu.findItem(R.id.menuAnTarea);
+        if(item!=null)
+            item.setVisible(false);
+        item=menu.findItem(R.id.menuAnSprint);
+        if(item!=null)
+            item.setVisible(false);
     }
 }

@@ -9,4 +9,9 @@
         android:id="@+id/menuAnDept"/>
     <item android:title="Añadir Proyecto"
         android:id="@+id/menuAnProy"/>
+    <item android:title="Añadir Tarea"
+        android:id="@+id/menuAnTarea"/>
+    <item android:title="Nuevo Sprint"
+        android:id="@+id/menuAnSprint"/>
+
 </menu>
