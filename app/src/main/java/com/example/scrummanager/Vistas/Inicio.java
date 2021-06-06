@@ -36,11 +36,13 @@ import java.util.Date;
  */
 public class Inicio extends Fragment {
     private RecyclerView recPorHacer,recEnProceso,recHechas;
-    private ArrayList<Tarea> tareas;
+
     String pid="377529fa-6c50-478f-bee8-da2fcc89b070", sid="b22bab63-b431-454a-8abe-895655f051c7",eid="ad96328d-ce92-4da7-88cf-b7ff81d0e6d3";
     ArrayList<Tarea> tareasPorHacer= new ArrayList<>();
     ArrayList<Tarea> tareasEnProceso= new ArrayList<>();
     ArrayList<Tarea> tareasHechas= new ArrayList<>();
+    Sprint sprint;
+    Proyecto proyecto;
 
     public Inicio() {
         // Required empty public constructor
@@ -54,8 +56,8 @@ public class Inicio extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(this.getArguments().getSerializable("sprint")!=null){
-            Sprint sprint = (Sprint) getArguments().getSerializable("sprint");
-            System.out.println(sprint.getNombre().toString());
+            sprint = (Sprint) getArguments().getSerializable("sprint");
+            proyecto = (Proyecto) getArguments().getSerializable("proyecto");
         }
     }
 
@@ -69,20 +71,6 @@ public class Inicio extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-
-        ArrayList<Tarea> tareas= new ArrayList<>();
-        Tarea tarea= new Tarea("1","Depuración", "Dcp",-1,3,"uid",new Date());
-        tareas.add(tarea);
-        tarea= new Tarea("1","Falta layout", "Dcp",0,0,"uid",new Date());
-        tareas.add(tarea);
-        tarea= new Tarea("1","Nombre3", "Dcp",1,2,"Fernando García Pérez",new Date());
-        tareas.add(tarea);
-        tarea= new Tarea("1","Nombre4", "Dcp",0,3,"uid",new Date());
-        tareas.add(tarea);
-        tarea= new Tarea("1","Nombre5", "Dcp",1,1,"uid",new Date());
-        tareas.add(tarea);
-
 
         rellenarRecyclers(view);
 

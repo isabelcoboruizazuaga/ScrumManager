@@ -53,7 +53,7 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
         View v;
         if (viewType == MOSTRAR_MENU) {
             //Se infla la View
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_item_departamento, parent, false);
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_item_tarea, parent, false);
             //Se crea el ViewHolder
             return new AdaptadorTareas.MenuViewHolder(v);
         } else {
@@ -110,8 +110,6 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
         //Si se está mostrando el menú
         if (holder instanceof AdaptadorTareas.MenuViewHolder) {
-            //Se incluye el nombre de la tarea en el layout
-            ((MenuViewHolder) holder).tv_nombreTarea.setText(nombre);
             //Se asignan onClickListeners para las opciones del menú
             ((MenuViewHolder) holder).btn_atrasTarea.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -134,6 +132,14 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
             ((MenuViewHolder) holder).btn_borrarTarea.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) { borrarConfirmacion(sprint,proyecto.getIdEmpresa(),proyecto.getIdProyecto());}
+            });
+            ((MenuViewHolder) holder).btn_bajarEstado.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {}
+            });
+            ((MenuViewHolder) holder).btn_subirEstado.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {subirEstado(tarea);}
             });
 
             //Si se mantiene pulsado se cierra el menú de opciones
@@ -249,7 +255,7 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     public class MenuViewHolder extends RecyclerView.ViewHolder {
-        private ImageButton btn_verTarea, btn_editarTarea, btn_atrasTarea, btn_borrarTarea;
+        private ImageButton btn_verTarea, btn_editarTarea, btn_atrasTarea, btn_borrarTarea,btn_bajarEstado,btn_subirEstado;
         private TextView tv_nombreTarea;
 
         public MenuViewHolder(@NonNull View itemView) {
@@ -259,11 +265,13 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
             contexto = itemView.getContext();
 
             //inicializacón de los elementos del layout
-            btn_verTarea = itemView.findViewById(R.id.btn_verDepartamento);
-            btn_editarTarea = itemView.findViewById(R.id.btn_editarDepartamento);
-            btn_atrasTarea = itemView.findViewById(R.id.btn_atrasDepartamento);
-            btn_borrarTarea = itemView.findViewById(R.id.btn_borrarDepartamento);
-            tv_nombreTarea = itemView.findViewById(R.id.tv_nombreDepartamento);
+            btn_verTarea = itemView.findViewById(R.id.btn_verTarea);
+            btn_editarTarea = itemView.findViewById(R.id.btn_editarTarea);
+            btn_atrasTarea = itemView.findViewById(R.id.btn_atrasTarea);
+            btn_borrarTarea = itemView.findViewById(R.id.btn_borrarTarea);
+           // tv_nombreTarea = itemView.findViewById(R.id.tv_nombreTarea);
+            btn_subirEstado = itemView.findViewById(R.id.btn_subirEstado);
+            btn_bajarEstado = itemView.findViewById(R.id.btn_bajarEstado);
         }
     }
 
@@ -297,6 +305,33 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
         intent.putExtra("sprint",sprint);
         intent.putExtra("proyecto",proyecto);
         contexto.startActivity(intent);
+    }
+
+    /**
+     * Aumenta el estado de una tarea de "Por hacer" a "Hecho" y de "Hecho" a "En proceso"
+     * @param tarea : Tarea , la tarea en la que se editará el estado
+     */
+    public void subirEstado(Tarea tarea){
+        int estadoAnterior= tarea.getEstadoTarea();
+        //Si no está finalizada puede cambiar hacia arriba
+        if(estadoAnterior<2){
+            Proyecto proyecto= this.proyecto;
+            Sprint sprint=this.sprint;
+            String eid= proyecto.getIdEmpresa();
+            String pid=proyecto.getIdProyecto();
+
+            //Se saca el sprint del proyecto y la tarea del sprint
+            proyecto.eliminarSprint(sprint);
+            sprint.eliminarTarea(tarea);
+            //Se edita el estado y se devuelve al sprint y al proyecto
+            tarea.setEstadoTarea(estadoAnterior+1);
+            sprint.nuevaTarea(tarea);
+            proyecto.nuevoSprint(sprint);
+            proyecto.ordenarSprints();
+            //Se devuelve el proyecto a la base de datos
+            DatabaseReference dbReference= FirebaseDatabase.getInstance().getReference().child(eid);
+            dbReference.child("Proyectos").child(pid).setValue(proyecto);
+        }
     }
 
     public void verSprint(Sprint sprint) {

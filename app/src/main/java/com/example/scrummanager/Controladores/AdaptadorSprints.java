@@ -4,8 +4,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -254,8 +256,17 @@ public class AdaptadorSprints extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     public void verSprint(Sprint sprint) {
+        /*//Se guarda en las preferencias para que salga directamente al iniciar
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contexto);
+        SharedPreferences.Editor edit_pref = prefs.edit();
+        edit_pref.putString("eid", idEmpresa);
+        edit_pref.putString("email", correo);
+        edit_pref.commit();*/
+
+        //Se abre en el fragment de inicio
         Bundle bundle = new Bundle();
         bundle.putSerializable("sprint", sprint);
+        bundle.putSerializable("proyecto", proyecto);
         NavHostFragment.findNavController(fragment).navigate(R.id.action_proyectos_to_inicio, bundle);
     }
 
