@@ -5,13 +5,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +23,7 @@ import com.example.scrummanager.Modelos.Proyecto;
 import com.example.scrummanager.Modelos.Sprint;
 import com.example.scrummanager.R;
 import com.example.scrummanager.Vistas.EditarSprintActivity;
+import com.example.scrummanager.Vistas.NuevaTareaActivity;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -54,7 +53,7 @@ public class AdaptadorSprints extends RecyclerView.Adapter<RecyclerView.ViewHold
         View v;
         if (viewType == MOSTRAR_MENU) {
             //Se infla la View
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_item_cliente, parent, false);
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_item_sprint, parent, false);
             //Se crea el ViewHolder
             return new AdaptadorSprints.MenuViewHolder(v);
         } else {
@@ -109,25 +108,31 @@ public class AdaptadorSprints extends RecyclerView.Adapter<RecyclerView.ViewHold
         //Si se está mostrando el menú
         if (holder instanceof AdaptadorSprints.MenuViewHolder) {
             //Se asignan onClickListeners para las opciones del menú
-            ((AdaptadorSprints.MenuViewHolder) holder).btn_atrasCliente.setOnClickListener(new View.OnClickListener() {
+            ((AdaptadorSprints.MenuViewHolder) holder).btn_atrasSprint.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     cerrarMenu();
                 }
             });
-            ((AdaptadorSprints.MenuViewHolder) holder).btn_verCliente.setOnClickListener(new View.OnClickListener() {
+            ((AdaptadorSprints.MenuViewHolder) holder).btn_verSprint.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     verSprint(sprint);
                 }
             });
-            ((AdaptadorSprints.MenuViewHolder) holder).btn_editarCliente.setOnClickListener(new View.OnClickListener() {
+            ((MenuViewHolder) holder).btn_nuevaTarea.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    nuevaTarea(sprint);
+                }
+            });
+            ((AdaptadorSprints.MenuViewHolder) holder).btn_editarSprint.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     editarSprint(sprint);
                 }
             });
-            ((AdaptadorSprints.MenuViewHolder) holder).btn_borrarCliente.setOnClickListener(new View.OnClickListener() {
+            ((AdaptadorSprints.MenuViewHolder) holder).btn_borrarSprint.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) { borrarConfirmacion(sprint,proyecto.getIdEmpresa(),proyecto.getIdProyecto());}
             });
@@ -192,7 +197,7 @@ public class AdaptadorSprints extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public class MenuViewHolder extends RecyclerView.ViewHolder {
         //items del layout
-        private ImageButton btn_verCliente, btn_atrasCliente, btn_borrarCliente, btn_editarCliente;
+        private ImageButton btn_verSprint, btn_atrasSprint, btn_borrarSprint, btn_editarSprint,btn_nuevaTarea;
 
         public MenuViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -201,10 +206,11 @@ public class AdaptadorSprints extends RecyclerView.Adapter<RecyclerView.ViewHold
             contexto = itemView.getContext();
 
             //inicializacón de los elementos del layout
-            btn_verCliente = itemView.findViewById(R.id.btn_verCliente);
-            btn_atrasCliente = itemView.findViewById(R.id.btn_atrasCliente);
-            btn_borrarCliente = itemView.findViewById(R.id.btn_borrarCliente);
-            btn_editarCliente = itemView.findViewById(R.id.btn_editarCliente);
+            btn_verSprint = itemView.findViewById(R.id.btn_verSprint);
+            btn_atrasSprint = itemView.findViewById(R.id.btn_atrasSprint);
+            btn_borrarSprint = itemView.findViewById(R.id.btn_borrarSprint);
+            btn_editarSprint = itemView.findViewById(R.id.btn_editarSprint);
+            btn_nuevaTarea = itemView.findViewById(R.id.btn_nuevaTarea);
         }
     }
 
@@ -240,16 +246,17 @@ public class AdaptadorSprints extends RecyclerView.Adapter<RecyclerView.ViewHold
         contexto.startActivity(intent);
     }
 
+    public void nuevaTarea(Sprint sprint){
+        Intent intent= new Intent(contexto, NuevaTareaActivity.class);
+        intent.putExtra("sprint",sprint);
+        intent.putExtra("proyecto",proyecto);
+        contexto.startActivity(intent);
+    }
+
     public void verSprint(Sprint sprint) {
         Bundle bundle = new Bundle();
         bundle.putSerializable("sprint", sprint);
         NavHostFragment.findNavController(fragment).navigate(R.id.action_proyectos_to_inicio, bundle);
-
-
-        /*Intent intent= new Intent(contexto, NuevaTareaActivity.class);
-        intent.putExtra("sprint",sprint);
-        intent.putExtra("proyecto",proyecto);
-        contexto.startActivity(intent);*/
     }
 
     private void borrarConfirmacion(Sprint sprint,String eid,String pid) {

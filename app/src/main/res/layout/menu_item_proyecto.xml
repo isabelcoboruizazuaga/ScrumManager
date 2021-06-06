@@ -2,23 +2,24 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="130px"
-    android:layout_height="130px"
-    android:layout_margin="2dp"
-    android:gravity="center">
+    android:layout_width="150dp"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="120px"
-        android:layout_height="120px"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
         app:cardCornerRadius="@dimen/cardview_default_radius"
         app:cardElevation="@dimen/cardview_default_elevation">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <LinearLayout
+                android:baselineAligned="false"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
@@ -26,13 +27,13 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:orientation="vertical">
 
                     <com.example.scrummanager.Controladores.ProporcionalImageButton
                         android:id="@+id/btn_nuevoSprintProyecto"
                         android:backgroundTint="@color/white"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:adjustViewBounds="true"
                         android:scaleType="centerCrop"
@@ -41,7 +42,7 @@
                     <com.example.scrummanager.Controladores.ProporcionalImageButton
                         android:id="@+id/btn_atrasProyecto"
                         android:backgroundTint="@color/white"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:adjustViewBounds="true"
                         android:scaleType="centerCrop"
@@ -52,13 +53,13 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:orientation="vertical">
 
                     <com.example.scrummanager.Controladores.ProporcionalImageButton
                         android:id="@+id/btn_editarProyecto"
                         android:backgroundTint="@color/white"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:adjustViewBounds="true"
                         android:scaleType="centerCrop"
@@ -67,13 +68,13 @@
                     <com.example.scrummanager.Controladores.ProporcionalImageButton
                         android:id="@+id/btn_borrarProyecto"
                         android:backgroundTint="@color/white"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:adjustViewBounds="true"
                         android:scaleType="centerCrop"
                         app:srcCompat="@drawable/bin_icon" />
-
                 </LinearLayout>
+
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>

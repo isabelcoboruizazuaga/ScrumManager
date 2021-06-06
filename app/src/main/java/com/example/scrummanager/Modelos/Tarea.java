@@ -11,7 +11,7 @@ public class Tarea implements Serializable {
     private ArrayList<Comentario> listaComentariosTarea;
     private String sprintTarea;
     private String encargadoTarea;
-    private String estadoTarea; //0 por hacer, 1 en progreso, 2 terminada
+    private int estadoTarea; //0 por hacer, 1 en progreso, 2 terminada
     private int tipoTarea; //-1 bug, 0 Tarea, 1 otros
     private int prioridadTarea; //0 baja, 1 normal, 2 alta, 3 terminal
     private ArrayList<Date> fechaTarea;
@@ -87,11 +87,11 @@ public class Tarea implements Serializable {
         this.encargadoTarea = encargadoTarea;
     }
 
-    public String getEstadoTarea() {
+    public int getEstadoTarea() {
         return estadoTarea;
     }
 
-    public void setEstadoTarea(String estadoTarea) {
+    public void setEstadoTarea(int estadoTarea) {
         this.estadoTarea = estadoTarea;
     }
 

@@ -142,6 +142,17 @@ public class Proyecto implements Serializable {
         return this.color;
     }
 
+    public Sprint extraerSprint(String sid){
+        Sprint sprint= null;
+        for(int i= 0; i<listaSprints.size();i++){
+            listaSprints.get(i).setShowMenu(false);
+            if(sid.equals(listaSprints.get(i).getIdSprint())){
+                sprint=listaSprints.get(i);
+            }
+        }
+        return sprint;
+    }
+
     public void nuevoSprint(Sprint sprint){
         try {
             if(!comprobarListaSprints(sprint)) {

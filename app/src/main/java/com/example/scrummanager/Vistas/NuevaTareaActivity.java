@@ -237,6 +237,7 @@ public class NuevaTareaActivity extends AppCompatActivity {
                 Date fechaCreacion= new Date();
 
                 Tarea tarea= new Tarea(tid,nombre, descripcion,tipo,prioridad, uidEncargado,fechaCreacion);
+                tarea.setEstadoTarea(0);
 
                 sprint1.nuevaTarea(tarea);
                 proyecto.nuevoSprint(sprint1);
