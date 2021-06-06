@@ -72,7 +72,7 @@ public class InicioSesionFragment extends Fragment {
 
         //Inicialización items del layout
         bt_login = getView().findViewById(R.id.bt_iniciarSesion);
-        bt_googleSingIn = getView().findViewById(R.id.botonGoogle);
+        //bt_googleSingIn = getView().findViewById(R.id.botonGoogle);
         et_correo = getView().findViewById(R.id.et_email);
         et_contrasena = getView().findViewById(R.id.et_password);
         et_idEmpresa= getView().findViewById(R.id.et_idEmpresa);
@@ -124,18 +124,18 @@ public class InicioSesionFragment extends Fragment {
             }
         });
 
-        //Ajustes del botón google
+       /* //Ajustes del botón google
         GoogleSignInOptions gso = new GoogleSignInOptions
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
 
-        client_google = GoogleSignIn.getClient(getContext(), gso);
+        client_google = GoogleSignIn.getClient(getContext(), gso);*/
 
         mAuth = FirebaseAuth.getInstance();
 
-        //Al pulsar el botón pasa al método de actividad
+       /* //Al pulsar el botón pasa al método de actividad
         bt_googleSingIn.setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -143,7 +143,7 @@ public class InicioSesionFragment extends Fragment {
                 Intent singIntent = client_google.getSignInIntent();
                 startActivityForResult(singIntent, RC_GOOGLE_API);
             }
-        });
+        });*/
     }
     //Si el inicio de sesión es correcto devuelve true
     public boolean iniciaSesion(String correo, String contrasena){
@@ -199,7 +199,7 @@ public class InicioSesionFragment extends Fragment {
 
 
 
-
+/*
     //Método que se activa tras pulsar el botón de google
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -266,7 +266,7 @@ public class InicioSesionFragment extends Fragment {
                 Toast.makeText(getContext(),e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }
-    }
+    }*/
 
 
 }

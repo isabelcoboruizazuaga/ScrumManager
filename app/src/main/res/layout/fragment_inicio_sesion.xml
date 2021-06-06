@@ -99,19 +99,6 @@
                 android:padding="10dp"
                 android:text="Iniciar Sesion"
                 android:backgroundTint="@color/purple_200"/>
-            <com.google.android.gms.common.SignInButton
-                android:id="@+id/botonGoogle"
-                android:layout_width="221dp"
-                android:layout_height="40dp"
-                android:layout_gravity="bottom|center_horizontal"
-                android:layout_marginTop="10dp"
-                android:text="Login"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.484"
-                tools:ignore="HardcodedText" />
         </LinearLayout>
 
         <LinearLayout
