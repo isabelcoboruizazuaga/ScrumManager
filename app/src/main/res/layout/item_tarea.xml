@@ -53,6 +53,7 @@
                         android:layout_gravity="center"
                         android:layout_marginTop="5dp"
                         android:layout_weight="1"
+                        android:editable="false"
                         android:text="Nombre tarea"
                         android:textAlignment="center"
                         android:textSize="12sp"
@@ -70,6 +71,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
+                        android:editable="false"
                         android:textSize="8sp"
                         android:text="Nombre Apellido" />
                 </LinearLayout>
@@ -83,9 +85,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textSize="10sp"
+                            android:editable="false"
                             android:gravity="center"
                             android:layout_gravity="center"
-                            android:inputType="textMultiLine"
                             android:text="" />
                 </LinearLayout>
             </LinearLayout>
@@ -100,6 +102,7 @@
                     android:id="@+id/tv_fechaCreacion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:editable="false"
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:text="dd/MM/yyyy"

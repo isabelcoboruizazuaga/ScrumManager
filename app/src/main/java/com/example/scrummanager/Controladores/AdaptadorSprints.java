@@ -28,6 +28,7 @@ import com.example.scrummanager.Vistas.EditarSprintActivity;
 import com.example.scrummanager.Vistas.NuevaTareaActivity;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.Gson;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -256,12 +257,15 @@ public class AdaptadorSprints extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     public void verSprint(Sprint sprint) {
-        /*//Se guarda en las preferencias para que salga directamente al iniciar
+        //Se guarda en las preferencias para que salga directamente al iniciar
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contexto);
-        SharedPreferences.Editor edit_pref = prefs.edit();
-        edit_pref.putString("eid", idEmpresa);
-        edit_pref.putString("email", correo);
-        edit_pref.commit();*/
+        SharedPreferences.Editor prefsEditor = prefs.edit();
+        Gson gson = new Gson();
+        String jsonSprint = gson.toJson(sprint);
+        prefsEditor.putString("sprint", jsonSprint);
+        String jsonProyecto = gson.toJson(proyecto);
+        prefsEditor.putString("proyecto", jsonProyecto);
+        prefsEditor.commit();
 
         //Se abre en el fragment de inicio
         Bundle bundle = new Bundle();

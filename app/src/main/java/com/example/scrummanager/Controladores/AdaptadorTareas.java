@@ -135,7 +135,7 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
             });
             ((MenuViewHolder) holder).btn_bajarEstado.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {}
+                public void onClick(View v) {bajarEstado(tarea);}
             });
             ((MenuViewHolder) holder).btn_subirEstado.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -301,6 +301,7 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     public void editarSprint(Sprint sprint) {
+        cerrarMenu();
         Intent intent= new Intent(contexto, EditarSprintActivity.class);
         intent.putExtra("sprint",sprint);
         intent.putExtra("proyecto",proyecto);
@@ -308,10 +309,11 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     /**
-     * Aumenta el estado de una tarea de "Por hacer" a "Hecho" y de "Hecho" a "En proceso"
+     * Aumenta el estado de una tarea de "Por hacer" a "En proceso" y de "En proceso" a "Hecho"
      * @param tarea : Tarea , la tarea en la que se editará el estado
      */
     public void subirEstado(Tarea tarea){
+        cerrarMenu();
         int estadoAnterior= tarea.getEstadoTarea();
         //Si no está finalizada puede cambiar hacia arriba
         if(estadoAnterior<2){
@@ -325,6 +327,34 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
             sprint.eliminarTarea(tarea);
             //Se edita el estado y se devuelve al sprint y al proyecto
             tarea.setEstadoTarea(estadoAnterior+1);
+            sprint.nuevaTarea(tarea);
+            proyecto.nuevoSprint(sprint);
+            proyecto.ordenarSprints();
+            //Se devuelve el proyecto a la base de datos
+            DatabaseReference dbReference= FirebaseDatabase.getInstance().getReference().child(eid);
+            dbReference.child("Proyectos").child(pid).setValue(proyecto);
+        }
+    }
+
+    /**
+     * Disminuye el estado de una tarea de "Hecho" a "En proceso" y de "En proceso" a "Por hacer"
+     * @param tarea : Tarea , la tarea en la que se editará el estado
+     */
+    public void bajarEstado(Tarea tarea){
+        cerrarMenu();
+        int estadoAnterior= tarea.getEstadoTarea();
+        //Si no está finalizada puede cambiar hacia arriba
+        if(estadoAnterior>0){
+            Proyecto proyecto= this.proyecto;
+            Sprint sprint=this.sprint;
+            String eid= proyecto.getIdEmpresa();
+            String pid=proyecto.getIdProyecto();
+
+            //Se saca el sprint del proyecto y la tarea del sprint
+            proyecto.eliminarSprint(sprint);
+            sprint.eliminarTarea(tarea);
+            //Se edita el estado y se devuelve al sprint y al proyecto
+            tarea.setEstadoTarea(estadoAnterior-1);
             sprint.nuevaTarea(tarea);
             proyecto.nuevoSprint(sprint);
             proyecto.ordenarSprints();

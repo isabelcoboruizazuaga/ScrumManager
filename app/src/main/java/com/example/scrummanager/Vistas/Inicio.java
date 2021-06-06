@@ -1,5 +1,6 @@
 package com.example.scrummanager.Vistas;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -8,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +27,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,7 +40,7 @@ import java.util.Date;
 public class Inicio extends Fragment {
     private RecyclerView recPorHacer,recEnProceso,recHechas;
 
-    String pid="377529fa-6c50-478f-bee8-da2fcc89b070", sid="b22bab63-b431-454a-8abe-895655f051c7",eid="ad96328d-ce92-4da7-88cf-b7ff81d0e6d3";
+    String pid,sid,eid;
     ArrayList<Tarea> tareasPorHacer= new ArrayList<>();
     ArrayList<Tarea> tareasEnProceso= new ArrayList<>();
     ArrayList<Tarea> tareasHechas= new ArrayList<>();
@@ -58,6 +61,21 @@ public class Inicio extends Fragment {
         if(this.getArguments().getSerializable("sprint")!=null){
             sprint = (Sprint) getArguments().getSerializable("sprint");
             proyecto = (Proyecto) getArguments().getSerializable("proyecto");
+
+            pid=proyecto.getIdProyecto();
+            eid=proyecto.getIdEmpresa();
+            sid=sprint.getIdSprint();
+        }else{
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+            Gson gson = new Gson();
+            String json = prefs.getString("sprint", "");
+            sprint = gson.fromJson(json, Sprint.class);
+            String json1 = prefs.getString("proyecto", "");
+            proyecto = gson.fromJson(json1, Proyecto.class);
+
+            pid=proyecto.getIdProyecto();
+            eid=proyecto.getIdEmpresa();
+            sid=sprint.getIdSprint();
         }
     }
 
@@ -87,7 +105,7 @@ public class Inicio extends Fragment {
         recPorHacer.setLayoutManager(layoutManager1);
 
         //Asignación del adapter
-        AdaptadorTareas adaptadorTareas= new AdaptadorTareas(tareasPorHacer,new Sprint(),new Proyecto(),getContext());
+        AdaptadorTareas adaptadorTareas= new AdaptadorTareas(tareasPorHacer,sprint,proyecto,getContext());
         recPorHacer.setAdapter(adaptadorTareas);
     }
 
@@ -102,7 +120,7 @@ public class Inicio extends Fragment {
         recEnProceso.setLayoutManager(layoutManager1);
 
         //Asignación del adapter
-        AdaptadorTareas adaptadorTareas= new AdaptadorTareas(tareasEnProceso,new Sprint(),new Proyecto(),getContext());
+        AdaptadorTareas adaptadorTareas= new AdaptadorTareas(tareasEnProceso,sprint,proyecto,getContext());
         recEnProceso.setAdapter(adaptadorTareas);
     }
 
@@ -117,7 +135,7 @@ public class Inicio extends Fragment {
         recHechas.setLayoutManager(layoutManager1);
 
         //Asignación del adapter
-        AdaptadorTareas adaptadorTareas= new AdaptadorTareas(tareasHechas,new Sprint(),new Proyecto(),getContext());
+        AdaptadorTareas adaptadorTareas= new AdaptadorTareas(tareasHechas,sprint,proyecto,getContext());
         recHechas.setAdapter(adaptadorTareas);
     }
 
@@ -140,25 +158,29 @@ public class Inicio extends Fragment {
                     //Se extrae el sprint en el que nos encontramos
                     Sprint sprint= proyecto.extraerSprint(sid);
                     if(sprint!=null){
-                        //Se evalua el estado de cada tarea para añadirlo a lista correspondiente
-                        ArrayList<Tarea> tareas= sprint.getListaTareasSprint();
-                        for(int i=0;i<tareas.size();i++){
-                            Tarea tarea= tareas.get(i);
-                            int estado= tarea.getEstadoTarea();
-                            switch (estado){
-                                case 0:
-                                    tareasPorHacer.add(tarea);
-                                    break;
-                                case 1:
-                                    tareasEnProceso.add(tarea);
-                                    break;
-                                case 2:
-                                    tareasHechas.add(tarea);
-                                    break;
+                        try {
+                            //Se evalua el estado de cada tarea para añadirlo a lista correspondiente
+                            ArrayList<Tarea> tareas = sprint.getListaTareasSprint();
+                            for (int i = 0; i < tareas.size(); i++) {
+                                Tarea tarea = tareas.get(i);
+                                int estado = tarea.getEstadoTarea();
+                                switch (estado) {
+                                    case 0:
+                                        tareasPorHacer.add(tarea);
+                                        break;
+                                    case 1:
+                                        tareasEnProceso.add(tarea);
+                                        break;
+                                    case 2:
+                                        tareasHechas.add(tarea);
+                                        break;
+                                }
+                                administrarTareasPorHacer(view);
+                                administrarTareasEnProceso(view);
+                                administrarTareasHechas(view);
                             }
-                            administrarTareasPorHacer(view);
-                            administrarTareasEnProceso(view);
-                            administrarTareasHechas(view);
+                        }catch (NullPointerException e){
+
                         }
                     }
                 }
