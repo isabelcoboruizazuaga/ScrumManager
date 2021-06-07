@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -65,16 +66,20 @@ public class Inicio extends Fragment {
             eid=proyecto.getIdEmpresa();
             sid=sprint.getIdSprint();
         }else{
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-            Gson gson = new Gson();
-            String json = prefs.getString("sprint", "");
-            sprint = gson.fromJson(json, Sprint.class);
-            String json1 = prefs.getString("proyecto", "");
-            proyecto = gson.fromJson(json1, Proyecto.class);
+            try {
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+                Gson gson = new Gson();
+                String json = prefs.getString("sprint", "");
+                sprint = gson.fromJson(json, Sprint.class);
+                String json1 = prefs.getString("proyecto", "");
+                proyecto = gson.fromJson(json1, Proyecto.class);
 
-            pid=proyecto.getIdProyecto();
-            eid=proyecto.getIdEmpresa();
-            sid=sprint.getIdSprint();
+                pid = proyecto.getIdProyecto();
+                eid = proyecto.getIdEmpresa();
+                sid = sprint.getIdSprint();
+            }catch (Exception e){
+
+            }
         }
     }
 
@@ -89,7 +94,11 @@ public class Inicio extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        rellenarRecyclers(view);
+        try {
+            rellenarRecyclers(view);
+        }catch (Exception e){
+
+        }
 
     }
 
@@ -208,16 +217,24 @@ public class Inicio extends Fragment {
                 startActivity(new Intent(getContext(), NuevoProyectoActivity.class));
                 break;
             case R.id.menuAnTarea:
-                Intent intent = new Intent(getContext(), NuevaTareaActivity.class);
-                intent.putExtra("sprint", sprint);
-                intent.putExtra("proyecto", proyecto);
-                getContext().startActivity(intent);
+                if(proyecto!=null) {
+                    Intent intent = new Intent(getContext(), NuevaTareaActivity.class);
+                    intent.putExtra("sprint", sprint);
+                    intent.putExtra("proyecto", proyecto);
+                    getContext().startActivity(intent);
+                }else{
+                    Toast.makeText(getContext(),"Debe haber un sprint seleccionado",Toast.LENGTH_LONG).show();
+                }
                 break;
             case R.id.menuAnSprint:
-                Intent intent1 = new Intent(getContext(), NuevoSprintActivity.class);
-                intent1.putExtra("proyecto", proyecto);
-                getContext().startActivity(intent1);
-                break;
+                if(proyecto!=null) {
+                    Intent intent1 = new Intent(getContext(), NuevoSprintActivity.class);
+                    intent1.putExtra("proyecto", proyecto);
+                    getContext().startActivity(intent1);
+                    break;
+                }else {
+                    Toast.makeText(getContext(),"Debe haber un sprint seleccionado",Toast.LENGTH_LONG).show();
+                }
         }
         return super.onOptionsItemSelected(item);
     }

@@ -47,8 +47,9 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         String uid= mAuth.getUid();
 
         //Se añade a la barra lateral
-        TextView tv_email = (TextView) navigationView.getHeaderView(0).findViewById(R.id.tv_navigationEmail);
+        TextView tv_email = (TextView) navigationView.getHeaderView(0).findViewById(R.id.tv_navigationNombre);
         tv_email.setText(email);
+
 
         ImageView iv_imagenPerfil = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.iv_navigationImagen);
 

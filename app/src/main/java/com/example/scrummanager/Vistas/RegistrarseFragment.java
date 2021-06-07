@@ -57,7 +57,7 @@ public class RegistrarseFragment extends Fragment {
         et_password = (EditText)getView().findViewById(R.id.et_password);
         bt_register= getView().findViewById(R.id.bt_register);
 
-        //Initialización de Firebase Authentication
+        //Inicialización de Firebase Authentication
         mAuth = FirebaseAuth.getInstance();
         //Firebase database initialization
         database= FirebaseDatabase.getInstance();
@@ -101,15 +101,21 @@ public class RegistrarseFragment extends Fragment {
                                 String eid=UUID.randomUUID().toString();
                                 Empresa empresa= new Empresa(eid, nombreEmpresa);
                                 dbReference.child(eid).child("NombreEmpresa").setValue(nombreEmpresa);
+
                                 //Se añade a las preferencias para no tener que recuperarlo más
                                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
                                 SharedPreferences.Editor edit_pref = prefs.edit();
+                                edit_pref.clear();
+                                edit_pref.commit();
                                 edit_pref.putString("eid", eid);
+                                edit_pref.putString("email",email);
+                                System.out.println(email);
                                 edit_pref.commit();
 
                                 //Se crea el perfil de usuario y se envía a la base de datos
                                 String uid = user.getUid();
                                 Empleado userObject= new Empleado(uid,email.substring(0,email .indexOf("@")),"",eid);
+                                userObject.setEmailEmpleado(email);
                                 dbReference.child(eid).child("Empleados").child(uid).setValue(userObject);
 
                                 updateUI(user);

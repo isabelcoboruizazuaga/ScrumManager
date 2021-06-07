@@ -37,7 +37,6 @@
                 android:layout_margin="10dp"
                 android:ems="10"
                 android:hint="Nombre Empresa"
-                android:textColor="@color/white"
                 android:inputType="textPersonName"
                 android:padding="10dp" />
         </LinearLayout>
@@ -53,7 +52,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:textColor="@color/white"
                 android:ems="10"
                 android:hint="Email"
                 android:inputType="textEmailAddress"
@@ -74,7 +72,6 @@
                 android:ems="10"
                 android:hint="Contraseña"
                 android:inputType="textPassword"
-                android:textColor="@color/white"
                 android:padding="10dp" />
         </LinearLayout>
 

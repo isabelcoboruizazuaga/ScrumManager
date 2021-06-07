@@ -51,11 +51,10 @@ public class InicioSesionFragment extends Fragment {
     FirebaseAuth mAuth;
 
     private boolean primeraVez, eidCorrecto, exito= false;
-
     //TODO BORRAR ESTO
-    SignInButton bt_googleSingIn;
-    GoogleSignInClient client_google;
-    private static final int RC_GOOGLE_API = 1;
+    //SignInButton bt_googleSingIn;
+    //GoogleSignInClient client_google;
+    //private static final int RC_GOOGLE_API = 1;
 
 
     @Override
@@ -151,6 +150,11 @@ public class InicioSesionFragment extends Fragment {
                 new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        //Se añade el id de empresa a las preferencias para no tener que recuperarlo más, igual con el correo
+                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+                        SharedPreferences.Editor edit_pref = prefs.edit();
+                        edit_pref.putString("email", correo);
+                        edit_pref.commit();
                         exito = task.isSuccessful();
                     }
                 }
