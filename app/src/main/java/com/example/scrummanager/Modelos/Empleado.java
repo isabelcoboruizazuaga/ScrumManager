@@ -14,10 +14,6 @@ public class Empleado implements Serializable {
     private String nombreEmpleado;
     private String apellidoEmpleado;
     private String emailEmpleado;
-    private String telefonoEmpleado;
-
-    private Direccion direccionEmpleado;
-    private String especialidadEmpleado;
     private int nivelJerarquia; //1 -> Jefe, 2 -> Jefe departamento,  3 -> Project Manager, 4-> Empleado base
     private boolean showMenu=false;
 
