@@ -47,6 +47,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+/**
+ * Permite editar un Empleado
+ */
 public class EditarEmpleadoActivity extends AppCompatActivity {
     private DatabaseReference dbReference;
     private FirebaseDatabase database;
@@ -56,6 +59,7 @@ public class EditarEmpleadoActivity extends AppCompatActivity {
 
     private ArrayList<Departamento> departamentos=new ArrayList<>();
     private ArrayList<String> departamentosNombres=new ArrayList<>();
+    private Departamento departamento;
     private Empleado empleado;
     private String uid,eid;
     private String idDepartamento, idAntiguoDepartamento;
@@ -65,6 +69,7 @@ public class EditarEmpleadoActivity extends AppCompatActivity {
     private Button btn_registrar;
     private EditText et_nombre, et_apellidos, et_dni, et_email;
     private ImageView iv_imagenEmpleado;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -168,6 +173,9 @@ public class EditarEmpleadoActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Obtiene el empleado a editar que se ha enviado a través de un intent
+     */
     private void recogerEmpleado(){
         Intent intent = getIntent();
         empleado = (Empleado) intent.getSerializableExtra("empleado");
@@ -188,7 +196,10 @@ public class EditarEmpleadoActivity extends AppCompatActivity {
         }
     }
 
-    //Método para subir la imagen a la database y cargarla en el layout
+    /**
+     * Sube la imagen a la base de datos y la muestra
+     * @param imagenUri
+     */
     private void subirImagenFirebase(Uri imagenUri){
         try {
             StorageReference archivoRef = storageReference.child("users/" + uid + "/profile.jpg");
@@ -210,16 +221,20 @@ public class EditarEmpleadoActivity extends AppCompatActivity {
         }catch (java.lang.IllegalArgumentException e){}
     }
 
-    //Método para rellenar las opciones de departamento
+    /**
+     * Rellena el spinner de los departamentos
+     */
     private void rellenarSpinnerDepartamento(){
         ArrayAdapter<String> departamentoAdapter= new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, departamentosNombres);
         departamentoAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerDepartamento.setAdapter(departamentoAdapter);
     }
 
-    //Método ejecutado cuando el usuario pulse el botón de actualizar
+    /**
+     * Edita el empleado con los datos introducidos por el usuario
+     * Extrae los datos del layout y los introduce en la base de datos
+     */
     private void actualizarEmpleado(){
-        //String nombreEmpresa = et_nombreEmpresa.getText().toString();
         String email = et_email.getText().toString();
         String nombre = et_nombre.getText().toString();
         String apellido = et_apellidos.getText().toString();
@@ -284,8 +299,11 @@ public class EditarEmpleadoActivity extends AppCompatActivity {
             });
         }
     }
-    //Valores del spinner
-    private Departamento departamento;
+
+
+    /**
+     * Establece el EventListener para extraer los datos de los departamentos de la base de datos
+     */
     private void setEventListener(){
         eventListener= new ValueEventListener() {
             @Override

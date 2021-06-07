@@ -25,6 +25,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Muestra una tarea enviada a través de un intent a la Activity
+ */
 public class VerTareaActivity extends AppCompatActivity {
     private Tarea tarea;
     private String eid;

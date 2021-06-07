@@ -27,6 +27,12 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+/**
+ * Una subclase de {@link Fragment} simple.
+ * Usa el metodo {@link Proyectos#newInstance} para
+ * crear una instancia del fragmento.
+ * Muestra los proyectos de la empresa
+ */
 public class Proyectos extends Fragment {
     private RecyclerView recView;
     private ArrayList<Proyecto> proyectos;
@@ -34,10 +40,17 @@ public class Proyectos extends Fragment {
     private Fragment fragmento;
     private ValueEventListener eventListenerProyectos;
 
+    /**
+     * Constructor vacío por defecto
+     */
     public Proyectos() {
-        // Required empty public constructor
     }
 
+    /**
+     * Usa este metodo para crear una nueva instancia de
+     * este fragmento
+     * @return una nueva instancia del fragmento Proyectos
+     */
     public static Proyectos newInstance() {
         Proyectos fragment = new Proyectos();
         return fragment;
@@ -76,6 +89,9 @@ public class Proyectos extends Fragment {
         dbReference.addValueEventListener(eventListenerProyectos);
     }
 
+    /**
+     * Establece el Event Listener de los clientes y rellena el Recycler View con la lista de los clientes
+     */
     private void setEventListenerClientes() {
         eventListenerProyectos = new ValueEventListener() {
             @Override
@@ -99,6 +115,11 @@ public class Proyectos extends Fragment {
         };
     }
 
+    /**
+     * Gestiona las acciones del menú del NavigationDrawer
+     * @param item : MenuItem elemento del menu seleccionado
+     * @return true si se ha seleccionado un elemente
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -118,6 +139,10 @@ public class Proyectos extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Gestiona los elementos que serán visibles en el menú
+     * @param menu: Menu
+     */
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         //Se ocultan las opciones del menú que no pertenecen a este fragment

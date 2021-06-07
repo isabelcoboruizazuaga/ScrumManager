@@ -45,6 +45,8 @@ public class EditarProyectoActivity extends AppCompatActivity {
     private ArrayList<String> departamentosNombres=new ArrayList<>(),clientesNombres=new ArrayList<>();
     private String eid,nifCliente,idDepartamento, pid, idAntiguoDepartamento,idAntiguoCliente;
     private Proyecto proyecto;
+    private Departamento departamento;
+    private Cliente cliente;
 
     private Spinner spinnerDepartamento,spinnerClientes;
     private Button btn_aniadir;
@@ -209,7 +211,6 @@ public class EditarProyectoActivity extends AppCompatActivity {
     }
 
 
-    private Departamento departamento;
     /**
      * Obtiene los datos de los departamentos y los pasa a dos arrays.
      * En un array "departamentos" guarda los objetos completos.
@@ -242,8 +243,6 @@ public class EditarProyectoActivity extends AppCompatActivity {
         spinnerClientes.setAdapter(clienteAdapter);
     }
 
-
-    private Cliente cliente;
     /**
      * Obtiene los datos de los clientes y los pasa a dos arrays.
      * En un array "clientes" guarda los objetos completos.

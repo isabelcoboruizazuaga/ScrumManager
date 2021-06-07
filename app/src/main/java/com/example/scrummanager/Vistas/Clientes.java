@@ -48,6 +48,12 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+/**
+ * Una subclase de {@link Fragment} simple.
+ * Usa el metodo {@link Clientes#newInstance} para
+ * crear una instancia del fragmento.
+ * Muestra los clientes de la empresa
+ */
 public class Clientes extends Fragment {
      private RecyclerView recView;
      private ArrayList<Cliente> clientes=new ArrayList<Cliente>();
@@ -58,10 +64,17 @@ public class Clientes extends Fragment {
     private FirebaseDatabase database;
     private ValueEventListener eventListener;
 
+    /**
+     * Constructor vacío por defecto
+     */
     public Clientes() {
-        // Required empty public constructor
     }
 
+    /**
+     * Usa este metodo para crear una nueva instancia de
+     * este fragmento
+     * @return una nueva instancia del fragmento Clientes
+     */
     public static Clientes newInstance() {
         Clientes fragment = new Clientes();
         return fragment;
@@ -103,7 +116,11 @@ public class Clientes extends Fragment {
 
 
     }
-    //Database listener
+
+    /**
+     * Extrae los clientes de la base de datos y
+     * los guarda en el ArrayList que carga el RecyclerView
+     */
     public void rellenarRecyclerView (){
         dbReference.child(eid).child("Clientes").addValueEventListener(new ValueEventListener() {
             @Override
@@ -125,6 +142,12 @@ public class Clientes extends Fragment {
             }
         });
     }
+
+    /**
+     * Gestiona las acciones del menú del NavigationDrawer
+     * @param item : MenuItem elemento del menu seleccionado
+     * @return true si se ha seleccionado un elemente
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
@@ -144,6 +167,10 @@ public class Clientes extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Gestiona los elementos que serán visibles en el menú
+     * @param menu: Menu
+     */
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         //Se ocultan las opciones del menú que no pertenecen a este fragment

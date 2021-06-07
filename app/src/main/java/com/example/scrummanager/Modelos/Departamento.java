@@ -3,6 +3,9 @@ package com.example.scrummanager.Modelos;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * Modelo de departamento
+ */
 public class Departamento implements Serializable {
     private String idDepartamento;
     private String idEmpresa;
@@ -15,9 +18,18 @@ public class Departamento implements Serializable {
     private ArrayList<Proyecto> ListaProyectosDepartamento;
     private boolean showMenu=false;
 
+    /**
+     * Constructor por defecto
+     */
     public Departamento() {
     }
 
+    /**
+     * Constructor
+     * @param idDepartamento
+     * @param nombreDepartamento
+     * @param idEmpresa
+     */
     public Departamento(String idDepartamento, String nombreDepartamento, String idEmpresa) {
         this.idDepartamento = idDepartamento;
         this.nombreDepartamento = nombreDepartamento;
@@ -26,62 +38,74 @@ public class Departamento implements Serializable {
         ListaProyectosDepartamento= new ArrayList<>();
     }
 
+    /**
+     * Getter de ShowMenu
+     * @return ShowMenu
+     */
     public boolean isShowMenu() {
         return showMenu;
     }
 
+    /**
+     * Setter de ShowMenu
+     * @param showMenu
+     */
     public void setShowMenu(boolean showMenu) {
         this.showMenu = showMenu;
     }
 
-    public void setIdDepartamento(String idDepartamento) {
-        this.idDepartamento = idDepartamento;
-    }
-
-    public String getUrlFotoDepartamento() {
-        return urlFotoDepartamento;
-    }
-
-    public void setUrlFotoDepartamento(String urlFotoDepartamento) {
-        this.urlFotoDepartamento = urlFotoDepartamento;
-    }
-
+    /**
+     * Getter de idDepartamento
+     * @return idDepartamento
+     */
     public String getIdDepartamento() {
         return idDepartamento;
     }
 
+    /**
+     * Getter de nombreDepartamento
+     * @return nombreDepartamento
+     */
     public String getNombreDepartamento() {
         return nombreDepartamento;
     }
 
+    /**
+     * Setter de nombreDepartamento
+     * @param nombreDepartamento
+     */
     public void setNombreDepartamento(String nombreDepartamento) {
         this.nombreDepartamento = nombreDepartamento;
     }
 
+    /**
+     * Getter de uidJefeDepartamento
+     * @return uidJefeDepartamento
+     */
     public String getUidJefeDepartamento() {
         return uidJefeDepartamento;
     }
 
+    /**
+     * Setter de  uidJefeDepartamento
+     * @param uidJefeDepartamento
+     */
     public void setUidJefeDepartamento(String uidJefeDepartamento) {
         this.uidJefeDepartamento = uidJefeDepartamento;
     }
 
+    /**
+     * Getter de getMiembrosDepartamento
+     * @return getMiembrosDepartamento
+     */
     public ArrayList<String> getMiembrosDepartamento() {
         return miembrosDepartamento;
     }
 
-    public void setMiembrosDepartamento(ArrayList<String> miembrosDepartamento) {
-        this.miembrosDepartamento = miembrosDepartamento;
-    }
-
-    public ArrayList<Proyecto> getListaProyectosDepartamento() {
-        return ListaProyectosDepartamento;
-    }
-
-    public void setListaProyectosDepartamento(ArrayList<Proyecto> listaProyectosDepartamento) {
-        this.ListaProyectosDepartamento = listaProyectosDepartamento;
-    }
-
+    /**
+     * Añade un empleado a la lista de miembros
+     * @param uid
+     */
     public void aniadirEmpleado(String uid){
         try {
             if(!comprobarListaEmpleados(uid)) {
@@ -94,6 +118,12 @@ public class Departamento implements Serializable {
             }
         }
     }
+
+    /**
+     * Comprueba si un empleado está en la lista de miembros
+     * @param uid
+     * @return existe: boolean
+     */
     public boolean comprobarListaEmpleados(String uid){
         boolean existe= false;
         for(int i= 0; i<miembrosDepartamento.size();i++){
@@ -103,6 +133,11 @@ public class Departamento implements Serializable {
         }
         return existe;
     }
+
+    /**
+     * Elimina un empleado de la lista de miembros
+     * @param uid
+     */
     public void eliminarEmpleado(String uid){
         try {
             if(comprobarListaEmpleados(uid)) {

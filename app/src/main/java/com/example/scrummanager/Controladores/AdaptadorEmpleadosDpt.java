@@ -23,6 +23,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+/**
+ * Adaptador para rellenar Recycler Views con una lista de empleados priorizando la imagen de estos
+ */
 public class AdaptadorEmpleadosDpt extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<Empleado> empleados;
     private Context contexto;
@@ -30,6 +33,11 @@ public class AdaptadorEmpleadosDpt extends RecyclerView.Adapter<RecyclerView.Vie
     StorageReference storageReference;
     Fragment fragment;
 
+    /**
+     * Constructor del Adaptador
+     * @param empleados
+     * @param contexto
+     */
     public AdaptadorEmpleadosDpt(ArrayList<Empleado> empleados, Context contexto) {
         this.empleados = empleados;
         this.contexto = contexto;
@@ -87,6 +95,10 @@ public class AdaptadorEmpleadosDpt extends RecyclerView.Adapter<RecyclerView.Vie
         }
     }
 
+    /**
+     * ViewHolder del adaptador de empleados, recoge el layout del item
+     * Obtiene los items del layout indicado en el método onCreateViewHolder
+     */
     public class AdaptadorEmpleadosDptViewHolder extends RecyclerView.ViewHolder {
         //items del layout
         private TextView tv_nombreEmpleadoDpt;

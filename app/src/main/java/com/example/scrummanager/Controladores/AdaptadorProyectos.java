@@ -25,9 +25,11 @@ import com.example.scrummanager.Modelos.Empleado;
 import com.example.scrummanager.Modelos.Proyecto;
 import com.example.scrummanager.Modelos.Sprint;
 import com.example.scrummanager.R;
+import com.example.scrummanager.Vistas.EditarClienteActivity;
 import com.example.scrummanager.Vistas.EditarEmpleadoActivity;
 import com.example.scrummanager.Vistas.EditarProyectoActivity;
 import com.example.scrummanager.Vistas.NuevoSprintActivity;
+import com.example.scrummanager.Vistas.VerClienteActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -41,6 +43,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * Adaptador para rellenar Recycler Views con una lista de proyectos
+ */
 public class AdaptadorProyectos extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<Proyecto> proyectos;
     private Context contexto;
@@ -48,6 +53,12 @@ public class AdaptadorProyectos extends RecyclerView.Adapter<RecyclerView.ViewHo
     private final int MOSTRAR_MENU = 1, OCULTAR_MENU = 2;
     private Fragment fragment;
 
+    /**
+     * Constructor del adaptador
+     * @param proyectos
+     * @param contexto
+     * @param fragment
+     */
     public AdaptadorProyectos(ArrayList<Proyecto> proyectos, Context contexto, Fragment fragment) {
         this.proyectos = proyectos;
         this.contexto = contexto;
@@ -179,13 +190,6 @@ public class AdaptadorProyectos extends RecyclerView.Adapter<RecyclerView.ViewHo
             });
         }
     }
-    public static Date parseDate(String date){
-        try {
-            return new SimpleDateFormat("dd/MM/yyyy").parse(date);
-        } catch (ParseException e) {
-            return null;
-        }
-    }
 
     @Override
     public int getItemCount() {
@@ -279,6 +283,10 @@ public class AdaptadorProyectos extends RecyclerView.Adapter<RecyclerView.ViewHo
         recView3.setAdapter(adaptadorSprints);
     }
 
+    /**
+     * ViewHolder del adaptador de proyectos, recoge el layout del item
+     * Obtiene los items del layout indicado en el método onCreateViewHolder
+     */
     public class AdaptadorProyectosViewHolder extends RecyclerView.ViewHolder {
         //items del layout
         private TextView tv_nombreProyecto;
@@ -297,6 +305,10 @@ public class AdaptadorProyectos extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
+    /**
+     * MenuViewHolder del adaptador de proyectos, recoge el layout del menú del item
+     * Obtiene los items del layout indicado en el método onCreateViewHolder
+     */
     public class MenuViewHolder extends RecyclerView.ViewHolder {
         //items del layout
         private ImageButton btn_nuevoSprint, btn_atrasProyecto, btn_borrarProyecto, btn_editarProyecto;
@@ -315,6 +327,10 @@ public class AdaptadorProyectos extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
+    /**
+     * Cambia a true el atributo de mostrar menú de un item seleccionado
+     * @param position
+     */
     public void mostrarMenu(int position) {
         for (int i = 0; i < proyectos.size(); i++) {
             proyectos.get(i).setShowMenu(false);
@@ -323,18 +339,8 @@ public class AdaptadorProyectos extends RecyclerView.Adapter<RecyclerView.ViewHo
         notifyDataSetChanged();
     }
 
-
-    public boolean isMenuMostrado() {
-        for (int i = 0; i < proyectos.size(); i++) {
-            if (proyectos.get(i).isShowMenu()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     /**
-     * Cierra el menú de un item
+     * Cambia a false el atributo de mostrar menú de todos los item
      */
     public void cerrarMenu() {
         for (int i = 0; i < proyectos.size(); i++) {
@@ -343,13 +349,22 @@ public class AdaptadorProyectos extends RecyclerView.Adapter<RecyclerView.ViewHo
         notifyDataSetChanged();
     }
 
-
+    /**
+     * Ejecuta la actividad de  Editar proyecto pasándole el proyecto seleccionado
+     * @see EditarProyectoActivity
+     * @param proyecto
+     */
     public void editarProyecto(Proyecto proyecto) {
         Intent intent= new Intent(contexto, EditarProyectoActivity.class);
         intent.putExtra("proyecto",proyecto);
         contexto.startActivity(intent);
     }
 
+    /**
+     * Ejecuta la actividad de Crear Sprint pasándole el proyecto seleccionado
+     * @see NuevoSprintActivity
+     * @param proyecto
+     */
     public void sprintProyecto(Proyecto proyecto) {
         Intent intent= new Intent(contexto, NuevoSprintActivity.class);
         intent.putExtra("proyecto",proyecto);
@@ -402,7 +417,6 @@ public class AdaptadorProyectos extends RecyclerView.Adapter<RecyclerView.ViewHo
      * Accede a la base de datos para sacar el cliente que posea el nif pasado como argumento
      * @param nifCliente    código identificativo del cliente
      * @param eid   código identificativo de la empresa a la que pertenece el cliente
-     *
      */
     private void findCliente(String nifCliente,String eid){
         if(nifCliente!=null && eid!=null) {
@@ -423,6 +437,7 @@ public class AdaptadorProyectos extends RecyclerView.Adapter<RecyclerView.ViewHo
             clie=inicializarCliente();
         }
     }
+
     /**
      * Devuelve un cliente con datos predeterminados
      * @return cliente

@@ -30,6 +30,12 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.UUID;
 
+/**
+ * Una subclase de {@link Fragment} simple.
+ * Usa el metodo {@link RegistrarseFragment#newInstance} para
+ * crear una instancia del fragmento.
+ * Permite registrarse en la aplicación
+ */
 public class RegistrarseFragment extends Fragment {
     private FirebaseAuth mAuth;
     private DatabaseReference dbReference;
@@ -39,15 +45,30 @@ public class RegistrarseFragment extends Fragment {
     private EditText et_nombreEmpresa;
     private EditText et_email;
     private EditText et_password;
+
+    /**
+     * Constructor vacío por defecto
+     */
+    public RegistrarseFragment() {
+    }
+
+    /**
+     * Usa este metodo para crear una nueva instancia de
+     * este fragmento
+     * @return una nueva instancia del fragmento RegistrarseFragment
+     */
+    public static RegistrarseFragment newInstance() {
+        RegistrarseFragment fragment = new RegistrarseFragment();
+        return fragment;
+    }
+
     @Override
-    public View onCreateView(
-            LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState
-    ) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_registrarse, container, false);
     }
 
+    @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -79,7 +100,10 @@ public class RegistrarseFragment extends Fragment {
         });
     }
 
-    //Método ejecutado cuando el usuario pulse el botón de registrar
+
+    /**
+     * Crea una cuenta con los datos proporcionados por el usuario que se extraen del layout
+     */
     private void crearCuenta(){
         String nombreEmpresa = et_nombreEmpresa.getText().toString();
         String email = et_email.getText().toString();
@@ -129,23 +153,30 @@ public class RegistrarseFragment extends Fragment {
 
     }
 
-    //Redirige al usuario o muestra un error
+    /**
+     * Una vez se ha creado la cuenta iniciando sesión se redirige a la actividad principal
+     * @param account
+     */
     private void updateUI(FirebaseUser account){
         if(account != null){
-            Toast.makeText(getContext(),"succes",Toast.LENGTH_LONG).show();
+            System.out.println("Cuenta creada correctamente");
             startActivity(new Intent(getContext(), NavigationDrawerActivity.class));
         }else{
-            Toast. makeText(getContext(),"error",Toast. LENGTH_SHORT).show();
+            Toast. makeText(getContext(),"Error",Toast. LENGTH_SHORT).show();
         }
 
     }
-    //Método que envía el email de verificación
+
+    /**
+     * Se envía un email de verificación al correo del usuario
+     * @param user
+     */
     private void verifyEmail(FirebaseUser user){
         user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    Toast.makeText(getContext(), "succes", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Email de confirmación enviado", Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(getContext(),"error", Toast.LENGTH_LONG).show();
                 }

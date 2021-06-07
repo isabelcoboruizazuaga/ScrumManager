@@ -149,6 +149,7 @@ public class NuevaTareaActivity extends AppCompatActivity {
         pid= proyecto.getIdProyecto();
         eid=proyecto.getIdEmpresa();
     }
+
     /**
      * Obtiene el sprint enviado por el intent que llamaba a la Activity
      */
@@ -183,6 +184,7 @@ public class NuevaTareaActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_tipoTarea.setAdapter(adapter);
     }
+
     /**
      * Rellena el spinner de la prioridad con el arrayList de opciones
      */
@@ -196,6 +198,7 @@ public class NuevaTareaActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_prioridadTarea.setAdapter(adapter);
     }
+
     /**
      * Obtiene los datos de los empleados y los pasa a dos arrayLists.
      * En un array "empleados" guarda los objetos completos.

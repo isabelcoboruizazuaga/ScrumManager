@@ -28,6 +28,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+/**
+ * Muestra un departamento enviado a través de un intent
+ */
 public class VerEmpleadoActivity extends AppCompatActivity {
     private TextView tv_nombre, tv_apellidos, tv_dni, tv_email;
     private ImageView iv_imagenEmpleado;
@@ -76,6 +79,7 @@ public class VerEmpleadoActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_ver_empleados, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -94,6 +98,9 @@ public class VerEmpleadoActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Abre un AlertDialog para confirmar si se desea borrar el empleado
+     */
     private void borrarEmpleado(){
         String eid= empleado.getIdEmpresa();
         String uid= empleado.getUid();
@@ -131,6 +138,9 @@ public class VerEmpleadoActivity extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * Elimina el departamento de la base de datos
+     */
     private void borrarConfirmacion() {
         //Inicialización
         AlertDialog.Builder alertDialogBu = new AlertDialog.Builder(VerEmpleadoActivity.this);

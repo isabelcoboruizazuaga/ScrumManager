@@ -21,8 +21,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.scrummanager.Modelos.Departamento;
 import com.example.scrummanager.Modelos.Empleado;
 import com.example.scrummanager.R;
+import com.example.scrummanager.Vistas.EditarClienteActivity;
 import com.example.scrummanager.Vistas.EditarDepartamentoActivity;
 import com.example.scrummanager.Vistas.EditarEmpleadoActivity;
+import com.example.scrummanager.Vistas.VerClienteActivity;
 import com.example.scrummanager.Vistas.VerDepartamentoActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -36,12 +38,20 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+/**
+ * Adaptador para rellenar Recycler Views con una lista de departamentos
+ */
 public class AdaptadorDepartamentos extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<Departamento> departamentos;
     private Context contexto;
     private final int MOSTRAR_MENU=1, OCULTAR_MENU=2;
     StorageReference storageReference;
 
+    /**
+     * Constructor del Adaptador
+     * @param departamentos
+     * @param contexto
+     */
     public AdaptadorDepartamentos(ArrayList<Departamento> departamentos, Context contexto) {
         this.departamentos = departamentos;
         this.contexto = contexto;
@@ -169,6 +179,10 @@ public class AdaptadorDepartamentos extends RecyclerView.Adapter<RecyclerView.Vi
         }
     }
 
+    /**
+     * ViewHolder del adaptador de departamentos, recoge el layout del item
+     * Obtiene los items del layout indicado en el método onCreateViewHolder
+     */
     public class AdaptadorDepartamentosViewHolder extends RecyclerView.ViewHolder{
         //items del layout
         private TextView tv_nombreDepartamento;
@@ -185,6 +199,11 @@ public class AdaptadorDepartamentos extends RecyclerView.Adapter<RecyclerView.Vi
 
         }
     }
+
+    /**
+     * MenuViewHolder del adaptador de departamento, recoge el layout del menú del item
+     * Obtiene los items del layout indicado en el método onCreateViewHolder
+     */
     public class MenuViewHolder extends RecyclerView.ViewHolder{
         //items del layout
         private ImageButton btn_verDepartamento, btn_editarDepartamento,btn_atrasDepartamento, btn_borrarDepartamento;
@@ -205,6 +224,10 @@ public class AdaptadorDepartamentos extends RecyclerView.Adapter<RecyclerView.Vi
         }
     }
 
+    /**
+     * Cambia a true el atributo de mostrar menú de un item seleccionado
+     * @param position
+     */
     public void mostrarMenu(int position) {
         for(int i=0; i<departamentos.size(); i++){
             departamentos.get(i).setShowMenu(false);
@@ -213,16 +236,9 @@ public class AdaptadorDepartamentos extends RecyclerView.Adapter<RecyclerView.Vi
         notifyDataSetChanged();
     }
 
-
-    public boolean isMenuMostrado() {
-        for(int i=0; i<departamentos.size(); i++){
-            if(departamentos.get(i).isShowMenu()){
-                return true;
-            }
-        }
-        return false;
-    }
-
+    /**
+     * Cambia a false el atributo de mostrar menú de todos los item
+     */
     public void cerrarMenu() {
         for(int i=0; i<departamentos.size(); i++){
             departamentos.get(i).setShowMenu(false);
@@ -230,17 +246,32 @@ public class AdaptadorDepartamentos extends RecyclerView.Adapter<RecyclerView.Vi
         notifyDataSetChanged();
     }
 
+    /**
+     * Ejecuta la actividad de  Editar departamento pasándole el departamento seleccionado
+     * @see EditarDepartamentoActivity
+     * @param departamento
+     */
     public void editarDepartamento(Departamento departamento){
         Intent intent= new Intent(contexto, EditarDepartamentoActivity.class);
         intent.putExtra("departamento",departamento);
         contexto.startActivity(intent);
     }
 
+    /**
+     * Ejecuta la actividad de Ver departamento pasándole el departamento seleccionado
+     * @see VerDepartamentoActivity
+     * @param departamento
+     */
     public void verDepartamento(Departamento departamento){
         Intent intent= new Intent(contexto, VerDepartamentoActivity.class);
         intent.putExtra("departamento",departamento);
         contexto.startActivity(intent);
     }
+
+    /**
+     * Abre un alertDialog para confirmar si se desea borrar el departamento
+     * @param departamento
+     */
     private void borrarConfirmacion(Departamento departamento) {
         //Inicialización
         AlertDialog.Builder alertDialogBu = new AlertDialog.Builder(contexto);
@@ -264,6 +295,10 @@ public class AdaptadorDepartamentos extends RecyclerView.Adapter<RecyclerView.Vi
         alertDialog.show();
     }
 
+    /**
+     * Elimina el cliente de la base de datos
+     * @param departamento
+     */
     public void borrarDepartamento(Departamento departamento){
         //Obtención del id de empresa
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(contexto);

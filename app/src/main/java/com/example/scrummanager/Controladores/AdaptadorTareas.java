@@ -24,8 +24,10 @@ import com.example.scrummanager.Modelos.Proyecto;
 import com.example.scrummanager.Modelos.Sprint;
 import com.example.scrummanager.Modelos.Tarea;
 import com.example.scrummanager.R;
+import com.example.scrummanager.Vistas.EditarEmpleadoActivity;
 import com.example.scrummanager.Vistas.EditarSprintActivity;
 import com.example.scrummanager.Vistas.EditarTareaActivity;
+import com.example.scrummanager.Vistas.VerEmpleadoActivity;
 import com.example.scrummanager.Vistas.VerTareaActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -38,6 +40,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * Adaptador para rellenar Recycler Views con una lista de tareas
+ */
 public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<Tarea> tareas;
     private Proyecto proyecto;
@@ -46,6 +51,13 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
     String nombreEm;
     private final int MOSTRAR_MENU = 1, OCULTAR_MENU = 2;
 
+    /**
+     * Constructor del Adaptador
+     * @param tareas
+     * @param sprint
+     * @param proyecto
+     * @param contexto
+     */
     public AdaptadorTareas(ArrayList<Tarea> tareas, Sprint sprint, Proyecto proyecto, Context contexto) {
         this.tareas = tareas;
         this.contexto = contexto;
@@ -249,7 +261,8 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     /**
-     * Metodo de prueba
+     * ViewHolder del adaptador de tareas, recoge el layout del item
+     * Obtiene los items del layout indicado en el método onCreateViewHolder
      */
     public class AdaptadorTareasViewHolder extends RecyclerView.ViewHolder {
         //items del layout
@@ -274,6 +287,10 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
+    /**
+     * MenuViewHolder del adaptador de tareas, recoge el layout del menú del item
+     * Obtiene los items del layout indicado en el método onCreateViewHolder
+     */
     public class MenuViewHolder extends RecyclerView.ViewHolder {
         private ImageButton btn_verTarea, btn_editarTarea, btn_atrasTarea, btn_borrarTarea,btn_bajarEstado,btn_subirEstado;
 
@@ -293,6 +310,10 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
+    /**
+     * Cambia a true el atributo de mostrar menú de un item seleccionado
+     * @param position
+     */
     public void mostrarMenu(int position) {
         for (int i = 0; i < tareas.size(); i++) {
             tareas.get(i).setShowMenu(false);
@@ -301,16 +322,9 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
         notifyDataSetChanged();
     }
 
-
-    public boolean isMenuMostrado() {
-        for (int i = 0; i < tareas.size(); i++) {
-            if (tareas.get(i).isShowMenu()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
+    /**
+     * Cambia a false el atributo de mostrar menú de todos los item
+     */
     public void cerrarMenu() {
         for (int i = 0; i < tareas.size(); i++) {
             tareas.get(i).setShowMenu(false);
@@ -318,6 +332,11 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
         notifyDataSetChanged();
     }
 
+    /**
+     * Ejecuta la actividad de  Editar tarea pasándole la tarea seleccionado
+     * @see EditarTareaActivity
+     * @param tarea
+     */
     public void editarTarea(Tarea tarea) {
         cerrarMenu();
         Intent intent= new Intent(contexto, EditarTareaActivity.class);
@@ -383,6 +402,12 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
+    /**
+     * Ejecuta la actividad de Ver tarea pasándole la tarea seleccionada
+     * @see VerTareaActivity
+     * @param tarea
+     * @param eid
+     */
     public void verTarea(Tarea tarea,String eid) {
         cerrarMenu();
 
@@ -392,6 +417,12 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
         contexto.startActivity(intent);
     }
 
+    /**
+     * Abre un alertDialog para confirmar si se desea borrar la tarea
+     * @param tarea
+     * @param eid
+     * @param pid
+     */
     private void borrarConfirmacion(Tarea tarea,String eid,String pid) {
         cerrarMenu();
         //Inicialización
@@ -416,6 +447,12 @@ public class AdaptadorTareas extends RecyclerView.Adapter<RecyclerView.ViewHolde
         alertDialog.show();
     }
 
+    /**
+     * Elimina la tarea de la base de datos
+     * @param tarea
+     * @param eid
+     * @param pid
+     */
     public void borrarTarea(Tarea tarea, String eid, String pid) {
         proyecto.eliminarSprint(sprint);
         sprint.eliminarTarea(tarea);

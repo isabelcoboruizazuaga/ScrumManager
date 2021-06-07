@@ -44,6 +44,9 @@ import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.UUID;
 
+/**
+ * Permite crear un departamento e introducirlo en la base de datos de la empresa
+ */
 public class NuevoDepartamentoActivity extends AppCompatActivity {
     private DatabaseReference dbReference;
     private FirebaseDatabase database;
@@ -56,6 +59,7 @@ public class NuevoDepartamentoActivity extends AppCompatActivity {
     private String eid;
     private Uri imagenUri;
     String did= UUID.randomUUID().toString();
+    private Empleado empleado;
 
     private Spinner spinnerEmpleado;
     private Button btn_crear;
@@ -131,6 +135,7 @@ public class NuevoDepartamentoActivity extends AppCompatActivity {
             }
         });
     }
+
     //Método que se activará cuando la imagen de pérfil se pulse y se abra la galería
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -143,7 +148,10 @@ public class NuevoDepartamentoActivity extends AppCompatActivity {
         }
     }
 
-    //Método para subir la imagen a la database y cargarla en el layout
+    /**
+     * Sube la imagen a la base de datos y la muestra
+     * @param imagenUri
+     */
     private void subirImagenFirebase(Uri imagenUri){
         try {
             StorageReference archivoRef = storageReference.child("departments/" + did + "/cover.jpg");
@@ -167,6 +175,11 @@ public class NuevoDepartamentoActivity extends AppCompatActivity {
         }catch (java.lang.IllegalArgumentException e){}
     }
 
+    /**
+     * Crea un departamento con los datos introducidos por el usuario
+     * Extrae los datos del layout y los introduce en la base de datos
+     * @param v
+     */
     private void crearDepartamento(View v){
         String nombre= et_nombre.getText().toString();
         Departamento departamento= new Departamento(did,nombre,eid);
@@ -239,14 +252,18 @@ public class NuevoDepartamentoActivity extends AppCompatActivity {
         }
     }
 
-    //Método para rellenar las opciones de departamento
+    /**
+     * Rellena las opciones del spinner de empleados
+     */
     private void rellenarSpinnerEmpleados(Empleado empleado){
         ArrayAdapter<String> empleadoAdapter= new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, empleadosNombres);
         empleadoAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerEmpleado.setAdapter(empleadoAdapter);
     }
 
- private Empleado empleado;
+    /**
+     * Crea el EventListener para extraer los empleados de la base de datos
+     */
     private void setEventListener(){
         eventListener= new ValueEventListener() {
             @Override

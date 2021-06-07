@@ -32,9 +32,10 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link Inicio#newInstance} factory method to
- * create an instance of this fragment.
+ * Una subclase de {@link Fragment} simple.
+ * Usa el metodo {@link Inicio#newInstance} para
+ * crear una instancia del fragmento.
+ * Muestra el último sprint seleccionado
  */
 public class Inicio extends Fragment {
     private RecyclerView recPorHacer,recEnProceso,recHechas;
@@ -46,14 +47,26 @@ public class Inicio extends Fragment {
     Sprint sprint;
     Proyecto proyecto;
 
+    /**
+     * Constructor vacío por defecto
+     */
     public Inicio() {
-        // Required empty public constructor
     }
-    public static Inicio newInstance(String param1, String param2) {
+
+    /**
+     * Usa este metodo para crear una nueva instancia de
+     * este fragmento
+     * @return una nueva instancia del fragmento Inicio
+     */
+    public static Inicio newInstance() {
         Inicio fragment = new Inicio();
         return fragment;
     }
 
+    /**
+     * Inicicia el menú y recoge los argumentos del bundle o las preferencias si estos no existen
+     * @param savedInstanceState : Bundle
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -201,6 +214,11 @@ public class Inicio extends Fragment {
         });
     }
 
+    /**
+     * Gestiona las acciones del menú del NavigationDrawer
+     * @param item : MenuItem elemento del menu seleccionado
+     * @return true si se ha seleccionado un elemente
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {

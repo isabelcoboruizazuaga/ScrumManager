@@ -46,6 +46,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
+/**
+ * Permite crear un proyecto e introducirlo en la base de datos de la empresa
+ */
 public class NuevoProyectoActivity extends AppCompatActivity {
     private DatabaseReference dbReference;
     private ValueEventListener eventListenerDepartamentos,eventListenerClientes ;
@@ -55,6 +58,8 @@ public class NuevoProyectoActivity extends AppCompatActivity {
     private ArrayList<String> departamentosNombres=new ArrayList<>(),clientesNombres=new ArrayList<>();
     private String pid;
     private  String eid,nifCliente,idDepartamento;
+    private Departamento departamento;
+    private Cliente cliente;
 
     private Spinner spinnerDepartamento,spinnerClientes;
     private Button btn_aniadir;
@@ -143,8 +148,6 @@ public class NuevoProyectoActivity extends AppCompatActivity {
         spinnerDepartamento.setAdapter(departamentoAdapter);
     }
 
-
-    private Departamento departamento;
     /**
      * Obtiene los datos de los departamentos y los pasa a dos arrays.
      * En un array "departamentos" guarda los objetos completos.
@@ -178,7 +181,6 @@ public class NuevoProyectoActivity extends AppCompatActivity {
     }
 
 
-    private Cliente cliente;
     /**
      * Obtiene los datos de los clientes y los pasa a dos arrays.
      * En un array "clientes" guarda los objetos completos.

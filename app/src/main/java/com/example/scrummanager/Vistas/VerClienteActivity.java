@@ -33,6 +33,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+/**
+ * Muestra un cliente enviado a través de un intent
+ */
 public class VerClienteActivity extends AppCompatActivity {
     StorageReference storageReference;
     private Cliente cliente;
@@ -40,6 +43,7 @@ public class VerClienteActivity extends AppCompatActivity {
     private Button btn_registrar;
     private TextView tv_nombre, tv_apellidos, tv_telefono, tv_email,tv_dni,tv_tipo;
     private ImageView iv_imagenCliente;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,11 +85,13 @@ public class VerClienteActivity extends AppCompatActivity {
             }
         });
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_ver_clientes, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -104,6 +110,9 @@ public class VerClienteActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Abre un AlertDialog para confirmar si se desea borrar el cliente
+     */
     private void borrarConfirmacion() {
         //Inicialización
         AlertDialog.Builder alertDialogBu = new AlertDialog.Builder(VerClienteActivity.this);
@@ -126,6 +135,10 @@ public class VerClienteActivity extends AppCompatActivity {
         AlertDialog alertDialog = alertDialogBu.create();
         alertDialog.show();
     }
+
+    /**
+     * Elimina el cliente de la base de datos
+     */
     public void borrarCliente() {
         //Inicialización de la base de datos
         FirebaseDatabase database = FirebaseDatabase.getInstance();

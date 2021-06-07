@@ -34,6 +34,12 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+/**
+ * Una subclase de {@link Fragment} simple.
+ * Usa el metodo {@link Empleados#newInstance} para
+ * crear una instancia del fragmento.
+ * Muestra los empleados de la empresa
+ */
 public class Empleados extends Fragment {private FirebaseAuth mAuthAdmin, mAuthWorker;
     private DatabaseReference dbReference;
     private FirebaseDatabase database;
@@ -44,12 +50,18 @@ public class Empleados extends Fragment {private FirebaseAuth mAuthAdmin, mAuthW
     private Empleado empleado;
     private String eid;
 
+    /**
+     * Constructor vacío por defecto
+     */
     public Empleados() {
-        // Required empty public constructor
     }
 
-
-    public static Empleados newInstance(String param1, String param2) {
+    /**
+     * Usa este metodo para crear una nueva instancia de
+     * este fragmento
+     * @return una nueva instancia del fragmento Empleados
+     */
+    public static Empleados newInstance() {
         Empleados fragment = new Empleados();
         return fragment;
     }
@@ -87,7 +99,9 @@ public class Empleados extends Fragment {private FirebaseAuth mAuthAdmin, mAuthW
     }
 
 
-    //Database listener
+    /**
+     * Extrae los datos de los empleados de la base de datos y los coloca en el Recycler View
+     */
     public void rellenarRecyclerView (){
         dbReference.child(eid).child("Empleados").addValueEventListener(new ValueEventListener() {
             @Override
@@ -110,6 +124,11 @@ public class Empleados extends Fragment {private FirebaseAuth mAuthAdmin, mAuthW
         });
     }
 
+    /**
+     * Gestiona las acciones del menú del NavigationDrawer
+     * @param item : MenuItem elemento del menu seleccionado
+     * @return true si se ha seleccionado un elemente
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
@@ -129,6 +148,10 @@ public class Empleados extends Fragment {private FirebaseAuth mAuthAdmin, mAuthW
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Gestiona los elementos que serán visibles en el menú
+     * @param menu: Menu
+     */
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         //Se ocultan las opciones del menú que no pertenecen a este fragment

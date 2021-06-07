@@ -36,6 +36,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+/**
+ * Clase que permite editar un cliente
+ */
 public class EditarClienteActivity extends AppCompatActivity {
     private DatabaseReference dbReference;
     private FirebaseDatabase database;
@@ -52,6 +55,7 @@ public class EditarClienteActivity extends AppCompatActivity {
     private Button btn_registrar;
     private EditText et_nombre, et_apellidos, et_telefono, et_email,et_dni;
     private ImageView iv_imagenCliente;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -141,7 +145,10 @@ public class EditarClienteActivity extends AppCompatActivity {
         }
     }
 
-    //Método para subir la imagen a la database y cargarla en el layout
+    /**
+     * Sube la imagen a la base de datos y la muestra
+     * @param imagenUri
+     */
     private void subirImagenFirebase(Uri imagenUri){
         try {
             StorageReference archivoRef = storageReference.child("clients/" + nif + "/profile.jpg");
@@ -164,7 +171,9 @@ public class EditarClienteActivity extends AppCompatActivity {
         }catch (java.lang.IllegalArgumentException e){}
     }
 
-    //Método para rellenar las opciones de tipo
+    /**
+     * Rellena el spinner de las opciones de tipo
+     */
     private void rellenarSpinnerTipo(){
         if(cliente.getTipoCliente().equals("Individual")){
             tipos.add(0,"Individual");
@@ -178,7 +187,10 @@ public class EditarClienteActivity extends AppCompatActivity {
         spinnerTipo.setAdapter(departamentoAdapter);
     }
 
-    //Método ejecutado cuando el usuario pulse el botón de registrar
+    /**
+     * Edita un cliente con los datos introducidos por el usuario
+     * Extrae los datos del layout y los guarda en la base de datos
+     */
     private void crearCliente(){
         //String nombreEmpresa = et_nombreEmpresa.getText().toString();
         String email = et_email.getText().toString();

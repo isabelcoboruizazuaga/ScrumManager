@@ -35,6 +35,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+/**
+ * Permite crear un nuevo cliente y añadirlo a la base de datos de la empresa
+ */
 public class NuevoClienteActivity extends AppCompatActivity {
     private DatabaseReference dbReference;
     private FirebaseDatabase database;
@@ -119,7 +122,10 @@ public class NuevoClienteActivity extends AppCompatActivity {
         }
     }
 
-    //Método para subir la imagen a la database y cargarla en el layout
+    /**
+     * Sube la imagen a la base de datos y la muestra
+     * @param imagenUri
+     */
     private void subirImagenFirebase(Uri imagenUri){
         try {
             StorageReference archivoRef = storageReference.child("clients/" + dni + "/profile.jpg");
@@ -142,7 +148,9 @@ public class NuevoClienteActivity extends AppCompatActivity {
         }catch (java.lang.IllegalArgumentException e){}
     }
 
-    //Método para rellenar las opciones de tipo
+    /**
+     * Rellena el spinner de las opciones de tipo
+     */
     private void rellenarSpinnerTipo(){
         tipos.add(0,"Empresa");
         tipos.add(1,"Individual");
@@ -151,7 +159,10 @@ public class NuevoClienteActivity extends AppCompatActivity {
         spinnerTipo.setAdapter(departamentoAdapter);
     }
 
-    //Método ejecutado cuando el usuario pulse el botón de registrar
+    /**
+     * Edita un cliente con los datos introducidos por el usuario
+     * Extrae los datos del layout y los guarda en la base de datos
+     */
     private void crearCliente(){
         //String nombreEmpresa = et_nombreEmpresa.getText().toString();
         String email = et_email.getText().toString();

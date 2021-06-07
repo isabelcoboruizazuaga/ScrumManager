@@ -34,6 +34,7 @@ public class NuevoSprintActivity extends AppCompatActivity {
 
     private EditText et_nombreSprint, et_FechaInicioSprint, et_FechaFinSprint, et_objetivosSprint;
     private Button btn_aniadir;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +64,7 @@ public class NuevoSprintActivity extends AppCompatActivity {
         });
 
     }
+
     /**
      * Obtiene el proyecto enviado por el intent que llamaba a la Activity
      */
@@ -72,6 +74,7 @@ public class NuevoSprintActivity extends AppCompatActivity {
         pid= proyecto.getIdProyecto();
         eid=proyecto.getIdEmpresa();
     }
+
     /**
      * Crea un sprint a partir de los datos proporcionados y lo añade a la base de datos
      */

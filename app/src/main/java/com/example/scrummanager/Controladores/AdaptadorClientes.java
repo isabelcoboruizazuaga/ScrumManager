@@ -36,8 +36,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 /**
- * @author Isabel Cobo Ruiz-Azuaga
- * Actividad de prueba
+ * Adaptador para rellenar Recycler Views con una lista de clientes
  */
 public class AdaptadorClientes extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<Cliente> clientes;
@@ -45,6 +44,11 @@ public class AdaptadorClientes extends RecyclerView.Adapter<RecyclerView.ViewHol
     private final int MOSTRAR_MENU = 1, OCULTAR_MENU = 2;
     StorageReference storageReference;
 
+    /**
+     * Constructor del Adaptador
+     * @param clientes
+     * @param contexto
+     */
     public AdaptadorClientes(ArrayList<Cliente> clientes, Context contexto) {
         this.clientes = clientes;
         this.contexto = contexto;
@@ -172,7 +176,8 @@ public class AdaptadorClientes extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     /**
-     * Metodo de prueba
+     * ViewHolder del adaptador de clientes, recoge el layout del item
+     * Obtiene los items del layout indicado en el método onCreateViewHolder
      */
     public class AdaptadorClientesViewHolder extends RecyclerView.ViewHolder {
         //items del layout
@@ -195,6 +200,10 @@ public class AdaptadorClientes extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
+    /**
+     * MenuViewHolder del adaptador de clientes, recoge el layout del menú del item
+     * Obtiene los items del layout indicado en el método onCreateViewHolder
+     */
     public class MenuViewHolder extends RecyclerView.ViewHolder {
         //items del layout
         private ImageButton btn_verCliente, btn_atrasCliente, btn_borrarCliente, btn_editarCliente;
@@ -213,6 +222,10 @@ public class AdaptadorClientes extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
+    /**
+     * Cambia a true el atributo de mostrar menú de un item seleccionado
+     * @param position
+     */
     public void mostrarMenu(int position) {
         for (int i = 0; i < clientes.size(); i++) {
             clientes.get(i).setShowMenu(false);
@@ -221,16 +234,9 @@ public class AdaptadorClientes extends RecyclerView.Adapter<RecyclerView.ViewHol
         notifyDataSetChanged();
     }
 
-
-    public boolean isMenuMostrado() {
-        for (int i = 0; i < clientes.size(); i++) {
-            if (clientes.get(i).isShowMenu()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
+    /**
+     * Cambia a false el atributo de mostrar menú de todos los item
+     */
     public void cerrarMenu() {
         for (int i = 0; i < clientes.size(); i++) {
             clientes.get(i).setShowMenu(false);
@@ -238,18 +244,32 @@ public class AdaptadorClientes extends RecyclerView.Adapter<RecyclerView.ViewHol
         notifyDataSetChanged();
     }
 
+    /**
+     * Ejecuta la actividad de  Editar cliente pasándole el cliente seleccionado
+     * @see EditarClienteActivity
+     * @param cliente
+     */
     public void editarCliente(Cliente cliente) {
         Intent intent= new Intent(contexto, EditarClienteActivity.class);
         intent.putExtra("cliente",cliente);
         contexto.startActivity(intent);
     }
 
+    /**
+     * Ejecuta la actividad de Ver cliente pasándole el cliente seleccionado
+     * @see VerClienteActivity
+     * @param cliente
+     */
     public void verCliente(Cliente cliente) {
         Intent intent= new Intent(contexto, VerClienteActivity.class);
         intent.putExtra("cliente",cliente);
         contexto.startActivity(intent);
     }
 
+    /**
+     * Abre un alertDialog para confirmar si se desea borrar el cliente
+     * @param cliente
+     */
     private void borrarConfirmacion(Cliente cliente) {
         //Inicialización
         AlertDialog.Builder alertDialogBu = new AlertDialog.Builder(contexto);
@@ -272,6 +292,11 @@ public class AdaptadorClientes extends RecyclerView.Adapter<RecyclerView.ViewHol
         AlertDialog alertDialog = alertDialogBu.create();
         alertDialog.show();
     }
+
+    /**
+     * Elimina el cliente de la base de datos
+     * @param cliente
+     */
     public void borrarCliente(Cliente cliente) {
         String eid= cliente.getIdEmpresa();
         String nif= cliente.getNifCliente();

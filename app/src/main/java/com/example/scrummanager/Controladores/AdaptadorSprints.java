@@ -24,8 +24,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.scrummanager.Modelos.Proyecto;
 import com.example.scrummanager.Modelos.Sprint;
 import com.example.scrummanager.R;
+import com.example.scrummanager.Vistas.EditarClienteActivity;
 import com.example.scrummanager.Vistas.EditarSprintActivity;
 import com.example.scrummanager.Vistas.NuevaTareaActivity;
+import com.example.scrummanager.Vistas.VerClienteActivity;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
@@ -36,6 +38,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * Adaptador para rellenar Recycler Views con una lista de sprints
+ */
 public class AdaptadorSprints extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<Sprint> sprints;
     private Proyecto proyecto;
@@ -43,6 +48,13 @@ public class AdaptadorSprints extends RecyclerView.Adapter<RecyclerView.ViewHold
     private Fragment fragment;
     private final int MOSTRAR_MENU = 1, OCULTAR_MENU = 2;
 
+    /**
+     * Constructor del Adaptador
+     * @param sprints
+     * @param proyecto
+     * @param contexto
+     * @param fragment
+     */
     public AdaptadorSprints(ArrayList<Sprint> sprints, Proyecto proyecto, Context contexto, Fragment fragment) {
         this.sprints = sprints;
         this.contexto = contexto;
@@ -175,7 +187,8 @@ public class AdaptadorSprints extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     /**
-     * Metodo de prueba
+     * ViewHolder del adaptador de sprints, recoge el layout del item
+     * Obtiene los items del layout indicado en el método onCreateViewHolder
      */
     public class AdaptadorSprintsViewHolder extends RecyclerView.ViewHolder {
         //items del layout
@@ -198,6 +211,10 @@ public class AdaptadorSprints extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
+    /**
+     * MenuViewHolder del adaptador de sprints, recoge el layout del menú del item
+     * Obtiene los items del layout indicado en el método onCreateViewHolder
+     */
     public class MenuViewHolder extends RecyclerView.ViewHolder {
         //items del layout
         private ImageButton btn_verSprint, btn_atrasSprint, btn_borrarSprint, btn_editarSprint,btn_nuevaTarea;
@@ -217,6 +234,10 @@ public class AdaptadorSprints extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
+    /**
+     * Cambia a true el atributo de mostrar menú de un item seleccionado
+     * @param position
+     */
     public void mostrarMenu(int position) {
         for (int i = 0; i < sprints.size(); i++) {
             sprints.get(i).setShowMenu(false);
@@ -225,16 +246,9 @@ public class AdaptadorSprints extends RecyclerView.Adapter<RecyclerView.ViewHold
         notifyDataSetChanged();
     }
 
-
-    public boolean isMenuMostrado() {
-        for (int i = 0; i < sprints.size(); i++) {
-            if (sprints.get(i).isShowMenu()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
+    /**
+     * Cambia a false el atributo de mostrar menú de todos los item
+     */
     public void cerrarMenu() {
         for (int i = 0; i < sprints.size(); i++) {
             sprints.get(i).setShowMenu(false);
@@ -242,6 +256,11 @@ public class AdaptadorSprints extends RecyclerView.Adapter<RecyclerView.ViewHold
         notifyDataSetChanged();
     }
 
+    /**
+     * Ejecuta la actividad de  Editar sprint pasándole el cliente seleccionado
+     * @see EditarSprintActivity
+     * @param sprint
+     */
     public void editarSprint(Sprint sprint) {
         Intent intent= new Intent(contexto, EditarSprintActivity.class);
         intent.putExtra("sprint",sprint);
@@ -249,6 +268,11 @@ public class AdaptadorSprints extends RecyclerView.Adapter<RecyclerView.ViewHold
         contexto.startActivity(intent);
     }
 
+    /**
+     * Ejecuta la actividad de Crear tarea pasándole el sprint seleccionado
+     * @see NuevaTareaActivity
+     * @param sprint
+     */
     public void nuevaTarea(Sprint sprint){
         Intent intent= new Intent(contexto, NuevaTareaActivity.class);
         intent.putExtra("sprint",sprint);
@@ -256,6 +280,11 @@ public class AdaptadorSprints extends RecyclerView.Adapter<RecyclerView.ViewHold
         contexto.startActivity(intent);
     }
 
+    /**
+     * Ejecuta el fragment de Ver sprint pasándole el sprint seleccionado
+     * @see com.example.scrummanager.Vistas.Inicio
+     * @param sprint
+     */
     public void verSprint(Sprint sprint) {
         //Se guarda en las preferencias para que salga directamente al iniciar
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contexto);
@@ -274,6 +303,12 @@ public class AdaptadorSprints extends RecyclerView.Adapter<RecyclerView.ViewHold
         NavHostFragment.findNavController(fragment).navigate(R.id.action_proyectos_to_inicio, bundle);
     }
 
+    /**
+     * Abre un alertDialog para confirmar si se desea borrar el sprint
+     * @param sprint
+     * @param eid
+     * @param pid
+     */
     private void borrarConfirmacion(Sprint sprint,String eid,String pid) {
         //Inicialización
         AlertDialog.Builder alertDialogBu = new AlertDialog.Builder(contexto);
@@ -297,6 +332,12 @@ public class AdaptadorSprints extends RecyclerView.Adapter<RecyclerView.ViewHold
         alertDialog.show();
     }
 
+    /**
+     * Elimina el cliente de la base de datos
+     * @param sprint
+     * @param eid
+     * @param pid
+     */
     public void borrarCliente(Sprint sprint,String eid,String pid) {
         proyecto.eliminarSprint(sprint);
 

@@ -38,6 +38,9 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.EventListener;
 
+/**
+ * Muestra un departamento enviado a través de un intent
+ */
 public class VerDepartamentoActivity extends AppCompatActivity {
     private DatabaseReference dbReference;
     private FirebaseDatabase database;
@@ -121,11 +124,13 @@ public class VerDepartamentoActivity extends AppCompatActivity {
 
         }
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_ver_departamentos, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -143,6 +148,10 @@ public class VerDepartamentoActivity extends AppCompatActivity {
 
         }
     }
+
+    /**
+     * Abre un AlertDialog para confirmar si se desea borrar el departamento
+     */
     public void borrarDepartamento(){
         //Se borra el departamento de la bd
         DatabaseReference dbReference=FirebaseDatabase.getInstance().getReference().child(eid);
@@ -180,6 +189,9 @@ public class VerDepartamentoActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Elimina el departamento de la base de datos
+     */
     private void borrarConfirmacion() {
         //Inicialización
         AlertDialog.Builder alertDialogBu = new AlertDialog.Builder(VerDepartamentoActivity.this);

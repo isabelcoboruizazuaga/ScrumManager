@@ -24,6 +24,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
+/**
+ * Permite editar un Sprint que se le pasa por un intent
+ */
 public class EditarSprintActivity extends AppCompatActivity {private DatabaseReference dbReference;
     private String eid, pid, sid;
     private Proyecto proyecto;
@@ -80,6 +83,7 @@ public class EditarSprintActivity extends AppCompatActivity {private DatabaseRef
         pid= proyecto.getIdProyecto();
         eid=proyecto.getIdEmpresa();
     }
+
     /**
      * Obtiene el sprint enviado por el intent que llamaba a la Activity
      */
@@ -88,6 +92,7 @@ public class EditarSprintActivity extends AppCompatActivity {private DatabaseRef
         sprint = (Sprint) intent.getSerializableExtra("sprint");
         sid= sprint.getIdSprint();
     }
+
     /**
      * Edita un sprint a partir de los datos proporcionados y lo añade a la base de datos
      */

@@ -39,6 +39,9 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.UUID;
 
+/**
+ * Permite editar un departamento
+ */
 public class EditarDepartamentoActivity extends AppCompatActivity {
     private DatabaseReference dbReference;
     private FirebaseDatabase database;
@@ -50,6 +53,7 @@ public class EditarDepartamentoActivity extends AppCompatActivity {
     private String uidJefeDpt, eid, did;
     private Departamento departamento;
     private Uri imagenUri;
+    private Empleado empleado;
 
     private Spinner spinnerEmpleado;
     private Button btn_crear;
@@ -164,6 +168,7 @@ public class EditarDepartamentoActivity extends AppCompatActivity {
             }
         });
     }
+
     //Método que se activará cuando la imagen de pérfil se pulse y se abra la galería
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -176,7 +181,10 @@ public class EditarDepartamentoActivity extends AppCompatActivity {
         }
     }
 
-    //Método para subir la imagen a la database y cargarla en el layout
+    /**
+     * Sube la imagen a la base de datos y la muestra
+     * @param imagenUri
+     */
     private void subirImagenFirebase(Uri imagenUri){
         try {
             StorageReference archivoRef = storageReference.child("departments/" + did + "/cover.jpg");
@@ -199,13 +207,20 @@ public class EditarDepartamentoActivity extends AppCompatActivity {
         }catch (java.lang.IllegalArgumentException e){}
     }
 
-    //Método para rellenar las opciones de empleados
+    /**
+     * Rellena las opciones del spinner de empleados
+     */
     private void rellenarSpinnerEmpleados(){
         ArrayAdapter<String> empleadoAdapter= new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, empleadosNombres);
         empleadoAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerEmpleado.setAdapter(empleadoAdapter);
     }
 
+    /**
+     * Edita un departamento con los datos introducidos por el usuario
+     * Extrae los datos del layout y los introduce en la base de datos
+     * @param v
+     */
     private void editarDepartamento(View v){
         String nombre= et_nombre.getText().toString();
         departamento.setNombreDepartamento(nombre);
@@ -332,7 +347,10 @@ public class EditarDepartamentoActivity extends AppCompatActivity {
             });
         }
     }
-    private Empleado empleado;
+
+    /**
+     * Crea el EventListener para extraer los empleados de la base de datos
+     */
     private void setEventListener(){
         eventListener= new ValueEventListener() {
             @Override

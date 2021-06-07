@@ -12,6 +12,9 @@ import android.view.View;
 
 import com.example.scrummanager.R;
 
+/**
+ * Clase que contiene los fragmentos de iniciar sesión y registrarse
+ */
 public class LoginActivity extends AppCompatActivity {
 
     @Override

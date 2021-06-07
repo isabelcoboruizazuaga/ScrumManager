@@ -48,6 +48,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+/**
+ * Permite crear un empleado e introducirlo en la base de datos de la empresa
+ */
 public class NuevoEmpleadoActivity extends AppCompatActivity {
     private FirebaseAuth mAuthAdmin, mAuthWorker;
     private DatabaseReference dbReference;
@@ -58,6 +61,7 @@ public class NuevoEmpleadoActivity extends AppCompatActivity {
     private ArrayList<Departamento> departamentos;
     private ArrayList<String> departamentosNombres;
     private Empleado empleadoManager;
+    private Departamento departamento;
     private String idDepartamento;
     private  String eid;
     private Uri imagenUri;
@@ -68,6 +72,7 @@ public class NuevoEmpleadoActivity extends AppCompatActivity {
     private EditText et_nombre, et_apellidos, et_dni, et_email, et_contrasenia;
     private TextView tv_eid;
     private ImageView iv_imagenEmpleado;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -169,41 +174,6 @@ public class NuevoEmpleadoActivity extends AppCompatActivity {
         });*/
     }
 
-    /*//Método que se activará cuando la imagen de pérfil se pulse y se abra la galería
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==1000){
-            if(resultCode== Activity.RESULT_OK){
-                Uri imagenUri= data.getData();
-                subirImagenFirebase(imagenUri);
-            }
-        }
-    }
-
-    //Método para subir la imagen a la database y cargarla en el layout
-    private void subirImagenFirebase(Uri imagenUri){
-        StorageReference archivoRef= storageReference.child("users/"+mAuthAdmin.getCurrentUser().getUid()+"/profile.jpg");
-        archivoRef.putFile(imagenUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                archivoRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        //Si se sube correctamente se accede a la base de datos y la carga en el layout
-                        Picasso.get().load(uri).into(iv_imagenEmpleado);
-                    }
-                });
-                Toast.makeText(getBaseContext(),"ok",Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getBaseContext(),"errooor",Toast.LENGTH_SHORT).show();
-            }
-        });
-    }*/
-
     //Método que se activará cuando la imagen de pérfil se pulse y se abra la galería
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -216,7 +186,10 @@ public class NuevoEmpleadoActivity extends AppCompatActivity {
         }
     }
 
-    //Método para subir la imagen a la database y cargarla en el layout
+    /**
+     * Sube la imagen a la base de datos y la muestra
+     * @param imagenUri
+     */
     private void subirImagenFirebase(Uri imagenUri){
         try {
             StorageReference archivoRef = storageReference.child("users/" + mAuthWorker.getCurrentUser().getUid() + "/profile.jpg");
@@ -239,14 +212,20 @@ public class NuevoEmpleadoActivity extends AppCompatActivity {
         }catch (java.lang.IllegalArgumentException e){}
     }
 
-    //Método para rellenar las opciones de departamento
+    /**
+     * Rellena el spinner de los departamentos
+     */
     private void rellenarSpinnerDepartamento(){
         ArrayAdapter<String> departamentoAdapter= new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, departamentosNombres);
         departamentoAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerDepartamento.setAdapter(departamentoAdapter);
     }
 
-    //Método ejecutado cuando el usuario pulse el botón de registrar
+    /**
+     * Crea el empleado con los datos introducidos por el usuario
+     * Extrae los datos del layout y los introduce en la base de datos
+     * Crea la cuenta de inicio de sesión del usuario
+     */
     private void crearCuenta(){
         //String nombreEmpresa = et_nombreEmpresa.getText().toString();
         String email = et_email.getText().toString();
@@ -316,7 +295,10 @@ public class NuevoEmpleadoActivity extends AppCompatActivity {
 
     }
 
-    //Redirige al usuario o muestra un error
+    /**
+     * Se indica si ha habido éxito al crear la cuenta
+     * @param account
+     */
     private void updateUI(FirebaseUser account){
         if(account != null){
             subirImagenFirebase(imagenUri);
@@ -329,7 +311,11 @@ public class NuevoEmpleadoActivity extends AppCompatActivity {
         }
 
     }
-    //Método que envía el email de verificación
+
+    /**
+     * Envía un email de verificación al empleado
+     * @param user
+     */
     private void verificarEmail(FirebaseUser user){
         user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -341,8 +327,9 @@ public class NuevoEmpleadoActivity extends AppCompatActivity {
         });
     }
 
-    //Valores del spinner
-    private Departamento departamento;
+    /**
+     * Establece el EventListener para extraer los datos de los departamentos de la base de datos
+     */
     private void setEventListener(){
         eventListener= new ValueEventListener() {
             @Override

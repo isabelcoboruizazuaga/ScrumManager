@@ -21,7 +21,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.scrummanager.Modelos.Departamento;
 import com.example.scrummanager.Modelos.Empleado;
 import com.example.scrummanager.R;
+import com.example.scrummanager.Vistas.EditarClienteActivity;
 import com.example.scrummanager.Vistas.EditarEmpleadoActivity;
+import com.example.scrummanager.Vistas.VerClienteActivity;
 import com.example.scrummanager.Vistas.VerEmpleadoActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -36,18 +38,23 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.EventListener;
 
+/**
+ * Adaptador para rellenar Recycler Views con una lista de empleados
+ */
 public class AdaptadorEmpleados extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<Empleado> empleados;
     private Context contexto;
     private final int MOSTRAR_MENU = 1, OCULTAR_MENU = 2;
     StorageReference storageReference;
-    Fragment fragment;
 
-
+    /**
+     * Constructor del Adaptador
+     * @param empleados
+     * @param contexto
+     */
     public AdaptadorEmpleados(ArrayList<Empleado> empleados, Context contexto, Fragment fragment) {
         this.empleados = empleados;
         this.contexto = contexto;
-        this.fragment=fragment;
     }
 
     @NonNull
@@ -199,6 +206,10 @@ public class AdaptadorEmpleados extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
+    /**
+     * ViewHolder del adaptador de empleados, recoge el layout del item
+     * Obtiene los items del layout indicado en el método onCreateViewHolder
+     */
     public class AdaptadorEmpleadosViewHolder extends RecyclerView.ViewHolder {
         //items del layout
         private TextView tv_nombreEmpleado,tv_apellidoEmpleado,tv_emailEmpleado,tv_departamentoEmpleado;
@@ -220,6 +231,10 @@ public class AdaptadorEmpleados extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
+    /**
+     * MenuViewHolder del adaptador de empleados, recoge el layout del menú del item
+     * Obtiene los items del layout indicado en el método onCreateViewHolder
+     */
     public class MenuViewHolder extends RecyclerView.ViewHolder {
         //items del layout
         private ImageButton btn_verEmpleado, btn_atrasEmpleado, btn_borrarEmpleado, btn_editarEmpleado;
@@ -238,6 +253,10 @@ public class AdaptadorEmpleados extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
+    /**
+     * Cambia a true el atributo de mostrar menú de un item seleccionado
+     * @param position
+     */
     public void mostrarMenu(int position) {
         for (int i = 0; i < empleados.size(); i++) {
             empleados.get(i).setShowMenu(false);
@@ -246,16 +265,9 @@ public class AdaptadorEmpleados extends RecyclerView.Adapter<RecyclerView.ViewHo
         notifyDataSetChanged();
     }
 
-
-    public boolean isMenuMostrado() {
-        for (int i = 0; i < empleados.size(); i++) {
-            if (empleados.get(i).isShowMenu()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
+    /**
+     * Cambia a false el atributo de mostrar menú de todos los item
+     */
     public void cerrarMenu() {
         for (int i = 0; i < empleados.size(); i++) {
             empleados.get(i).setShowMenu(false);
@@ -263,18 +275,32 @@ public class AdaptadorEmpleados extends RecyclerView.Adapter<RecyclerView.ViewHo
         notifyDataSetChanged();
     }
 
+    /**
+     * Ejecuta la actividad de  Editar enpleado pasándole el empleado seleccionado
+     * @see EditarEmpleadoActivity
+     * @param empleado
+     */
     public void editarEmpleado(Empleado empleado) {
         Intent intent= new Intent(contexto, EditarEmpleadoActivity.class);
         intent.putExtra("empleado",empleado);
         contexto.startActivity(intent);
     }
 
+    /**
+     * Ejecuta la actividad de Ver empleado pasándole el empleado seleccionado
+     * @see VerEmpleadoActivity
+     * @param empleado
+     */
     public void verEmpleado(Empleado empleado) {
         Intent intent= new Intent(contexto, VerEmpleadoActivity.class);
         intent.putExtra("empleado",empleado);
         contexto.startActivity(intent);
     }
 
+    /**
+     * Abre un alertDialog para confirmar si se desea borrar el empleado
+     * @param empleado
+     */
     private void borrarConfirmacion(Empleado empleado) {
         //Inicialización
         AlertDialog.Builder alertDialogBu = new AlertDialog.Builder(contexto);
@@ -297,6 +323,11 @@ public class AdaptadorEmpleados extends RecyclerView.Adapter<RecyclerView.ViewHo
         AlertDialog alertDialog = alertDialogBu.create();
         alertDialog.show();
     }
+
+    /**
+     * Elimina el cliente de la base de datos
+     * @param empleado
+     */
     public void borrarEmpleado(Empleado empleado) {
         String eid= empleado.getIdEmpresa();
         String uid= empleado.getUid();
