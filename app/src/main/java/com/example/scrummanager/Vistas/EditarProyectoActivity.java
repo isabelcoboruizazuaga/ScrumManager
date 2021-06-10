@@ -158,13 +158,21 @@ public class EditarProyectoActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Departamento departamento1 = snapshot.getValue(Departamento.class);
-                departamentos.add(0, departamento1);
-                departamentosNombres.add(0, departamento1.getNombreDepartamento());
+                if(departamento!=null) {
+                    departamentos.add(0, departamento1);
+                    departamentosNombres.add(0, departamento1.getNombreDepartamento());
 
-                //Se indica que es el spinner de departamentos separando ademas el actual del resto
-                Departamento dpt= new Departamento("-1","Departamentos", eid);
-                departamentosNombres.add(1,dpt.getNombreDepartamento());
-                departamentos.add(1,dpt);
+                    //Se indica que es el spinner de departamentos separando ademas el actual del resto
+                    Departamento dpt = new Departamento("-1", "Departamentos", eid);
+                    departamentosNombres.add(1, dpt.getNombreDepartamento());
+                    departamentos.add(1, dpt);
+
+                }else{
+                    //Se indica que es el spinner de departamentos separando ademas el actual del resto
+                    Departamento dpt = new Departamento("-1", "Departamentos", eid);
+                    departamentosNombres.add(0, dpt.getNombreDepartamento());
+                    departamentos.add(0, dpt);
+                }
 
                 rellenarSpinnerDepartamentos();
             }

@@ -7,11 +7,11 @@
         <item
             android:id="@+id/inicio"
             android:icon="@drawable/home_icon"
-            android:title="@string/menu_home" />
+            android:title="Inicio" />
         <item
             android:id="@+id/departamentos"
             android:icon="@drawable/departments_icon"
-            android:title="@string/menu_departamentos" />
+            android:title="Departamentos" />
         <!--<item
             android:id="@+id/equipos"
             android:icon="@drawable/teams_icon"
@@ -19,14 +19,14 @@
         <item
             android:id="@+id/proyectos"
             android:icon="@drawable/projects_icon"
-            android:title="@string/menu_proyectos" />
+            android:title="Proyectos" />
         <item
             android:id="@+id/clientes"
             android:icon="@drawable/clients_icon"
-            android:title="@string/menu_clientes" />
+            android:title="Clientes"/>
         <item
             android:id="@+id/empleados"
             android:icon="@drawable/workers_icon"
-            android:title="@string/menu_empleados" />
+            android:title="Trabajadores"/>
     </group>
 </menu>

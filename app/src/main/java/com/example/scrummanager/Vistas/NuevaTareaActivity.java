@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.scrummanager.Controladores.AdaptadorEmpleadosDpt;
 import com.example.scrummanager.Modelos.Departamento;
 import com.example.scrummanager.Modelos.Empleado;
 import com.example.scrummanager.Modelos.Proyecto;
@@ -79,7 +80,9 @@ public class NuevaTareaActivity extends AppCompatActivity {
 
         //Extracción de los datos del spinner empleados
         setEventListenerEmpleados();
-        dbReference.child("Empleados").addValueEventListener(eventListenerEmpleados);
+
+
+        dbReference.child("Departamentos").child(proyecto.getDid()).addValueEventListener(eventListenerEmpleados);
 
         //Control spinner empleados
         rellenarSpinnerEmpleados();
@@ -208,11 +211,27 @@ public class NuevaTareaActivity extends AppCompatActivity {
         eventListenerEmpleados = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot x : snapshot.getChildren() ){
-                    //Se añaden los empleados a la lista
-                    Empleado empleado = x.getValue(Empleado.class);
-                    empleados.add(empleado);
-                    empleadosNombres.add(empleado.getNombreEmpleado()+""+empleado.getApellidoEmpleado());
+                Departamento departamento= snapshot.getValue(Departamento.class);
+                //Se recorre la lista de miembros y se extraen los datos de cada uno
+                try {
+                    ArrayList<String> miembrosDpt= departamento.getMiembrosDepartamento();
+                    for (int i = 0; i < miembrosDpt.size(); i++) {
+                        String uid = miembrosDpt.get(i);
+                        dbReference.child("Empleados").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                Empleado empld = snapshot.getValue(Empleado.class);
+                                empleados.add(empld);
+                                empleadosNombres.add(empld.getNombreEmpleado() +" "+ empld.getApellidoEmpleado());
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                            }
+                        });
+                    }
+                } catch (NullPointerException e){
+
                 }
             }
             @Override
@@ -220,6 +239,7 @@ public class NuevaTareaActivity extends AppCompatActivity {
 
             }
         };
+
     }
 
     /**

@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_FirstFragment_to_SecondFragment"
             app:destination="@id/SecondFragment" />
+        <action
+            android:id="@+id/action_FirstFragment_to_contraseniaOlvidada"
+            app:destination="@id/contraseniaOlvidada" />
     </fragment>
     <fragment
         android:id="@+id/SecondFragment"
@@ -21,6 +24,15 @@
         tools:layout="@layout/fragment_registrarse">
         <action
             android:id="@+id/action_SecondFragment_to_FirstFragment"
+            app:destination="@id/FirstFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/contraseniaOlvidada"
+        android:name="com.example.scrummanager.Vistas.ContraseniaOlvidada"
+        android:label="fragment_contrasenia_olvidada"
+        tools:layout="@layout/fragment_contrasenia_olvidada" >
+        <action
+            android:id="@+id/action_contraseniaOlvidada_to_FirstFragment"
             app:destination="@id/FirstFragment" />
     </fragment>
 </navigation>

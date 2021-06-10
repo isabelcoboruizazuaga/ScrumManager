@@ -9,13 +9,9 @@ import java.util.ArrayList;
 public class Departamento implements Serializable {
     private String idDepartamento;
     private String idEmpresa;
-
     private String nombreDepartamento;
     private String uidJefeDepartamento;
-    private String urlFotoDepartamento;
-
     private ArrayList<String> miembrosDepartamento; //guarda la uid de cada miembro
-    private ArrayList<Proyecto> ListaProyectosDepartamento;
     private boolean showMenu=false;
 
     /**
@@ -35,7 +31,6 @@ public class Departamento implements Serializable {
         this.nombreDepartamento = nombreDepartamento;
         this.idEmpresa= idEmpresa;
         miembrosDepartamento= new ArrayList<>();
-        ListaProyectosDepartamento= new ArrayList<>();
     }
 
     /**

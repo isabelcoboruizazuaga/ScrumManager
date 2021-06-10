@@ -229,10 +229,10 @@ public class AdaptadorProyectos extends RecyclerView.Adapter<RecyclerView.ViewHo
                 miembrosDpt.clear();
                 //Se extraen los uid de los empleados
                 Departamento dpt= snapshot.getValue(Departamento.class);
-                ArrayList<String> empleados= dpt.getMiembrosDepartamento();
 
                 //Se recorre la lista de uid de miembros y se añade a la de objetos
                 try {
+                    ArrayList<String> empleados= dpt.getMiembrosDepartamento();
                     for (int i = 0; i < empleados.size(); i++) {
                         String uid = empleados.get(i);
                         dbReference.child("Empleados").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {

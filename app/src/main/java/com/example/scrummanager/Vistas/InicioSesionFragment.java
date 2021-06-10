@@ -111,6 +111,15 @@ public class InicioSesionFragment extends Fragment {
                         .navigate(R.id.action_FirstFragment_to_SecondFragment);
             }
         });
+
+        //Al pulsar el texto de contraseña pasa a ese fragment
+        view.findViewById(R.id.tv_recuperarContrasenia).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavHostFragment.findNavController(InicioSesionFragment.this)
+                        .navigate(R.id.action_FirstFragment_to_contraseniaOlvidada);
+            }
+        });
         mAuth = FirebaseAuth.getInstance();
     }
 

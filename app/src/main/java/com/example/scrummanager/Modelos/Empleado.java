@@ -9,7 +9,6 @@ public class Empleado implements Serializable {
     private String uid;
     private String idEmpresa;
     private String idDepartamento;
-
     private String nifEmpleado;
     private String nombreEmpleado;
     private String apellidoEmpleado;
